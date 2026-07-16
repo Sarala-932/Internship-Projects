@@ -1,17 +1,17 @@
 import nodemailer from "nodemailer";
-import config from "../config/config.mjs"
+import {config} from "../config/config.mjs"
 
-const transporter = config.MAIL_USER
+const transporter = config.mailUser
     ? nodemailer.createTransport({
           service: "gmail",
           auth: {
-              user: config.MAIL_USER,
-              pass: config.MAIL_PASS,
+              user: config.mailUser,
+              pass: config.mailPass,
           },
       })
     : null;
 
-const FROM = config.MAIL_FROM || "MedCore HMS <no-reply@medcore.local>";
+const FROM = config.mailFrom || "MedCore HMS <no-reply@medcore.local>";
 
 export function otpTemplate({name, otp, minutes = 10}) {
     return `

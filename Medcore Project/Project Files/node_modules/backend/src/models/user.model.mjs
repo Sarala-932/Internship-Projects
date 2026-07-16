@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema(
     {timestamps: true},
 );
 
-userSchema.index({email: 1}, {unique: true});
 userSchema.index({hospitalId: 1, role: 1});
 userSchema.index({hospitalId: 1, isActive: 1});
 

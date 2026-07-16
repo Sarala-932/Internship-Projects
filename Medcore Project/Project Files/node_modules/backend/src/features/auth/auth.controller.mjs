@@ -1,7 +1,7 @@
-import {User} from "../../models/User.js";
+import User from "../../models/user.model.mjs";
 import Otp from "../../models/otp.model.mjs";
 import {generateOtp, hashOtp, compareOtp, getOtpExpiry} from "../../utils/otp.mjs";
-import {sendOtpEmail} from "../../utils/mailer.js";
+import {sendOtpEmail} from "../../utils/mailer.mjs";
 
 const MAX_ATTEMPTS = 5;
 
