@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
 const userRoles = [
-    "Super Admin",
-    "Hospital Admin",
-    "Doctor",
-    "Nurse",
-    "Receptionist",
-    "Lab Technician",
-    "Pharmacist",
-    "Accountant",
-    "Patient",
+    "super_admin",
+    "admin",
+    "doctor",
+    "nurse",
+    "receptionist",
+    "pharmacist",
+    "lab_tech",
+    "accountant",
+    "patient",
 ];
 
 const userSchema = new mongoose.Schema(

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/user.model.mjs";
-import {jwtSecret} from "../../config.mjs";
+import {config} from "../config/config.mjs";
 
 const authentication = async (req, res, next) => {
     try {
@@ -11,7 +11,7 @@ const authentication = async (req, res, next) => {
 
         let decode;
         try {
-            decode = jwt.verify(accessToken, jwtSecret);
+            decode = jwt.verify(accessToken, config.jwtSecret);
         } catch (err) {
             // Frontend "TokenExpiredError" dekh ke /refresh call karega
             const msg = err.name === "TokenExpiredError" ? "Access token expired" : "Invalid access token";
@@ -22,7 +22,7 @@ const authentication = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({message: "User not found"});
         }
-        if (!user.isVerified) {
+        if (!user.isEmailVerified) {
             return res.status(403).json({message: "Please verify your email first"});
         }
 

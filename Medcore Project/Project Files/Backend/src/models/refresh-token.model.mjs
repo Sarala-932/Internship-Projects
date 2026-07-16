@@ -12,7 +12,6 @@ const refreshTokenSchema = new mongoose.Schema(
         hospitalId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Hospital",
-            required: true,
             index: true,
         },
 

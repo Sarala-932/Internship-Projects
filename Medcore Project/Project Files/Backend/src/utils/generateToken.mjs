@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import {jwtSecret, jwtRefreshSecret, accessTokenExpiry, refreshTokenExpiry} from "../../config.mjs";
+import { config } from "../config/config.mjs";
+const {jwtSecret, jwtRefreshSecret, accessTokenExpiry, refreshTokenExpiry} = config;
 
 export const generateAccessToken = (user) =>
     jwt.sign({id: user._id, hospitalId: user.hospitalId, role: user.role}, jwtSecret, {
