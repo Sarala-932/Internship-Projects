@@ -8,4 +8,11 @@ if (!process.env.MONGO_URI) {
 export const config = {
     MONGO_URI: process.env.MONGO_URI,
     PORT: process.env.PORT || 5000,
+    jwtSecret: process.env.JWT_SECRET,
+    jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
+    accessTokenExpiry: "15m",
+    refreshTokenExpiry: "7d",
+    mailPass: process.env.MAIL_PASS,
+    mailUser: process.env.MAIL_USER,
+    mailFrom: process.env.MAIL_FROM,
 };
