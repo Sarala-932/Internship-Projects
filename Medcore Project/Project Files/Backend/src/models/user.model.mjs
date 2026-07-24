@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
         firstName: {type: String, required: true},
         lastName: {type: String, required: true},
         phone: {type: String},
+        departmentId: {type: mongoose.Schema.Types.ObjectId, ref: "Department"},
         avatarUrl: {type: String},
         isEmailVerified: {type: Boolean, default: false},
         isActive: {type: Boolean, default: true},

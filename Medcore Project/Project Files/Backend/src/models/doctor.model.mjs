@@ -44,9 +44,7 @@ const doctorSchema = new mongoose.Schema(
     {timestamps: true},
 );
 
-doctorSchema.index({userId: 1}, {unique: true});
 doctorSchema.index({hospitalId: 1, departmentId: 1});
-doctorSchema.index({licenseNumber: 1}, {unique: true, sparse: true});
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
 

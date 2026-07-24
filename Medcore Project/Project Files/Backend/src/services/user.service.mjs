@@ -87,12 +87,61 @@ export const loginUserService = async (email, password) => {
 
 export const getUserByIdService = async (userId) => {
     const user = await User.findById(userId).select(
-        "email firstName lastName phone role hospitalId isEmailVerified isActive avatarUrl createdAt"
+        "email firstName lastName phone role hospitalId departmentId isEmailVerified isActive avatarUrl createdAt"
     );
     
     if (!user) {
         throw createError("User not found", 404);
     }
     
+    return user;
+};
+
+// Super Admin / Admin creates staff users (doctor, nurse, etc.)
+// These accounts are pre-verified (no OTP needed since admin is creating them)
+export const createStaffUserService = async (data, creatorRole) => {
+    const { email, password, firstName, lastName, phone, role, hospitalId, departmentId } = data;
+
+    if (!email || !password || !firstName || !lastName || !role) {
+        throw createError("email, password, firstName, lastName, role required", 400);
+    }
+
+    if (password.length < 8) {
+        throw createError("Password must be at least 8 characters", 400);
+    }
+
+    if (!VALID_ROLES.includes(role)) {
+        throw createError("Invalid role", 400);
+    }
+
+    // Admin cannot create super_admin or other admin accounts
+    if (creatorRole === "admin" && ["super_admin", "admin"].includes(role)) {
+        throw createError("Admin cannot create admin/super_admin accounts", 403);
+    }
+
+    // Staff users need a hospitalId
+    if (!hospitalId) {
+        throw createError("hospitalId is required for staff users", 400);
+    }
+
+    const existing = await User.findOne({ email: email.toLowerCase() });
+    if (existing) {
+        throw createError("Email already registered", 409);
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    const user = await User.create({
+        email: email.toLowerCase(),
+        passwordHash,
+        firstName,
+        lastName,
+        phone,
+        role,
+        hospitalId,
+        departmentId: departmentId || undefined,
+        isEmailVerified: true, // Admin ne banaya hai, toh verified hai
+    });
+
     return user;
 };

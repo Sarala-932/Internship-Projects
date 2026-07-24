@@ -1,6 +1,6 @@
 import {issueOtp} from "./otp.controller.mjs";
 import {accessCookieOpts, refreshCookieOpts} from "./token.controller.mjs";
-import {registerUserService, loginUserService, getUserByIdService} from "../services/user.service.mjs";
+import {registerUserService, loginUserService, getUserByIdService, createStaffUserService} from "../services/user.service.mjs";
 
 // POST /api/auth/register
 export async function register(req, res) {
@@ -63,5 +63,28 @@ export async function getMe(req, res) {
     } catch (err) {
         console.error("getMe error:", err);
         return res.status(err.status || 500).json({message: err.message || "Failed to fetch user"});
+    }
+}
+
+// POST /api/users/staff — Admin/Super Admin creates staff accounts
+export async function createStaffUser(req, res) {
+    try {
+        const user = await createStaffUserService(req.body, req.user.role);
+
+        return res.status(201).json({
+            message: "Staff account created",
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+                hospitalId: user.hospitalId,
+                departmentId: user.departmentId,
+            },
+        });
+    } catch (err) {
+        console.error("createStaffUser error:", err);
+        return res.status(err.status || 500).json({ message: err.message || "Failed to create staff user" });
     }
 }

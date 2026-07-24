@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const hospitalSchema = new mongoose.Schema(
     {
         name: {type: String, required: true},
@@ -38,8 +40,6 @@ const hospitalSchema = new mongoose.Schema(
     {timestamps: true},
 );
 
-hospitalSchema.index({code: 1}, {unique: true});
-hospitalSchema.index({email: 1}, {unique: true});
 hospitalSchema.index({status: 1});
 
 const Hospital = mongoose.model("Hospital", hospitalSchema);

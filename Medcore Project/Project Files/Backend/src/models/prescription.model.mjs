@@ -42,7 +42,6 @@ const prescriptionSchema = new mongoose.Schema(
 
 // Indexes
 prescriptionSchema.index({hospitalId: 1, patientId: 1, createdAt: -1}); // patient's Rx history
-prescriptionSchema.index({rxNumber: 1}, {unique: true}); // unique Rx lookup
 prescriptionSchema.index({encounterId: 1}); // encounter → prescriptions
 
 const Prescription = mongoose.model("Prescription", prescriptionSchema);
