@@ -1,4 +1,5 @@
 import Hospital from "../models/hospital.model.mjs";
+import AuditLog from "../models/audit-logs.model.mjs";
 
 const createError = (message, status = 400) => {
     const err = new Error(message);
@@ -7,7 +8,7 @@ const createError = (message, status = 400) => {
 };
 
 // Super Admin creates a new hospital (status: "pending")
-export const createHospitalService = async (data) => {
+export const createHospitalService = async (data, creatorId) => {
     const { name, email, phone, address, code } = data;
 
     if (!name || !email) {
@@ -34,6 +35,17 @@ export const createHospitalService = async (data) => {
         status: "pending",
     });
 
+    if (creatorId) {
+        await AuditLog.create({
+            userId: creatorId,
+            userRole: "super_admin",
+            action: "register",
+            resource: "hospital",
+            resourceId: hospital._id,
+            metadata: { hospitalName: name },
+        });
+    }
+
     return hospital;
 };
 
@@ -48,6 +60,16 @@ export const verifyHospitalService = async (hospitalId, verifiedByUserId) => {
     hospital.verifiedAt = new Date();
     hospital.verifiedBy = verifiedByUserId;
     await hospital.save();
+
+    await AuditLog.create({
+        hospitalId: hospital._id,
+        userId: verifiedByUserId,
+        userRole: "super_admin",
+        action: "verify",
+        resource: "hospital",
+        resourceId: hospital._id,
+        metadata: { hospitalName: hospital.name },
+    });
 
     return hospital;
 };

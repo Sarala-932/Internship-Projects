@@ -12,7 +12,7 @@ const createError = (message, status = 400) => {
 };
 
 export const registerUserService = async (userData) => {
-    const { email, password, firstName, lastName, phone, role } = userData;
+    const { email, password, firstName, lastName, phone, role, hospitalId, dob, bloodGroup } = userData;
 
     if (!email || !password || !firstName || !lastName) {
         throw createError("email, password, firstName, lastName required", 400);
@@ -23,6 +23,10 @@ export const registerUserService = async (userData) => {
     }
 
     const requestedRole = role || "patient";
+
+    if (requestedRole === "patient" && !hospitalId) {
+        throw createError("hospitalId is required when registering as a patient", 400);
+    }
 
     if (!VALID_ROLES.includes(requestedRole)) {
         throw createError("Invalid role", 400);
@@ -47,6 +51,19 @@ export const registerUserService = async (userData) => {
         phone,
         role: requestedRole,
     });
+
+    if (requestedRole === "patient") {
+        const { registerPatientService } = await import("./patient.service.mjs");
+        await registerPatientService(hospitalId, {
+            userId: user._id,
+            firstName,
+            lastName,
+            phone,
+            dob,
+            bloodGroup,
+            email: email.toLowerCase()
+        });
+    }
 
     return user;
 };
@@ -142,6 +159,52 @@ export const createStaffUserService = async (data, creatorRole) => {
         departmentId: departmentId || undefined,
         isEmailVerified: true, // Admin ne banaya hai, toh verified hai
     });
+
+    return user;
+};
+
+// Update user profile
+export const updateProfileService = async (userId, data) => {
+    const { firstName, lastName, phone } = data;
+    
+    if (!firstName || !lastName) {
+        throw createError("First name and last name are required", 400);
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw createError("User not found", 404);
+    }
+
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.phone = phone || user.phone;
+
+    await user.save();
+    return user;
+};
+
+// Change password
+export const changePasswordService = async (userId, oldPassword, newPassword) => {
+    if (!oldPassword || !newPassword) {
+        throw createError("Old password and new password are required", 400);
+    }
+    if (newPassword.length < 8) {
+        throw createError("New password must be at least 8 characters", 400);
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw createError("User not found", 404);
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.passwordHash);
+    if (!isMatch) {
+        throw createError("Incorrect current password", 401);
+    }
+
+    user.passwordHash = await bcrypt.hash(newPassword, 12);
+    await user.save();
 
     return user;
 };

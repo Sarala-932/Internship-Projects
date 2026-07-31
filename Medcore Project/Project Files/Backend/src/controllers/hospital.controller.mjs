@@ -8,7 +8,7 @@ import {
 // POST /api/hospitals — Super Admin creates hospital
 export async function createHospital(req, res) {
     try {
-        const hospital = await createHospitalService(req.body);
+        const hospital = await createHospitalService(req.body, req.user?._id);
 
         return res.status(201).json({
             message: "Hospital created (pending verification)",

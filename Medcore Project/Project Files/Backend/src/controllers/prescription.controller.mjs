@@ -5,7 +5,8 @@ import {
     getPrescriptionsByPatientService,
     cancelPrescriptionService,
     searchMedicinesService,
-    generatePrescriptionPdfService
+    generatePrescriptionPdfService,
+    getPendingPrescriptionsService
 } from "../services/prescription.service.mjs";
 
 export const createPrescription = async (req, res) => {
@@ -62,6 +63,17 @@ export const getPrescriptionsByPatient = async (req, res) => {
     }
 };
 
+export const getPendingPrescriptions = async (req, res) => {
+    try {
+        const prescriptions = await getPendingPrescriptionsService(req.hospitalId);
+        return res.status(200).json({ prescriptions });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Failed to fetch pending prescriptions"
+        });
+    }
+};
+
 export const cancelPrescription = async (req, res) => {
     try {
         const prescription = await cancelPrescriptionService(req.params.id, req.userId);
@@ -92,8 +104,16 @@ export const downloadPrescriptionPdf = async (req, res) => {
     try {
         const { filename, buffer } = await generatePrescriptionPdfService(req.params.id);
 
+        if (req.query.format === 'base64') {
+            const base64String = buffer.toString('base64');
+            return res.status(200).json({
+                filename,
+                pdfBase64: base64String
+            });
+        }
+
         res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+        res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
         res.setHeader("Content-Length", buffer.length);
 
         return res.send(buffer);

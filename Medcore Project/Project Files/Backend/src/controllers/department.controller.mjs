@@ -35,8 +35,9 @@ export async function createDepartment(req, res) {
 export async function getDepartments(req, res) {
     try {
         // Admin sees only their hospital's departments
-        const hospitalId = req.user.role === "super_admin"
-            ? req.query.hospitalId
+        // Super admin and patients can see any hospital's departments by passing hospitalId
+        const hospitalId = (req.user.role === "super_admin" || req.user.role === "patient")
+            ? req.query.hospitalId || req.user.hospitalId
             : req.user.hospitalId;
 
         if (!hospitalId) {

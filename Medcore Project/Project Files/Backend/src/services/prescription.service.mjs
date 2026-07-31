@@ -71,6 +71,13 @@ export const getPrescriptionsByPatientService = async (patientId, hospitalId) =>
         .sort({ createdAt: -1 });
 };
 
+export const getPendingPrescriptionsService = async (hospitalId) => {
+    return Prescription.find({ hospitalId, status: "issued" })
+        .populate("patientId", "firstName lastName mrn")
+        .populate("doctorId", "firstName lastName")
+        .sort({ createdAt: 1 });
+};
+
 export const cancelPrescriptionService = async (prescriptionId, doctorUserId) => {
     const prescription = await Prescription.findById(prescriptionId);
     if (!prescription) {

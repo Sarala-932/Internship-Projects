@@ -64,7 +64,6 @@ const labOrderSchema = new mongoose.Schema(
 
 // Indexes
 labOrderSchema.index({hospitalId: 1, patientId: 1, createdAt: -1}); // patient's lab history
-labOrderSchema.index({orderNumber: 1}, {unique: true}); // unique order lookup
 labOrderSchema.index({hospitalId: 1, overallStatus: 1}); // lab dashboard — pending orders
 
 const LabOrder = mongoose.model("LabOrder", labOrderSchema);

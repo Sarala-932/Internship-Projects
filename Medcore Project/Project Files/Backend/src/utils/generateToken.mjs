@@ -5,7 +5,7 @@ const {jwtSecret, jwtRefreshSecret, accessTokenExpiry, refreshTokenExpiry} = con
 
 export const generateAccessToken = (user) =>
     jwt.sign({id: user._id, hospitalId: user.hospitalId, role: user.role}, jwtSecret, {
-        expiresIn: accessTokenExpiry || "15m",
+        expiresIn: accessTokenExpiry || "1h",
     });
 
 export const generateRefreshToken = (user) =>

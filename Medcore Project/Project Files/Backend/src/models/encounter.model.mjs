@@ -18,15 +18,7 @@ const vitalsSchema = new mongoose.Schema(
     {_id: false},
 );
 
-// ICD-10 Diagnosis
-const diagnosisSchema = new mongoose.Schema(
-    {
-        icd10Code: {type: String}, // "I10"
-        description: {type: String}, // "Essential hypertension"
-        type: {type: String, enum: ["primary", "secondary"]},
-    },
-    {_id: false},
-);
+// (Removed diagnosisSchema as we are using simple string for now)
 
 // Attachments — lab reports, X-rays, scans
 const attachmentSchema = new mongoose.Schema(
@@ -49,7 +41,7 @@ const encounterSchema = new mongoose.Schema(
         chiefComplaint: {type: String},
         historyOfPresentIllness: {type: String}, // HPI — SOAP: Subjective
         examination: {type: String}, // SOAP: Objective
-        diagnosis: [diagnosisSchema], // SOAP: Assessment — ICD-10
+        diagnosis: {type: String}, // SOAP: Assessment
         clinicalNotes: {type: String},
         advice: {type: String}, // SOAP: Plan
         followUpDate: {type: Date},

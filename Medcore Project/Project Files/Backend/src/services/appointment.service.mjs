@@ -1,6 +1,8 @@
 import Appointment from "../models/appointment.model.mjs";
 import Doctor from "../models/doctor.model.mjs";
 import Patient from "../models/patient.model.mjs";
+import User from "../models/user.model.mjs";
+import bcrypt from "bcrypt";
 
 export const bookAppointmentService = async (hospitalId, bookedByUserId, data) => {
     const { patientId, doctorId, departmentId, scheduledAt, durationMin = 15, type = "opd", reason } = data;
@@ -36,6 +38,12 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
     const slotStart = new Date(scheduledAt);
     if (isNaN(slotStart.getTime())) {
         const error = new Error("Invalid scheduledAt date format");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (slotStart < new Date()) {
+        const error = new Error("Cannot book an appointment in the past");
         error.statusCode = 400;
         throw error;
     }
@@ -76,15 +84,83 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
     });
 
     return appointment.populate([
-        { path: "patientId", select: "firstName lastName mrn phone" },
+        { path: "patientId", select: "firstName lastName mrn phone userId" },
         { path: "doctorId", select: "firstName lastName email" },
         { path: "departmentId", select: "name code" }
     ]);
 };
 
+export const deskBookingService = async (hospitalId, bookedByUserId, data) => {
+    // Expected fields from desk form:
+    // patient details: firstName, lastName, phone, email, address, city, age, category, prefix
+    // appointment details: doctorId, departmentId, scheduledAt, type, reason, refBy
+    
+    let { 
+        patientId, // if existing
+        firstName, lastName, phone, email, address, city, age, category, prefix,
+        doctorId, departmentId, scheduledAt, type = "opd", reason, refBy
+    } = data;
+
+    // 1. Resolve Patient
+    if (!patientId && phone) {
+        // Try to find if user already exists by phone
+        let user = await User.findOne({ phone, role: "patient" });
+        if (!user) {
+            // Create user
+            const hashedPassword = await bcrypt.hash("Password123!", 10);
+            user = await User.create({
+                firstName: firstName || "Unknown",
+                lastName: lastName || "",
+                phone,
+                email: email || undefined,
+                passwordHash: hashedPassword,
+                role: "patient",
+                hospitalId
+            });
+        }
+        
+        let patientProfile = await Patient.findOne({ userId: user._id });
+        if (!patientProfile) {
+            // Generate MRN
+            const count = await Patient.countDocuments();
+            const mrn = `MRN-${new Date().getFullYear()}${(count + 1).toString().padStart(5, '0')}`;
+            patientProfile = await Patient.create({
+                userId: user._id,
+                hospitalId,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                mrn,
+                address: { line1: address, city: city },
+                emergencyContact: { phone }
+            });
+        }
+        patientId = patientProfile._id;
+    }
+
+    if (!patientId) {
+        const error = new Error("Patient ID or valid Patient Phone number is required");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    // 2. Delegate to standard bookAppointmentService
+    const appointmentData = {
+        patientId,
+        doctorId,
+        departmentId,
+        scheduledAt,
+        durationMin: 15,
+        type,
+        reason: `${reason || ''} ${refBy ? '(Ref by: ' + refBy + ')' : ''}`
+    };
+
+    return bookAppointmentService(hospitalId, bookedByUserId, appointmentData);
+};
+
 export const getAppointmentByIdService = async (appointmentId) => {
     const appointment = await Appointment.findById(appointmentId).populate([
-        { path: "patientId", select: "firstName lastName mrn phone dob gender bloodGroup" },
+        { path: "patientId", select: "firstName lastName mrn phone dob gender bloodGroup userId" },
         { path: "doctorId", select: "firstName lastName email phone" },
         { path: "departmentId", select: "name code" },
         { path: "bookedBy", select: "firstName lastName role" },
@@ -100,8 +176,11 @@ export const getAppointmentByIdService = async (appointmentId) => {
     return appointment;
 };
 
-export const getAppointmentsService = async (hospitalId, filters = {}) => {
-    const query = { hospitalId };
+export const getAppointmentsService = async (hospitalId, filters = {}, role = null) => {
+    const query = {};
+    if (hospitalId) {
+        query.hospitalId = hospitalId;
+    }
 
     if (filters.doctorId) query.doctorId = filters.doctorId;
     if (filters.patientId) query.patientId = filters.patientId;
@@ -143,7 +222,9 @@ export const updateAppointmentStatusService = async (appointmentId, newStatus) =
     appointment.status = newStatus;
     await appointment.save();
 
-    return appointment;
+    return appointment.populate([
+        { path: "patientId", select: "firstName lastName userId" }
+    ]);
 };
 
 export const cancelAppointmentService = async (appointmentId, cancelReason) => {
@@ -165,5 +246,8 @@ export const cancelAppointmentService = async (appointmentId, cancelReason) => {
     appointment.cancelReason = cancelReason || "Cancelled by user";
     await appointment.save();
 
-    return appointment;
+    return appointment.populate([
+        { path: "patientId", select: "firstName lastName userId" },
+        { path: "doctorId", select: "firstName lastName email" }
+    ]);
 };

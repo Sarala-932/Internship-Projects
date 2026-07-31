@@ -9,7 +9,10 @@ import {
 
 const router = Router();
 
-// All hospital routes need authentication + super_admin role
+// Public route to fetch hospitals for registration
+router.get("/public", getHospitals);
+
+// All other hospital routes need authentication + super_admin role
 router.use(authentication);
 router.use(authorize("super_admin"));
 

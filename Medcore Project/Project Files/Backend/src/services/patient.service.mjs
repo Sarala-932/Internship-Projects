@@ -8,6 +8,30 @@ export const registerPatientService = async (hospitalId, data) => {
         data.mrn = `MRN-${today}-${random4}`;
     }
 
+    // Auto-create User account if not already provided (e.g., from self-registration) and email exists
+    if (!data.userId && data.email) {
+        const { default: User } = await import("../models/user.model.mjs");
+        const bcrypt = await import("bcrypt");
+        const defaultPassword = data.phone || "Medcore@123";
+        const passwordHash = await bcrypt.hash(defaultPassword, 12);
+        
+        const existingUser = await User.findOne({ email: data.email.toLowerCase() });
+        if (!existingUser) {
+            const newUser = await User.create({
+                email: data.email.toLowerCase(),
+                passwordHash,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                phone: data.phone,
+                role: "patient",
+                isEmailVerified: true // Admin created
+            });
+            data.userId = newUser._id;
+        } else {
+            data.userId = existingUser._id;
+        }
+    }
+
     const patient = await Patient.create({
         hospitalId,
         ...data

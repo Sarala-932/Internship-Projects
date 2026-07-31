@@ -48,9 +48,34 @@ export async function verifyOtp(req, res) {
 
         otp.consumedAt = new Date();
         await otp.save();
-        await User.updateOne({email}, {isEmailVerified: true});
+        
+        const user = await User.findOne({email});
+        user.isEmailVerified = true;
+        user.lastLoginAt = new Date();
+        await user.save();
+        
+        const { issueTokenPair } = await import("../services/auth.service.mjs");
+        const { accessCookieOpts, refreshCookieOpts } = await import("./token.controller.mjs");
+        
+        const { accessToken, refreshToken } = await issueTokenPair(user);
+        
+        // Set secure cookies
+        res.cookie("accessToken", accessToken, accessCookieOpts);
+        res.cookie("refreshToken", refreshToken, refreshCookieOpts);
 
-        return res.json({message: "Email verified"});
+        return res.json({
+            message: "Email verified and logged in",
+            accessToken,
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+                hospitalId: user.hospitalId,
+                isEmailVerified: user.isEmailVerified,
+            }
+        });
     } catch (err) {
         console.error("verifyOtp error:", err);
         return res.status(500).json({message: "Server error"});
