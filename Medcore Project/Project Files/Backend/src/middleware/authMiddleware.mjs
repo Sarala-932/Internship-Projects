@@ -4,7 +4,8 @@ import {config} from "../config/config.mjs";
 
 const authentication = async (req, res, next) => {
     try {
-        const accessToken = req.cookies?.accessToken;
+        const accessToken = req.cookies?.accessToken 
+            || req.headers?.authorization?.replace("Bearer ", "");
         if (!accessToken) {
             return res.status(401).json({message: "Unauthorized — no token"});
         }
