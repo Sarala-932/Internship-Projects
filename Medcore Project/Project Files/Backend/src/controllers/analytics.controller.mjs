@@ -134,14 +134,14 @@ export async function getHospitalAnalytics(req, res) {
             scheduledAt: {$gte: startOfDay, $lte: endOfDay},
         });
 
-        // MTD Revenue
-        const startOfMonth = new Date();
-        startOfMonth.setDate(1);
-        startOfMonth.setHours(0, 0, 0, 0);
+        // Revenue - Last 30 Days
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        thirtyDaysAgo.setHours(0, 0, 0, 0);
 
         const mtdBills = await Bill.find({
             hospitalId,
-            createdAt: {$gte: startOfMonth},
+            createdAt: {$gte: thirtyDaysAgo},
             status: "paid",
         });
         const revenueMTD = mtdBills.reduce((sum, bill) => sum + bill.paidAmount, 0);
@@ -161,7 +161,7 @@ export async function getHospitalAnalytics(req, res) {
         sevenDaysAgo.setHours(0, 0, 0, 0);
 
         const revenueAgg = await Bill.aggregate([
-            { $match: { hospitalId, status: "paid", createdAt: { $gte: sevenDaysAgo } } },
+            { $match: { hospitalId: new (await import('mongoose')).default.Types.ObjectId(hospitalId), status: "paid", createdAt: { $gte: sevenDaysAgo } } },
             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, total: { $sum: "$paidAmount" } } }
         ]);
 
