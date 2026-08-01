@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addLiveNotification } from "../state/notificationSlice";
 import toast from "react-hot-toast";
 
-const SOCKET_URL = "/"; // Force relative path for Vercel proxy
+const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : "http://localhost:8000";
 
 let globalSocket = null;
 
@@ -34,7 +34,7 @@ export const useSocket = () => {
     const socket = io(SOCKET_URL, {
       auth: { token: freshToken },
       withCredentials: true,
-      transports: ["polling"],
+      transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 2000,

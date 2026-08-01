@@ -2,7 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const apiClient = axios.create({
-  baseURL: "/api", // Force relative path for Vercel proxy
+  baseURL: import.meta.env.VITE_API_URL || "/api", // Use HTTPS AWS domain in production
   headers: {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",
