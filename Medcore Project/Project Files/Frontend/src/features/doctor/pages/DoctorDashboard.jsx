@@ -1,10 +1,12 @@
 import { Users, Calendar, Activity, RefreshCw, AlertCircle, Clock } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { useDoctorDashboard } from "../hook/useDoctorDashboard";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function DoctorDashboard() {
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const { stats: data, loading, refreshStats } = useDoctorDashboard();
 
   if (loading && !data) {
@@ -45,7 +47,10 @@ export default function DoctorDashboard() {
           <h2 className="text-2xl font-bold text-white mb-1">Good Morning, Dr. {user?.firstName}!</h2>
           <p className="text-blue-100 text-sm">You have {data.stats.appointmentsToday} appointments scheduled for today.</p>
         </div>
-        <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/20">
+        <button 
+          onClick={() => navigate('/doctor/appointments')}
+          className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/20"
+        >
           View Schedule
         </button>
       </div>
