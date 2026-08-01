@@ -4,16 +4,16 @@ const isProd = process.env.NODE_ENV === "production";
 
 const accessCookieOpts = {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? "strict" : "lax",
+    secure: true,
+    sameSite: "none", // Required for cross-origin cookies (Vercel + AWS)
     maxAge: 60 * 60 * 1000, // 1 hr
     path: "/",
 };
 
 const refreshCookieOpts = {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? "strict" : "lax",
+    secure: true,
+    sameSite: "none", // Required for cross-origin cookies (Vercel + AWS)
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: "/api/auth",
 };
