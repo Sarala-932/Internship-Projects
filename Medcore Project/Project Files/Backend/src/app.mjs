@@ -39,8 +39,12 @@ app.get("/", (_req, res) => {
     res.status(200).json({message: "Server is running..."});
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  swaggerOptions: {
+    tagsSorter: 'alpha',
+    operationsSorter: 'alpha'
+  }
+}));
 app.use("/api/auth", authRouter);
 app.use("/api/hospitals", hospitalRouter);
 app.use("/api/analytics", analyticsRoutes);
