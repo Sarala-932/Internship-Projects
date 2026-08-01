@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addLiveNotification } from "../state/notificationSlice";
 import toast from "react-hot-toast";
 
-const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : "http://localhost:8000";
+const SOCKET_URL = "/"; // Force relative path for Vercel proxy
 
 let globalSocket = null;
 
