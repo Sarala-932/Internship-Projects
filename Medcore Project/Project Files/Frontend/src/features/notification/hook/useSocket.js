@@ -34,7 +34,7 @@ export const useSocket = () => {
     const socket = io(SOCKET_URL, {
       auth: { token: freshToken },
       withCredentials: true,
-      transports: ["websocket", "polling"],
+      transports: ["polling"],
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 2000,
