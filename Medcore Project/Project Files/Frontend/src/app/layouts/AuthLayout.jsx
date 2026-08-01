@@ -10,7 +10,7 @@ export default function AuthLayout() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className="flex flex-col min-h-screen justify-start items-center bg-slate-50 dark:bg-slate-900 relative transition-colors duration-300 pt-28 pb-12 px-4">
+    <div className="flex flex-col min-h-screen justify-start items-center bg-slate-50 dark:bg-slate-900 relative transition-colors duration-300 pt-20 pb-12 px-4">
       {/* Top Navigation for Auth */}
       <div className="w-full p-6 flex justify-between items-center absolute top-0 left-0">
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
