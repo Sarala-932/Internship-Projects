@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   departments: [],
   staff: [],
+  staffMeta: null,
   patients: [],
   stats: null,
   loading: false,
@@ -26,7 +27,8 @@ const adminSlice = createSlice({
       state.error = null;
     },
     setStaff: (state, action) => {
-      state.staff = action.payload;
+      state.staff = action.payload.staff;
+      state.staffMeta = action.payload.meta;
       state.loading = false;
       state.error = null;
     },

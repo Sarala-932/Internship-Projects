@@ -203,13 +203,39 @@ export async function getUsers(req, res) {
             filter.role = { $ne: "super_admin" };
         }
 
+        // Search logic
+        const { search, page: pageQuery, limit: limitQuery } = req.query;
+        if (search) {
+            filter.$or = [
+                { firstName: { $regex: search, $options: "i" } },
+                { lastName: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        const page = parseInt(pageQuery) || 1;
+        const limit = parseInt(limitQuery) || 10;
+        const skip = (page - 1) * limit;
+
         const users = await User.find(filter)
             .select("-passwordHash")
             .populate("hospitalId", "name")
             .populate("departmentId", "name")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
-        return res.json({ users });
+        const total = await User.countDocuments(filter);
+
+        return res.json({ 
+            users,
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        });
     } catch (err) {
         console.error("getUsers error:", err);
         return res.status(500).json({ message: "Failed to fetch users" });

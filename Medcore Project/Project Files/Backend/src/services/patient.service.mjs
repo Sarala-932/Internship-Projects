@@ -54,7 +54,7 @@ export const getPatientByIdService = async (patientId) => {
     return patient;
 };
 
-export const getPatientsByHospitalService = async (hospitalId, search) => {
+export const getPatientsByHospitalService = async (hospitalId, search, page = 1, limit = 10) => {
     const query = { hospitalId };
 
     if (search) {
@@ -66,7 +66,24 @@ export const getPatientsByHospitalService = async (hospitalId, search) => {
         ];
     }
 
-    return Patient.find(query).sort({ createdAt: -1 });
+    const skip = (page - 1) * limit;
+
+    const patients = await Patient.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    const total = await Patient.countDocuments(query);
+
+    return {
+        patients,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    };
 };
 
 export const updatePatientService = async (patientId, data) => {

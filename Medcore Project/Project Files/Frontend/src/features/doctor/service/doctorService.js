@@ -90,8 +90,11 @@ const doctorService = {
   },
 
   // Patients
-  getPatients: async () => {
-    const response = await apiClient.get("/patients");
+  getPatients: async (params = {}) => {
+    let url = "/patients";
+    const query = new URLSearchParams(params).toString();
+    if (query) url += `?${query}`;
+    const response = await apiClient.get(url);
     return response.data;
   }
 };

@@ -25,9 +25,9 @@ export const fetchAppointments = createAsyncThunk(
 
 export const fetchPatients = createAsyncThunk(
   "doctor/fetchPatients",
-  async (_, { rejectWithValue }) => {
+  async (params = {}, { rejectWithValue }) => {
     try {
-      return await doctorService.getPatients();
+      return await doctorService.getPatients(params);
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Failed to fetch patients");
     }
@@ -47,6 +47,7 @@ const initialState = {
   },
   patients: {
     list: [],
+    meta: null,
     loading: false,
     error: null,
   }
@@ -102,6 +103,7 @@ const doctorSlice = createSlice({
       .addCase(fetchPatients.fulfilled, (state, action) => {
         state.patients.loading = false;
         state.patients.list = action.payload.patients || [];
+        state.patients.meta = action.payload.meta || null;
       })
       .addCase(fetchPatients.rejected, (state, action) => {
         state.patients.loading = false;

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Users, Activity, UserCheck, IndianRupee, Building2, TrendingUp, RefreshCw } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useAdminDashboard } from "../hook/useAdminDashboard";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function AdminDashboard() {
   const { user } = useSelector((state) => state.auth);
@@ -54,6 +55,56 @@ export default function AdminDashboard() {
           </div>
         ))}
       </div>
+
+      {/* Analytics Charts */}
+      {data.charts && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Revenue Chart */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+            <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
+              <IndianRupee className="w-5 h-5 text-emerald-500" />
+              Revenue Trend (Last 7 Days)
+            </h3>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data.charts.revenue}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
+                  <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => `₹${val}`} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    labelFormatter={(val) => new Date(val).toLocaleDateString()}
+                    formatter={(val) => [`₹${val}`, 'Revenue']}
+                  />
+                  <Bar dataKey="amount" fill="#10b981" radius={[4, 4, 0, 0]} barSize={32} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Patients Chart */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+            <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
+              <Users className="w-5 h-5 text-indigo-500" />
+              Patient Growth (Last 7 Days)
+            </h3>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data.charts.patients}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
+                  <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    labelFormatter={(val) => new Date(val).toLocaleDateString()}
+                  />
+                  <Line type="monotone" dataKey="count" name="New Patients" stroke="#6366f1" strokeWidth={3} dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Staff + Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

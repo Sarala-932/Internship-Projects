@@ -1,6 +1,7 @@
 import { Users, Calendar, Activity, RefreshCw, AlertCircle, Clock } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useDoctorDashboard } from "../hook/useDoctorDashboard";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function DoctorDashboard() {
   const { user } = useSelector((state) => state.auth);
@@ -63,6 +64,30 @@ export default function DoctorDashboard() {
           </div>
         ))}
       </div>
+
+      {/* Analytics Chart */}
+      {data.charts?.appointments && data.charts.appointments.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+          <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
+            <Activity className="w-5 h-5 text-indigo-500" />
+            Appointments Trend (Last 7 Days)
+          </h3>
+          <div className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data.charts.appointments}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  labelFormatter={(val) => new Date(val).toLocaleDateString()}
+                />
+                <Line type="monotone" dataKey="count" name="Appointments" stroke="#6366f1" strokeWidth={3} dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {/* Today's Appointments */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">

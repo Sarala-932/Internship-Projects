@@ -3,6 +3,7 @@ import { Building2, Users, CheckCircle, Clock, TrendingUp, Plus, Eye, ShieldChec
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
 import { useSuperAdmin } from "../hook/useSuperAdmin";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import CreateHospitalModal from "../components/CreateHospitalModal";
 
@@ -67,6 +68,36 @@ export default function SuperAdminDashboard() {
           </div>
         ))}
       </div>
+
+      {/* Analytics Chart */}
+      {analytics?.charts?.hospitals && analytics.charts.hospitals.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+          <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
+            <TrendingUp className="w-5 h-5 text-emerald-500" />
+            Hospital Growth (Last 7 Days)
+          </h3>
+          <div className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={analytics.charts.hospitals}>
+                <defs>
+                  <linearGradient id="colorHosp" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  labelFormatter={(val) => new Date(val).toLocaleDateString()}
+                />
+                <Area type="monotone" dataKey="count" name="New Hospitals" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorHosp)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {/* Hospitals Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">

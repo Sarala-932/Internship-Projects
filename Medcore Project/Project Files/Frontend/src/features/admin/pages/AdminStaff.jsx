@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Users, Plus, RefreshCw, AlertCircle, ShieldCheck, Mail, Phone, Lock, FileText, CheckCircle } from "lucide-react";
+import { Users, Plus, RefreshCw, AlertCircle, ShieldCheck, Mail, Phone, Lock, FileText, CheckCircle, Search } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useAdminStaff } from "../hook/useAdminStaff";
+import Pagination from "../../../shared/components/Pagination";
 
 const STAFF_ROLES = [
   { value: "doctor", label: "Doctor" },
@@ -14,7 +15,26 @@ const STAFF_ROLES = [
 
 export default function AdminStaff() {
   const { user } = useSelector(state => state.auth);
-  const { staff, departments, loading, error, fetchStaff, toggleStaffStatus, createStaff } = useAdminStaff();
+  
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1); // Reset to first page on search
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const { staff, meta, departments, loading, error, fetchStaff, toggleStaffStatus, createStaff } = useAdminStaff({
+    page,
+    limit,
+    search
+  });
 
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -68,7 +88,17 @@ export default function AdminStaff() {
           </p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+          <div className="relative w-full sm:w-64">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input 
+              type="text" 
+              placeholder="Search staff by name or email..."
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
           <button 
             onClick={fetchStaff}
             className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
@@ -78,21 +108,21 @@ export default function AdminStaff() {
           </button>
           <button 
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm"
           >
             <Plus className="w-4 h-4" />
-            Add Staff Member
+            Add Staff
           </button>
         </div>
       </div>
 
       {/* Staff Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading ? (
+        {loading && staff.length === 0 ? (
           <div className="flex items-center justify-center py-20">
             <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
           </div>
-        ) : error ? (
+        ) : error && staff.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />
             <span className="font-medium">{error}</span>
@@ -100,83 +130,90 @@ export default function AdminStaff() {
         ) : staff.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
             <Users className="w-14 h-14 mb-4 text-slate-300 dark:text-slate-600" />
-            <p className="font-medium text-slate-600 dark:text-slate-300">No staff members found</p>
-            <button onClick={() => setShowModal(true)} className="mt-4 text-sm text-blue-600 font-semibold hover:underline">
-              Add your first staff member
-            </button>
+            <p className="font-medium text-slate-600 dark:text-slate-300">
+              {search ? "No staff found matching your search." : "No staff members found"}
+            </p>
+            {!search && (
+              <button onClick={() => setShowModal(true)} className="mt-4 text-sm text-blue-600 font-semibold hover:underline">
+                Add your first staff member
+              </button>
+            )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase border-b border-slate-200 dark:border-slate-700">
-                <tr>
-                  <th className="px-6 py-3.5 font-semibold">Name & Email</th>
-                  <th className="px-6 py-3.5 font-semibold">Role</th>
-                  <th className="px-6 py-3.5 font-semibold">Department</th>
-                  <th className="px-6 py-3.5 font-semibold">Status</th>
-                  <th className="px-6 py-3.5 font-semibold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
-                {staff.map((member) => (
-                  <tr key={member._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-sm font-bold text-blue-700 dark:text-blue-400">
-                          {(member.firstName || "U")[0]}{(member.lastName || "")[0]}
-                        </div>
-                        <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
-                            {member.firstName} {member.lastName}
-                            {member.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" title="Admin" />}
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{member.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="capitalize font-medium text-slate-700 dark:text-slate-300">
-                        {member.role.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      {member.departmentId ? (
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                          {member.departmentId.name}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-slate-400">—</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        member.isActive
-                          ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                          : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
-                      }`}>
-                        {member.isActive ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                        {member.isActive ? "Active" : "Suspended"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      {/* Admin cannot suspend themselves */}
-                      {user?._id !== member._id && (
-                        <button
-                          onClick={() => toggleStaffStatus(member._id)}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                            member.isActive 
-                              ? "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
-                              : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 dark:text-emerald-400"
-                          }`}
-                        >
-                          {member.isActive ? "Suspend" : "Activate"}
-                        </button>
-                      )}
-                    </td>
+          <div className="flex flex-col h-full">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase border-b border-slate-200 dark:border-slate-700">
+                  <tr>
+                    <th className="px-6 py-3.5 font-semibold">Name & Email</th>
+                    <th className="px-6 py-3.5 font-semibold">Role</th>
+                    <th className="px-6 py-3.5 font-semibold">Department</th>
+                    <th className="px-6 py-3.5 font-semibold">Status</th>
+                    <th className="px-6 py-3.5 font-semibold text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                  {staff.map((member) => (
+                    <tr key={member._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-sm font-bold text-blue-700 dark:text-blue-400">
+                            {(member.firstName || "U")[0]}{(member.lastName || "")[0]}
+                          </div>
+                          <div>
+                            <p className="font-medium text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
+                              {member.firstName} {member.lastName}
+                              {member.role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" title="Admin" />}
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{member.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="capitalize font-medium text-slate-700 dark:text-slate-300">
+                          {member.role.replace('_', ' ')}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {member.departmentId ? (
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                            {member.departmentId.name}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-slate-400">—</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          member.isActive
+                            ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                            : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+                        }`}>
+                          {member.isActive ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                          {member.isActive ? "Active" : "Suspended"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        {/* Admin cannot suspend themselves */}
+                        {user?._id !== member._id && (
+                          <button
+                            onClick={() => toggleStaffStatus(member._id)}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                              member.isActive 
+                                ? "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
+                                : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 dark:text-emerald-400"
+                            }`}
+                          >
+                            {member.isActive ? "Suspend" : "Activate"}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination meta={meta} onPageChange={(p) => setPage(p)} />
           </div>
         )}
       </div>

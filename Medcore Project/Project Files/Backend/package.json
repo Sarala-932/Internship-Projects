@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "seed": "node scripts/seedDemoData.mjs"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +29,14 @@
     "razorpay": "^2.9.8",
     "resend": "^6.17.2",
     "socket.io": "^4.8.3",
-    "streamifier": "^0.1.1"
+    "streamifier": "^0.1.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
+    "mongodb-memory-server": "^11.2.0",
+    "supertest": "^7.2.2"
   }
 }

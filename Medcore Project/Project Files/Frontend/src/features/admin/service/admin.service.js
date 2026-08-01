@@ -13,8 +13,9 @@ const adminService = {
   },
 
   // --- Staff ---
-  fetchStaff: async () => {
-    const res = await apiClient.get("/users?role=doctor,nurse,receptionist,pharmacist,accountant");
+  fetchStaff: async (params = {}) => {
+    const queryParams = new URLSearchParams(params);
+    const res = await apiClient.get(`/users?${queryParams.toString()}`);
     return res.data;
   },
 

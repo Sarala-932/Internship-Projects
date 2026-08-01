@@ -38,8 +38,8 @@ export const updateInventory = async (req, res) => {
 
 export const getInventory = async (req, res) => {
     try {
-        const inventory = await getInventoryService(req.hospitalId, req.query);
-        return res.status(200).json({ inventory });
+        const result = await getInventoryService(req.hospitalId, req.query);
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(error.statusCode || 500).json({
             message: error.message || "Failed to fetch inventory"

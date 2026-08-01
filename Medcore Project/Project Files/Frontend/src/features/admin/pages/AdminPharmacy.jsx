@@ -3,6 +3,7 @@ import { Pill, Plus, RefreshCw, AlertCircle, Search, Package, IndianRupee, Calen
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
 import { useRealtime } from "../../../shared/hooks/useRealtime";
+import Pagination from "../../../shared/components/Pagination";
 
 export default function AdminPharmacy() {
   const [activeTab, setActiveTab] = useState("inventory"); // 'inventory' | 'prescriptions'
@@ -10,7 +11,14 @@ export default function AdminPharmacy() {
   const [inventory, setInventory] = useState([]);
   const [pendingPrescriptions, setPendingPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Search & Pagination
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [meta, setMeta] = useState(null);
+  
   const [error, setError] = useState(null);
 
   // Modal State - Inventory
@@ -30,9 +38,12 @@ export default function AdminPharmacy() {
     try {
       setLoading(true);
       setError(null);
-      const url = search ? `/pharmacy/inventory?search=${encodeURIComponent(search)}` : "/pharmacy/inventory";
+      let url = `/pharmacy/inventory?page=${page}&limit=${limit}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      
       const res = await apiClient.get(url);
       setInventory(res.data.inventory || []);
+      setMeta(res.data.meta || null);
     } catch (err) {
       setError("Failed to fetch inventory.");
       toast.error(err.response?.data?.message || "Error fetching inventory");
@@ -55,23 +66,22 @@ export default function AdminPharmacy() {
     }
   };
 
-  // We need inventory data even in prescriptions tab to map medicines
-  useEffect(() => {
-    if (inventory.length === 0) {
-      fetchInventory();
-    }
-  }, []);
-
+  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (activeTab === "inventory") {
-        fetchInventory();
-      } else {
-        fetchPendingPrescriptions();
-      }
+      setSearch(searchInput);
+      setPage(1);
     }, 500);
     return () => clearTimeout(timer);
-  }, [search, activeTab]);
+  }, [searchInput]);
+
+  useEffect(() => {
+    if (activeTab === "inventory") {
+      fetchInventory();
+    } else {
+      fetchPendingPrescriptions();
+    }
+  }, [search, activeTab, page]);
 
   useRealtime("pharmacy", () => {
     if (activeTab === "inventory") fetchInventory();
@@ -336,60 +346,63 @@ export default function AdminPharmacy() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase border-b border-slate-200 dark:border-slate-700">
-                  <tr>
-                    <th className="px-6 py-3.5 font-semibold">Medicine Name</th>
-                    <th className="px-6 py-3.5 font-semibold">Category</th>
-                    <th className="px-6 py-3.5 font-semibold">Batch & Expiry</th>
-                    <th className="px-6 py-3.5 font-semibold">Stock</th>
-                    <th className="px-6 py-3.5 font-semibold">Pricing</th>
-                    <th className="px-6 py-3.5 font-semibold text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
-                  {inventory.map((item) => (
-                    <tr key={item._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <p className="font-bold text-slate-900 dark:text-white">{item.medicineName}</p>
-                        {item.genericName && <p className="text-xs text-slate-500 dark:text-slate-400">{item.genericName}</p>}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300 capitalize">
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-1 text-sm">
-                          <p className="font-mono text-slate-600 dark:text-slate-300">{item.batchNumber}</p>
-                          <p className="text-xs flex items-center gap-1 text-slate-500">
-                            <Calendar className="w-3.5 h-3.5" /> Exp: {new Date(item.expiryDate).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className={`font-bold ${item.quantity <= item.reorderLevel ? 'text-red-500' : 'text-slate-900 dark:text-white'}`}>
-                            {item.quantity}
-                          </span>
-                          {item.quantity <= item.reorderLevel && (
-                            <span className="flex h-2 w-2 rounded-full bg-red-500" title="Low Stock"></span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="font-semibold text-slate-900 dark:text-white flex items-center">
-                          <IndianRupee className="w-3.5 h-3.5 mr-0.5 text-slate-400" />{item.mrp}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 text-right space-x-3">
-                        <button onClick={() => openEditModal(item)} className="text-amber-600 hover:text-amber-700 font-semibold text-xs transition-colors">Edit</button>
-                      </td>
+            <div className="flex flex-col h-full">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase border-b border-slate-200 dark:border-slate-700">
+                    <tr>
+                      <th className="px-6 py-3.5 font-semibold">Medicine Name</th>
+                      <th className="px-6 py-3.5 font-semibold">Category</th>
+                      <th className="px-6 py-3.5 font-semibold">Batch & Expiry</th>
+                      <th className="px-6 py-3.5 font-semibold">Stock</th>
+                      <th className="px-6 py-3.5 font-semibold">Pricing</th>
+                      <th className="px-6 py-3.5 font-semibold text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                    {inventory.map((item) => (
+                      <tr key={item._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <p className="font-bold text-slate-900 dark:text-white">{item.medicineName}</p>
+                          {item.genericName && <p className="text-xs text-slate-500 dark:text-slate-400">{item.genericName}</p>}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300 capitalize">
+                            {item.category}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="space-y-1 text-sm">
+                            <p className="font-mono text-slate-600 dark:text-slate-300">{item.batchNumber}</p>
+                            <p className="text-xs flex items-center gap-1 text-slate-500">
+                              <Calendar className="w-3.5 h-3.5" /> Exp: {new Date(item.expiryDate).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <span className={`font-bold ${item.quantity <= item.reorderLevel ? 'text-red-500' : 'text-slate-900 dark:text-white'}`}>
+                              {item.quantity}
+                            </span>
+                            {item.quantity <= item.reorderLevel && (
+                              <span className="flex h-2 w-2 rounded-full bg-red-500" title="Low Stock"></span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="font-semibold text-slate-900 dark:text-white flex items-center">
+                            <IndianRupee className="w-3.5 h-3.5 mr-0.5 text-slate-400" />{item.mrp}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 text-right space-x-3">
+                          <button onClick={() => openEditModal(item)} className="text-amber-600 hover:text-amber-700 font-semibold text-xs transition-colors">Edit</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Pagination meta={meta} onPageChange={(p) => setPage(p)} />
             </div>
           )
         ) : (

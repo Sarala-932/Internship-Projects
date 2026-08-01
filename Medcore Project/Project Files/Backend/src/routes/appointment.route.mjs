@@ -17,9 +17,79 @@ router.get("/debug/sockets", getActiveSocketsTest);
 
 router.use(authentication);
 
+/**
+ * @swagger
+ * /api/appointments:
+ *   post:
+ *     summary: Book a new appointment
+ *     tags: [Appointments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - doctorId
+ *               - departmentId
+ *               - appointmentDate
+ *               - timeSlot
+ *             properties:
+ *               patientId:
+ *                 type: string
+ *               doctorId:
+ *                 type: string
+ *               departmentId:
+ *                 type: string
+ *               appointmentDate:
+ *                 type: string
+ *                 format: date
+ *               timeSlot:
+ *                 type: string
+ *               reason:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Appointment booked successfully
+ */
 router.post("/", authorize("receptionist", "admin", "patient", "super_admin"), bookAppointment);
+
 router.post("/desk", authorize("receptionist", "admin", "super_admin"), bookAppointmentDesk);
+
+/**
+ * @swagger
+ * /api/appointments:
+ *   get:
+ *     summary: Get all appointments
+ *     tags: [Appointments]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: List of appointments
+ */
 router.get("/", authorize("doctor", "nurse", "receptionist", "admin", "super_admin", "patient"), getAppointments);
+
+/**
+ * @swagger
+ * /api/appointments/{id}:
+ *   get:
+ *     summary: Get appointment by ID
+ *     tags: [Appointments]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Appointment details
+ */
 router.get("/:id", getAppointmentById);
 router.patch("/:id/status", authorize("doctor", "receptionist", "admin", "nurse", "super_admin"), updateAppointmentStatus);
 router.patch("/:id/cancel", authorize("doctor", "receptionist", "admin", "patient", "super_admin"), cancelAppointment);

@@ -4,25 +4,29 @@ import { setStaff, setLoading, setError } from "../state/adminSlice";
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 
-export const useAdminStaff = () => {
+export const useAdminStaff = (params = {}) => {
   const dispatch = useDispatch();
-  const { staff, loading, error } = useSelector((state) => state.admin);
+  const { staff, staffMeta: meta, loading, error } = useSelector((state) => state.admin);
   const [departments, setDepartments] = useState([]);
+
+  // Serialize params to trigger re-fetch when they change
+  const paramsString = JSON.stringify(params);
 
   const fetchStaff = useCallback(async () => {
     try {
       dispatch(setLoading(true));
+      const parsedParams = JSON.parse(paramsString);
       const [staffData, deptData] = await Promise.all([
-        adminService.fetchStaff(),
+        adminService.fetchStaff(parsedParams),
         adminService.fetchDepartments()
       ]);
-      dispatch(setStaff(staffData.users || []));
+      dispatch(setStaff({ staff: staffData.users || [], meta: staffData.meta || null }));
       setDepartments(deptData.departments || []);
     } catch (err) {
       dispatch(setError(err.response?.data?.message || "Failed to fetch staff"));
       toast.error("Error loading staff directory");
     }
-  }, [dispatch]);
+  }, [dispatch, paramsString]);
 
   const toggleStaffStatus = async (id) => {
     try {
@@ -48,6 +52,7 @@ export const useAdminStaff = () => {
 
   return {
     staff,
+    meta,
     departments,
     loading,
     error,

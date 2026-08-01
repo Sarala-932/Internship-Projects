@@ -18,6 +18,8 @@ import analyticsRoutes from "./routes/analytics.route.mjs";
 import masterRouter from "./routes/master.route.mjs";
 import ticketRouter from "./routes/ticket.route.mjs";
 import notificationRouter from "./routes/notification.route.mjs";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger.mjs";
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.use(cookieParser());
 app.get("/", (_req, res) => {
     res.status(200).json({message: "Server is running..."});
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/auth", authRouter);
 app.use("/api/hospitals", hospitalRouter);

@@ -56,8 +56,12 @@ export const getPatients = async (req, res) => {
         if (!hospitalId) {
             return res.status(400).json({ message: "Hospital ID is required" });
         }
-        const patients = await getPatientsByHospitalService(hospitalId, req.query.search);
-        return res.status(200).json({ patients });
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        const result = await getPatientsByHospitalService(hospitalId, req.query.search, page, limit);
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(error.statusCode || 500).json({
             message: error.message || "Failed to get patients"
