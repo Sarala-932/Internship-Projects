@@ -6,16 +6,6 @@ import authentication from "../middleware/authMiddleware.mjs";
 
 const router = Router();
 
-/**
- * @swagger
- * /api/auth/:
- *   get:
- *     summary: Check API status
- *     tags: [Auth]
- *     responses:
- *       200:
- *         description: API is running
- */
 router.get("/", (req, res) => {
     res.send({message: "API is running"});
 });
