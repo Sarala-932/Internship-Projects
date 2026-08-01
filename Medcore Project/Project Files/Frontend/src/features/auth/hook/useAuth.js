@@ -47,8 +47,22 @@ export const useAuth = () => {
   };
 
   const handleLogout = () => {
+    // Get role from local storage before dispatching logout clears it
+    let currentRole = "patient";
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        currentRole = JSON.parse(userStr).role;
+      }
+    } catch(e) {}
+    
     dispatch(logout());
-    navigate('/login');
+    
+    if (currentRole && currentRole !== "patient") {
+      navigate('/login?type=staff');
+    } else {
+      navigate('/login?type=patient');
+    }
   };
 
   const handleVerifyOtp = async (email, otp) => {

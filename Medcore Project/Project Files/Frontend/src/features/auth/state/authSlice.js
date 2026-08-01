@@ -23,6 +23,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      if (state.user?.role) {
+        localStorage.setItem("lastRole", state.user.role);
+      }
       state.user = null;
       state.token = null;
       state.status = "idle";

@@ -77,12 +77,23 @@ apiClient.interceptors.response.use(
         if (typeof window !== "undefined") {
           console.error("Token refresh failed. Redirecting to login. Error:", err);
           toast.error("Session expired. Please log in again.");
+          // Get role before clearing
+          let lastRole = "patient";
+          try {
+            const userStr = localStorage.getItem("user");
+            if (userStr) {
+              lastRole = JSON.parse(userStr).role;
+              localStorage.setItem("lastRole", lastRole);
+            }
+          } catch(e) {}
+
           // Clear localStorage so we don't get stuck in a loop
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           
           setTimeout(() => {
-            window.location.href = "/login";
+            const redirectUrl = (lastRole && lastRole !== "patient") ? "/login?type=staff" : "/login?type=patient";
+            window.location.href = redirectUrl;
           }, 1000);
         }
         return Promise.reject(err);

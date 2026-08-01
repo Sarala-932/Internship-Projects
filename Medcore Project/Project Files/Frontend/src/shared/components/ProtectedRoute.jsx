@@ -5,8 +5,10 @@ export default function ProtectedRoute({ allowedRoles }) {
   const { user, token } = useSelector((state) => state.auth);
 
   if (!token || !user) {
-    // Not logged in, redirect to login page
-    return <Navigate to="/login" replace />;
+    const lastRole = localStorage.getItem("lastRole");
+    // If there was a last role and it wasn't patient, go to staff login. Otherwise patient login.
+    const redirectUrl = (lastRole && lastRole !== "patient") ? "/login?type=staff" : "/login?type=patient";
+    return <Navigate to={redirectUrl} replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
