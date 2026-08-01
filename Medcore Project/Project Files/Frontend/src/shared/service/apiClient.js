@@ -56,7 +56,7 @@ apiClient.interceptors.response.use(
 
       try {
         // Request a new access token using the HttpOnly refresh token
-        const refreshResponse = await axios.post("/api/auth/refresh", {}, { withCredentials: true });
+        const refreshResponse = await apiClient.post("/auth/refresh", {}, { withCredentials: true });
         
         // Update localStorage with the fresh token
         const newToken = refreshResponse.data?.accessToken;
