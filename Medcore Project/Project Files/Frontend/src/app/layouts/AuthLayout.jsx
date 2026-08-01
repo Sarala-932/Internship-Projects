@@ -30,8 +30,8 @@ export default function AuthLayout() {
 
       <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 transition-colors duration-300 relative z-10">
         {!['/verify-otp', '/forgot-password', '/reset-password'].includes(location.pathname) && (
-          <div className="mb-8 text-center flex flex-col items-center">
-            <div className={`w-12 h-12 rounded-full mb-4 flex items-center justify-center ${isStaff ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'}`}>
+          <div className="mb-5 text-center flex flex-col items-center">
+            <div className={`w-12 h-12 rounded-full mb-3 flex items-center justify-center ${isStaff ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'}`}>
               {location.pathname === '/register' ? <UserPlus className="w-6 h-6" /> : (isStaff ? <Stethoscope className="w-6 h-6" /> : <User className="w-6 h-6" />)}
             </div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
