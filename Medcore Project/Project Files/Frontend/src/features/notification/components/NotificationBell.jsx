@@ -41,7 +41,7 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative"
+        className="cursor-pointer p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
@@ -63,7 +63,7 @@ export default function NotificationBell() {
             {unreadCount > 0 && (
               <button 
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium flex items-center gap-1"
+                className="cursor-pointer text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium flex items-center gap-1"
               >
                 <Check className="w-3.5 h-3.5" /> Mark all read
               </button>
@@ -108,7 +108,7 @@ export default function NotificationBell() {
                           </Link>
                         )}
                         {!notif.isRead && (
-                          <button onClick={() => handleMarkAsRead(notif._id)} className="text-xs font-medium text-slate-500 hover:text-slate-700">
+                          <button onClick={() => handleMarkAsRead(notif._id)} className="cursor-pointer text-xs font-medium text-slate-500 hover:text-slate-700">
                             Mark read
                           </button>
                         )}
@@ -121,7 +121,7 @@ export default function NotificationBell() {
           </div>
           
           <div className="p-3 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 text-center">
-            <button className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+            <button className="cursor-pointer text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
               View All Notifications
             </button>
           </div>

@@ -49,7 +49,7 @@ export default function DoctorDashboard() {
         </div>
         <button 
           onClick={() => navigate('/doctor/appointments')}
-          className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/20"
+          className="cursor-pointer bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/20"
         >
           View Schedule
         </button>
@@ -101,7 +101,7 @@ export default function DoctorDashboard() {
             <Clock className="w-5 h-5 text-blue-500" />
             Today's Queue
           </h3>
-          <button onClick={refreshStats} className="text-slate-500 hover:text-blue-600 transition-colors" title="Refresh Dashboard">
+          <button onClick={refreshStats} className="cursor-pointer text-slate-500 hover:text-blue-600 transition-colors" title="Refresh Dashboard">
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
@@ -146,7 +146,7 @@ export default function DoctorDashboard() {
                       {getStatusBadge(apt.status)}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <a href={`/doctor/appointments/${apt._id}`} className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold text-xs transition-colors px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                      <a href={`/doctor/appointments/${apt._id}`} className="cursor-pointer text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold text-xs transition-colors px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                         View Details
                       </a>
                     </td>

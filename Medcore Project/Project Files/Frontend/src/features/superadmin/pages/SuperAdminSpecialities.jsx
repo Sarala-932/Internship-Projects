@@ -68,7 +68,7 @@ export default function SuperAdminSpecialities() {
           </div>
           <button 
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm"
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add New
@@ -127,7 +127,7 @@ export default function SuperAdminSpecialities() {
                   
                   <button 
                     onClick={() => handleToggleStatus(spec._id)}
-                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer"
                   >
                     {spec.isActive ? "Disable" : "Enable"}
                   </button>
@@ -144,7 +144,7 @@ export default function SuperAdminSpecialities() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add Speciality</h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-500 dark:hover:text-slate-300">
+              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-500 dark:hover:text-slate-300 cursor-pointer">
                 <AlertCircle className="w-5 h-5" />
               </button>
             </div>
@@ -177,14 +177,14 @@ export default function SuperAdminSpecialities() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+                  className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl disabled:opacity-70"
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl disabled:opacity-70 cursor-pointer"
                 >
                   {submitting && <RefreshCw className="w-4 h-4 animate-spin" />}
                   Save Speciality

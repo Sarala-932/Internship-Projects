@@ -64,7 +64,7 @@ export default function SuperAdminAuditLogs() {
           
           <button 
             onClick={() => fetchLogs(page)}
-            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -82,7 +82,7 @@ export default function SuperAdminAuditLogs() {
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />
             <span className="font-medium">{error}</span>
-            <button onClick={() => fetchLogs(page)} className="mt-2 text-sm text-blue-600 hover:underline">Try Again</button>
+            <button onClick={() => fetchLogs(page)} className="mt-2 text-sm text-blue-600 hover:underline cursor-pointer">Try Again</button>
           </div>
         ) : logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
@@ -163,14 +163,14 @@ export default function SuperAdminAuditLogs() {
               <button 
                 onClick={handlePrevPage} 
                 disabled={page === 1}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Previous
               </button>
               <button 
                 onClick={handleNextPage} 
                 disabled={page === totalPages}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Next
               </button>

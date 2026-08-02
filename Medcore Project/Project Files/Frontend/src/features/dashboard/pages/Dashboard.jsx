@@ -35,7 +35,7 @@ export default function Dashboard() {
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Recent Appointments</h3>
-            <button className="text-sm text-hospital-blue hover:underline">View All</button>
+            <button className="cursor-pointer text-sm text-hospital-blue hover:underline">View All</button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">

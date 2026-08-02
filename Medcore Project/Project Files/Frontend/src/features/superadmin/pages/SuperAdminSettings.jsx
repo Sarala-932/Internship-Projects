@@ -89,7 +89,7 @@ export default function SuperAdminSettings() {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center justify-center w-full gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-70"
+                className="inline-flex items-center justify-center w-full gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-70 cursor-pointer"
               >
                 {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
                 Update Password

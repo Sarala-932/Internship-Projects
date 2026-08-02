@@ -99,7 +99,7 @@ export default function SuperAdminLayout() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleDarkMode}
-              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -108,7 +108,7 @@ export default function SuperAdminLayout() {
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 dark:bg-slate-800 text-white font-semibold shadow-sm hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-600 transition-all"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 dark:bg-slate-800 text-white font-semibold shadow-sm hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-600 transition-all cursor-pointer"
               >
                 {(user?.firstName || "S")[0]}{(user?.lastName || "A")[0]}
               </button>
@@ -150,7 +150,7 @@ export default function SuperAdminLayout() {
                   <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
                     <button 
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer"
                     >
                       <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400">
                         <LogOut className="w-4 h-4" />

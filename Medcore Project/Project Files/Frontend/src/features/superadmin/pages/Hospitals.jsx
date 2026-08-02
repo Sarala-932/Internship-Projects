@@ -52,7 +52,7 @@ export default function Hospitals() {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-600/20"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Add Hospital
@@ -115,7 +115,7 @@ export default function Hospitals() {
                           <button
                             onClick={() => handleVerify(h._id)}
                             disabled={verifying === h._id}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer"
                           >
                             {verifying === h._id ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <ShieldCheck className="w-3.5 h-3.5" />}
                             {verifying === h._id ? "Verifying..." : "Verify"}
@@ -123,7 +123,7 @@ export default function Hospitals() {
                         ) : (
                           <button
                             onClick={() => setSelectedHospitalForAdmin(h)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg text-xs font-semibold transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             Assign Admin

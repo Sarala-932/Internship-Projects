@@ -22,7 +22,7 @@ export default function AuthLayout() {
         
         <button 
           onClick={toggleDarkMode} 
-          className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors absolute right-6 top-6"
+          className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors absolute right-6 top-6 cursor-pointer"
         >
           {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>

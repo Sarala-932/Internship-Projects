@@ -92,13 +92,13 @@ export default function PatientRecords() {
                   href={order.tests.find((t) => t.result?.reportUrl).result.reportUrl} 
                   target="_blank" 
                   rel="noreferrer"
-                  className="w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-colors"
+                  className="w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   Download PDF
                 </a>
               ) : (
-                <button disabled className="w-full py-2 bg-slate-50 dark:bg-slate-800 text-slate-400 text-sm font-medium rounded-lg flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 cursor-not-allowed">
+                <button disabled className="w-full py-2 bg-slate-50 dark:bg-slate-800 text-slate-400 text-sm font-medium rounded-lg flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 cursor-not-allowed cursor-pointer">
                   No PDF Available
                 </button>
               )}

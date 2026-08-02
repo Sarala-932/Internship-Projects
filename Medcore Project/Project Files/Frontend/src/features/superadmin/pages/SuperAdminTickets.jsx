@@ -52,7 +52,7 @@ export default function SuperAdminTickets() {
           
           <button 
             onClick={fetchTickets}
-            className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -124,7 +124,7 @@ export default function SuperAdminTickets() {
                     {ticket.status !== 'open' && (
                       <button 
                         onClick={() => handleUpdateStatus(ticket._id, 'open')}
-                        className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
                       >
                         Re-open
                       </button>
@@ -132,7 +132,7 @@ export default function SuperAdminTickets() {
                     {ticket.status !== 'in_progress' && ticket.status !== 'resolved' && (
                       <button 
                         onClick={() => handleUpdateStatus(ticket._id, 'in_progress')}
-                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/40"
+                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 cursor-pointer"
                       >
                         Start Progress
                       </button>
@@ -140,7 +140,7 @@ export default function SuperAdminTickets() {
                     {ticket.status !== 'resolved' && (
                       <button 
                         onClick={() => handleUpdateStatus(ticket._id, 'resolved')}
-                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40"
+                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 cursor-pointer"
                       >
                         Mark Resolved
                       </button>

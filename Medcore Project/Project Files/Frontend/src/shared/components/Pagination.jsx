@@ -41,7 +41,7 @@ export default function Pagination({ meta, onPageChange }) {
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
-          className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -55,7 +55,7 @@ export default function Pagination({ meta, onPageChange }) {
                 key={p}
                 onClick={() => onPageChange(p)}
                 className={clsx(
-                  "px-3.5 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                  "px-3.5 py-1.5 text-sm font-medium rounded-lg transition-colors cursor-pointer",
                   p === page
                     ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20"
                     : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
@@ -70,7 +70,7 @@ export default function Pagination({ meta, onPageChange }) {
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages}
-          className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           <ChevronRight className="w-4 h-4" />
         </button>

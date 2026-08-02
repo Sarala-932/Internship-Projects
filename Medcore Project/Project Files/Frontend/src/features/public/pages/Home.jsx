@@ -64,19 +64,19 @@ export default function Home() {
                         <nav className="hidden md:flex gap-6 text-sm font-medium">
                             <a
                                 href="#services"
-                                className="text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
+                                className="text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors cursor-pointer"
                             >
                                 Services
                             </a>
                             <a
                                 href="#about"
-                                className="text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
+                                className="text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors cursor-pointer"
                             >
                                 About Us
                             </a>
                             <a
                                 href="#contact"
-                                className="text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
+                                className="text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors cursor-pointer"
                             >
                                 Contact
                             </a>
@@ -84,7 +84,7 @@ export default function Home() {
                         <div className="flex items-center gap-4 text-sm font-medium">
                             <button
                                 onClick={toggleDarkMode}
-                                className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 aria-label="Toggle Dark Mode"
                             >
                                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -308,7 +308,7 @@ export default function Home() {
                                 <li>
                                     <a
                                         href="#"
-                                        className="hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
+                                        className="hover:text-hospital-blue dark:hover:text-blue-400 transition-colors cursor-pointer"
                                     >
                                         Home
                                     </a>
@@ -316,7 +316,7 @@ export default function Home() {
                                 <li>
                                     <a
                                         href="#services"
-                                        className="hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
+                                        className="hover:text-hospital-blue dark:hover:text-blue-400 transition-colors cursor-pointer"
                                     >
                                         Our Services
                                     </a>
@@ -324,7 +324,7 @@ export default function Home() {
                                 <li>
                                     <a
                                         href="#about"
-                                        className="hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
+                                        className="hover:text-hospital-blue dark:hover:text-blue-400 transition-colors cursor-pointer"
                                     >
                                         About Us
                                     </a>
@@ -362,10 +362,10 @@ export default function Home() {
                     <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
                         <p>&copy; {new Date().getFullYear()} MedCore Hospital. All rights reserved.</p>
                         <div className="flex gap-4 mt-4 md:mt-0">
-                            <a href="#" className="hover:text-white transition-colors">
+                            <a href="#" className="hover:text-white transition-colors cursor-pointer">
                                 Privacy Policy
                             </a>
-                            <a href="#" className="hover:text-white transition-colors">
+                            <a href="#" className="hover:text-white transition-colors cursor-pointer">
                                 Terms of Service
                             </a>
                         </div>

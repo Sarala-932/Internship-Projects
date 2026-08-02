@@ -173,7 +173,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
                     </h2>
                     <button
                         onClick={onClose}
-                        className="p-1.5 bg-blue-700 hover:bg-blue-800 rounded-lg transition-colors"
+                        className="p-1.5 bg-blue-700 hover:bg-blue-800 rounded-lg transition-colors cursor-pointer"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -487,7 +487,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg transition-colors"
+                        className="px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg transition-colors cursor-pointer"
                     >
                         Cancel
                     </button>
@@ -495,7 +495,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
                         form="desk-booking-form"
                         type="submit"
                         disabled={loading}
-                        className="flex items-center justify-center gap-2 px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg disabled:opacity-70 transition-colors shadow-md"
+                        className="flex items-center justify-center gap-2 px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg disabled:opacity-70 transition-colors shadow-md cursor-pointer"
                     >
                         {loading ? (
                             <RefreshCw className="w-4 h-4 animate-spin" />

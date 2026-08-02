@@ -62,7 +62,7 @@ export default function DoctorPatients() {
           </div>
           <button 
             onClick={refreshPatients}
-            className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
+            className="cursor-pointer p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -120,7 +120,7 @@ export default function DoctorPatients() {
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-700 mt-auto flex gap-2">
                   <button 
                     onClick={() => handleOpenHistory(patient)}
-                    className="flex-1 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 border border-indigo-100 dark:border-indigo-800 rounded-lg text-sm font-semibold text-indigo-700 dark:text-indigo-400 transition-colors flex items-center justify-center gap-1.5"
+                    className="cursor-pointer flex-1 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 border border-indigo-100 dark:border-indigo-800 rounded-lg text-sm font-semibold text-indigo-700 dark:text-indigo-400 transition-colors flex items-center justify-center gap-1.5"
                   >
                     <FileText className="w-4 h-4" /> View History
                   </button>

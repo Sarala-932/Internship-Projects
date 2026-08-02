@@ -50,7 +50,7 @@ export default function CreateStaffModal({isOpen, onClose, onSuccess, hospitalId
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-lg transition-colors"
+                        className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-lg transition-colors cursor-pointer"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -131,14 +131,14 @@ export default function CreateStaffModal({isOpen, onClose, onSuccess, hospitalId
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                            className="flex-1 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={creating}
-                            className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-all disabled:opacity-70 flex items-center justify-center gap-2 cursor-pointer"
                         >
                             {creating ? (
                                 <RefreshCw className="w-4 h-4 animate-spin" />

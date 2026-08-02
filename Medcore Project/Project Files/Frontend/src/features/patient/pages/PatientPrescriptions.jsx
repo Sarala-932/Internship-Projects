@@ -94,7 +94,7 @@ export default function PatientPrescriptions() {
                   <button 
                     onClick={() => handlePreview(presc._id)}
                     disabled={downloadingId === presc._id}
-                    className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {downloadingId === presc._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
                     {downloadingId === presc._id ? 'Loading...' : 'Preview / Print'}
@@ -140,7 +140,7 @@ export default function PatientPrescriptions() {
               <h3 className="font-bold text-lg text-slate-900 dark:text-white">Prescription Preview</h3>
               <button 
                 onClick={closePreview}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full text-slate-500 transition-colors"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full text-slate-500 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

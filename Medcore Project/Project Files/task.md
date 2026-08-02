@@ -1,0 +1,3 @@
+- [x] Scan all .jsx files in `Frontend/src/app` and `Frontend/src/shared` for interactive elements and add `cursor-pointer` to their classNames.
+- [x] Scan all .jsx files in `Frontend/src/features/patient`, `Frontend/src/features/public` and `Frontend/src/features/superadmin` for interactive elements and add `cursor-pointer` to their classNames.
+- [ ] Scan all .jsx files in `Frontend/src/features/admin`, `auth`, and `billing` for interactive elements and add `cursor-pointer`. (Partially completed due to tool limits and prompt timeout).

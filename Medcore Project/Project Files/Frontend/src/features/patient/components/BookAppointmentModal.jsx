@@ -186,7 +186,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">Book Appointment</h2>
-          <button onClick={onClose} className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
+          <button onClick={onClose} className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -250,7 +250,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
                     <button
                       onClick={handleStep1Next}
                       disabled={!formData.departmentId}
-                      className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded-xl transition-all"
+                      className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded-xl transition-all cursor-pointer"
                     >
                       Next Step
                     </button>
@@ -265,7 +265,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Select Doctor</h3>
-                <button onClick={() => setStep(1)} className="text-sm text-blue-600 font-medium">Back</button>
+                <button onClick={() => setStep(1)} className="text-sm text-blue-600 font-medium cursor-pointer">Back</button>
               </div>
               {doctors.length === 0 && !loading && (
                 <p className="text-slate-500">No doctors available in {formData.departmentName}.</p>
@@ -277,7 +277,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
                   <button
                     key={doc._id}
                     onClick={() => handleDoctorSelect(doc)}
-                    className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-slate-200 dark:border-slate-700 rounded-xl transition-all text-left group"
+                    className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-slate-200 dark:border-slate-700 rounded-xl transition-all text-left group cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg">
@@ -300,7 +300,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Select Date & Time</h3>
-                <button onClick={() => setStep(2)} className="text-sm text-blue-600 font-medium">Back</button>
+                <button onClick={() => setStep(2)} className="text-sm text-blue-600 font-medium cursor-pointer">Back</button>
               </div>
 
               {doctorSchedule && (
@@ -330,7 +330,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
                       <button
                         key={i}
                         onClick={() => handleTimeSelect(time)}
-                        className="py-2 px-3 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors dark:text-slate-300"
+                        className="py-2 px-3 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors dark:text-slate-300 cursor-pointer"
                       >
                         {time}
                       </button>
@@ -348,7 +348,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Confirm Details</h3>
-                <button onClick={() => setStep(3)} className="text-sm text-blue-600 font-medium">Back</button>
+                <button onClick={() => setStep(3)} className="text-sm text-blue-600 font-medium cursor-pointer">Back</button>
               </div>
 
               <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-100 dark:border-blue-800/50 space-y-3">
@@ -384,7 +384,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all disabled:opacity-70 flex justify-center"
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all disabled:opacity-70 flex justify-center cursor-pointer"
               >
                 {loading ? "Booking..." : "Confirm & Book Appointment"}
               </button>

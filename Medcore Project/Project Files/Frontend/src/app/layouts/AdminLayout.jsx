@@ -83,7 +83,7 @@ export default function AdminLayout() {
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" />
+                <Icon className="w-5 h-5 shrink-0" />
                 {link.label}
                 {isActive && <ChevronRight className="w-4 h-4 ml-auto text-hospital-blue dark:text-blue-400" />}
               </Link>
@@ -103,7 +103,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleDarkMode}
-              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -114,7 +114,7 @@ export default function AdminLayout() {
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white font-bold shadow-sm hover:ring-2 hover:ring-indigo-300 dark:hover:ring-indigo-700 transition-all"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white font-bold shadow-sm hover:ring-2 hover:ring-indigo-300 dark:hover:ring-indigo-700 transition-all cursor-pointer"
               >
                 {(user?.firstName || "A")[0]}{(user?.lastName || "A")[0]}
               </button>
@@ -156,7 +156,7 @@ export default function AdminLayout() {
                   <div className="px-2 pt-2 border-t border-slate-100 dark:border-slate-700">
                     <button 
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
                     >
                       <LogOut className="w-4 h-4" /> Sign Out
                     </button>

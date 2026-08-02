@@ -84,14 +84,14 @@ export default function AdminAppointments() {
         <div className="flex items-center gap-3">
           <button 
             onClick={fetchData}
-            className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
+            className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowModal(true)}
-            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 w-full sm:w-auto rounded-xl text-sm font-semibold transition-all shadow-sm"
+            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 w-full sm:w-auto rounded-xl text-sm font-semibold transition-all shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Book Appointment
@@ -114,7 +114,7 @@ export default function AdminAppointments() {
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
             <Calendar className="w-14 h-14 mb-4 text-slate-300 dark:text-slate-600" />
             <p className="font-medium text-slate-600 dark:text-slate-300">No upcoming appointments.</p>
-            <button onClick={() => setShowModal(true)} className="mt-4 text-sm text-indigo-600 font-semibold hover:underline">
+            <button onClick={() => setShowModal(true)} className="mt-4 text-sm text-indigo-600 font-semibold hover:underline cursor-pointer">
               Book the first appointment
             </button>
           </div>
@@ -181,7 +181,7 @@ export default function AdminAppointments() {
                     <td className="px-6 py-4 text-right">
                       <button 
                         onClick={() => setSelectedAppointment(appt)}
-                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold text-xs transition-colors"
+                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold text-xs transition-colors cursor-pointer"
                       >
                         Details
                       </button>
@@ -213,7 +213,7 @@ export default function AdminAppointments() {
               <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 Appointment Details
               </h3>
-              <button onClick={() => setSelectedAppointment(null)} className="text-slate-400 hover:text-slate-500">
+              <button onClick={() => setSelectedAppointment(null)} className="text-slate-400 hover:text-slate-500 cursor-pointer">
                 <AlertCircle className="w-5 h-5" />
               </button>
             </div>
@@ -267,7 +267,7 @@ export default function AdminAppointments() {
               <p className="text-xs text-slate-500">Booked on {new Date(selectedAppointment.createdAt).toLocaleDateString()}</p>
               <button 
                 onClick={() => setSelectedAppointment(null)}
-                className="px-5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-sm font-medium rounded-xl transition-colors"
+                className="px-5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-sm font-medium rounded-xl transition-colors cursor-pointer"
               >
                 Close
               </button>

@@ -37,7 +37,7 @@ export default function CancelAppointmentModal({ isOpen, onClose, appointment, o
           </div>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-full transition-colors text-slate-500 dark:text-slate-400"
+            className="p-2 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-full transition-colors text-slate-500 dark:text-slate-400 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -68,14 +68,14 @@ export default function CancelAppointmentModal({ isOpen, onClose, appointment, o
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors disabled:opacity-50"
+            className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
           >
             Keep Appointment
           </button>
           <button
             onClick={handleCancel}
             disabled={loading || !reason.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

@@ -79,7 +79,7 @@ export default function SuperAdminUsers() {
           
           <button 
             onClick={fetchUsers}
-            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -97,7 +97,7 @@ export default function SuperAdminUsers() {
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />
             <span className="font-medium">{error}</span>
-            <button onClick={fetchUsers} className="mt-2 text-sm text-blue-600 hover:underline">Try Again</button>
+            <button onClick={fetchUsers} className="mt-2 text-sm text-blue-600 hover:underline cursor-pointer">Try Again</button>
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
@@ -167,7 +167,7 @@ export default function SuperAdminUsers() {
                       {user.role !== "super_admin" && (
                         <button
                           onClick={() => handleToggleStatus(user._id)}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                             user.isActive 
                               ? "bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400"
                               : "bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 dark:text-emerald-400"

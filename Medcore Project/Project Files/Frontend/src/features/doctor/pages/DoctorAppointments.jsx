@@ -72,7 +72,7 @@ export default function DoctorAppointments() {
           {filterDate && (
             <button
               onClick={() => setFilterDate('')}
-              className="text-sm font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mr-2"
+              className="cursor-pointer text-sm font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mr-2"
               title="Clear date filter to see all appointments"
             >
               Clear
@@ -80,7 +80,7 @@ export default function DoctorAppointments() {
           )}
           <button 
             onClick={refreshAppointments}
-            className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
+            className="cursor-pointer p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -151,14 +151,14 @@ export default function DoctorAppointments() {
                       {apt.status === "scheduled" || apt.status === "checked_in" ? (
                         <button 
                           onClick={() => handleStatusChange(apt._id, "in_consultation")}
-                          className="flex items-center justify-end gap-1.5 w-full text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold text-xs transition-colors"
+                          className="cursor-pointer flex items-center justify-end gap-1.5 w-full text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold text-xs transition-colors"
                         >
                           <PlayCircle className="w-4 h-4" /> Start Consult
                         </button>
                       ) : apt.status === "in_consultation" ? (
                         <button 
                           onClick={() => navigate(`/doctor/appointments/${apt._id}`)}
-                          className="flex items-center justify-end gap-1.5 w-full text-purple-600 hover:text-purple-700 dark:text-purple-400 font-semibold text-xs transition-colors"
+                          className="cursor-pointer flex items-center justify-end gap-1.5 w-full text-purple-600 hover:text-purple-700 dark:text-purple-400 font-semibold text-xs transition-colors"
                         >
                           Open Encounter
                         </button>
@@ -166,13 +166,13 @@ export default function DoctorAppointments() {
                         <div className="flex flex-col items-end gap-2">
                           <button 
                             onClick={() => navigate(`/doctor/appointments/${apt._id}`)}
-                            className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium text-xs transition-colors"
+                            className="cursor-pointer text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium text-xs transition-colors"
                           >
                             View Encounter
                           </button>
                           <button 
                             onClick={() => handleOpenHistory(apt.patientId)}
-                            className="text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 font-medium text-xs transition-colors flex items-center gap-1"
+                            className="cursor-pointer text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 font-medium text-xs transition-colors flex items-center gap-1"
                           >
                             <CalendarDays className="w-3.5 h-3.5" /> History
                           </button>
