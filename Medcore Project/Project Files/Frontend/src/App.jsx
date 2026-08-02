@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { RouterProvider } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { router } from "./app/app.routes";
+import { router } from "./app/routes/AppRoutes";
 import { useSocket } from "./features/notification/hook/useSocket";
 import { useNotifications } from "./features/notification/hook/useNotifications";
 
