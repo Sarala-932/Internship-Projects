@@ -10,8 +10,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:8000',
-        description: 'Development Server',
+        url: process.env.RENDER_EXTERNAL_URL || 'http://localhost:8000',
+        description: 'MedCore API Server',
       },
     ],
     components: {
