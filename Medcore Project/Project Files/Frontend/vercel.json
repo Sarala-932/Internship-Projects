@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:match*",
-      "destination": "https://medcore-hms.duckdns.org/api/:match*"
+      "destination": "https://medcore-backend-iftk.onrender.com/api/:match*"
     },
     {
       "source": "/socket.io/:match*",
-      "destination": "https://medcore-hms.duckdns.org/socket.io/:match*"
+      "destination": "https://medcore-backend-iftk.onrender.com/socket.io/:match*"
     },
     {
       "source": "/(.*)",
