@@ -17,7 +17,7 @@
 **MedCore HMS** is a robust, full-stack healthcare platform designed to digitize and streamline hospital operations. Built as a scalable, cloud-deployed SaaS, it manages everything from patient registrations and doctor encounters to complex pharmacy inventory, laboratory workflows, and billing operations.
 
 🌐 **Live Demo (Frontend):** [https://medcore-hms-theta.vercel.app/](https://medcore-hms-theta.vercel.app/)
-⚙️ **Live API Docs (Swagger):** [https://medcore-hms.duckdns.org/api-docs/](https://medcore-hms.duckdns.org/api-docs/)
+⚙️ **Live API Docs (Swagger):** [https://medcore-backend-iftk.onrender.com/api-docs/](https://medcore-backend-iftk.onrender.com/api-docs/)
 
 *(Note: Use `admin@cityhospital.com` / `Admin@1234` for Admin Portal, or `aarav.test@example.com` / `Patient@123` for Patient Portal).*
 
@@ -42,11 +42,10 @@
 - **Payment Gateway:** Razorpay Integration
 
 ### DevOps & Cloud Infrastructure
-- **Server:** AWS EC2 (Ubuntu Linux)
-- **Containerization:** Docker & Docker Compose
-- **Web Server/Proxy:** NGINX
-- **Security:** Let's Encrypt SSL/TLS Certificates, HSTS (Strict-Transport-Security)
-- **Domain Management:** DuckDNS
+- **Frontend Hosting:** Vercel Global Edge Network
+- **Backend Hosting:** Render Cloud Platform
+- **Security:** Managed SSL/TLS Certificates, HSTS (Strict-Transport-Security)
+- **Deployment:** Continuous Integration/Continuous Deployment (CI/CD) via GitHub
 
 ---
 
@@ -62,7 +61,7 @@ Designed to support multiple hospitals on a single platform. The `Super Admin` m
 ### 3. Advanced Security Posture
 - **Cross-Origin Authentication:** Implemented a secure authentication flow handling strict `SameSite=None; Secure` cookies across different hosting domains (Vercel Frontend & AWS Backend). Added an `Authorization` header fallback for robust session persistence.
 - **Data Protection:** Passwords securely hashed via `bcrypt`. 
-- **Network Security:** NGINX reverse proxy acting as an SSL termination endpoint on AWS, protecting internal Docker networks from direct exposure.
+- **Network Security:** Vercel and Render native Edge networks providing automatic SSL termination, DDoS protection, and secure routing without exposing internal ports.
 
 ### 4. Real-Time Capabilities
 Integrated **Socket.IO** for real-time WebSocket communication, powering instant notifications, live appointment tracking, and real-time dashboard updates without polling overhead.
@@ -112,14 +111,7 @@ npm install
 npm run dev
 ```
 
-### 3. Docker Deployment (Production)
-The entire backend ecosystem is containerized for seamless cloud deployment.
-```bash
-cd Backend
-docker compose up -d --build
-```
 
----
 
 ## 📝 API Documentation
 Fully documented REST APIs available via Swagger UI. Once the backend is running locally, access it at:
