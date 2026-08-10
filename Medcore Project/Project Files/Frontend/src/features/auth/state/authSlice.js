@@ -14,7 +14,7 @@ const getUserFromStorage = () => {
 const initialState = {
   user: getUserFromStorage(),
   token: localStorage.getItem("token") || null,
-  status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: "idle",
   error: null,
 };
 

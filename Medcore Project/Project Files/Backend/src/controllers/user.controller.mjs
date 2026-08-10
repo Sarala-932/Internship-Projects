@@ -16,9 +16,9 @@ export async function register(req, res) {
     try {
         const user = await registerUserService(req.body);
 
-        await issueOtp(user.email, user.firstName);
+        const otpResponse = await issueOtp(user.email, user.firstName);
 
-        return res.status(201).json({
+        const responseObj = {
             message: "Account created. Check your email for the OTP.",
             userId: user._id,
             firstName: user.firstName,
@@ -26,7 +26,13 @@ export async function register(req, res) {
             email: user.email,
             role: user.role,
             phone: user.phone,
-        });
+        };
+
+        if (otpResponse.sendResult && otpResponse.sendResult.success === false) {
+             responseObj.demoOtp = otpResponse.code;
+        }
+
+        return res.status(201).json(responseObj);
     } catch (err) {
         console.error("Register error:", err);
         return res.status(err.status || 500).json({message: err.message || "Registration failed"});
@@ -73,8 +79,13 @@ export async function forgotPassword(req, res) {
         // Always return success to prevent email enumeration
         if (!user) return res.json({message: "If this email exists, a reset code has been sent."});
 
-        await issueOtp(user.email, user.firstName, "password_reset");
-        return res.json({message: "If this email exists, a reset code has been sent."});
+        const otpResponse = await issueOtp(user.email, user.firstName, "password_reset");
+        
+        const responseObj = {message: "If this email exists, a reset code has been sent."};
+        if (otpResponse.sendResult && otpResponse.sendResult.success === false) {
+             responseObj.demoOtp = otpResponse.code;
+        }
+        return res.json(responseObj);
     } catch (err) {
         console.error("forgotPassword error:", err);
         return res.status(500).json({message: "Server error"});

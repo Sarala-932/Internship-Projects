@@ -17,7 +17,8 @@ export async function issueOtp(email, firstName, purpose = "signup") {
         expiresAt: getOtpExpiry(),
     });
 
-    await sendOtpEmail({to: email, name: firstName, otp: code});
+    const sendResult = await sendOtpEmail({to: email, name: firstName, otp: code});
+    return { code, sendResult };
 }
 
 export async function verifyOtp(req, res) {
@@ -88,8 +89,13 @@ export async function resendOtp(req, res) {
         if (!email) return res.status(400).json({message: "Email required"});
 
         const user = await User.findOne({email: String(email).toLowerCase()});
-        if (user && !user.isEmailVerified) {
-            await issueOtp(user.email, user.firstName, purpose);
+        if (user) {
+            const otpResponse = await issueOtp(user.email, user.firstName, purpose);
+            const responseObj = {message: "If the email exists, an OTP was sent."};
+            if (otpResponse.sendResult && otpResponse.sendResult.success === false) {
+                 responseObj.demoOtp = otpResponse.code;
+            }
+            return res.json(responseObj);
         }
         return res.json({message: "If the email exists, an OTP was sent."});
     } catch (err) {

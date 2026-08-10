@@ -36,8 +36,14 @@ export const useAuth = () => {
   const handleRegister = async (userData) => {
     try {
       setLoading(true);
-      await authService.register(userData);
-      toast.success('Registration successful. Please verify your email.');
+      const response = await authService.register(userData);
+      
+      if (response.demoOtp) {
+          toast.success(`Demo Mode: Your OTP is ${response.demoOtp}`, { duration: 10000 });
+      } else {
+          toast.success('Registration successful. Please verify your email.');
+      }
+      
       navigate(`/verify-otp?email=${encodeURIComponent(userData.email)}`);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed');
@@ -94,8 +100,13 @@ export const useAuth = () => {
   const handleResendOtp = async (email) => {
     try {
       setLoading(true);
-      await authService.resendOtp(email);
-      toast.success('A new OTP has been sent to your email.');
+      const response = await authService.resendOtp(email);
+      
+      if (response.demoOtp) {
+          toast.success(`Demo Mode: Your new OTP is ${response.demoOtp}`, { duration: 10000 });
+      } else {
+          toast.success(response.message || 'OTP resent successfully');
+      }
       return true;
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to resend OTP');
