@@ -15,6 +15,7 @@ export const config = {
     mailPass: process.env.MAIL_PASS,
     mailUser: process.env.MAIL_USER,
     mailFrom: process.env.MAIL_FROM,
+    resendApiKey: process.env.RESEND_API_KEY,
     razorpayKeyId: process.env.RAZORPAY_KEY_ID,
     razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET,
     cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
