@@ -5,6 +5,22 @@ if (!process.env.MONGO_URI) {
     throw new Error("MONGO_URI is not defined in environment variables");
 }
 
+if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+}
+
+if (!process.env.JWT_REFRESH_SECRET) {
+    throw new Error("JWT_REFRESH_SECRET is not defined in environment variables");
+}
+
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    throw new Error("Razorpay credentials (RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET) are missing");
+}
+
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    throw new Error("Cloudinary credentials are not fully defined in environment variables");
+}
+
 export const config = {
     MONGO_URI: process.env.MONGO_URI,
     PORT: process.env.PORT || 5000,
