@@ -12,7 +12,7 @@ export const uploadPdfBufferToCloudinary = (buffer, filename) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        resource_type: "auto", // Cloudinary automatically detects PDFs
+        resource_type: "raw", // Must be raw for PDFs to serve correctly in browser
         folder: "medcore/lab_reports",
         public_id: filename
       },
