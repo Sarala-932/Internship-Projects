@@ -105,8 +105,8 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
             // Generate PDF Buffer
             const pdfBuffer = await generateLabReportPdfBuffer(populatedOrder, patient, hospital);
             
-            // Upload to Cloudinary (Cloudinary auto adds .pdf for pdfs when resource_type is auto)
-            const filename = `LAB_${populatedOrder.orderNumber}_${Date.now()}`;
+            // Upload to Cloudinary
+            const filename = `LAB_${populatedOrder.orderNumber}_${Date.now()}.pdf`;
             const uploadResult = await uploadPdfBufferToCloudinary(pdfBuffer, filename);
             const pdfUrl = uploadResult.secure_url;
 
