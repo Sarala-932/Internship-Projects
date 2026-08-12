@@ -116,19 +116,24 @@ export default function Login() {
 
         <div className="mt-6 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
           <p className="font-semibold text-slate-600 dark:text-slate-300 mb-2">Demo Login Credentials:</p>
-          <div className="grid grid-cols-2 gap-2 leading-relaxed">
-            <div>
-              <span className="block font-medium text-slate-700 dark:text-slate-200">Admin:</span>
-              admin@cityhospital.com<br/>Admin@1234
-            </div>
-            <div>
-              <span className="block font-medium text-slate-700 dark:text-slate-200">Doctor:</span>
-              doctor1@cityhospital.com<br/>Doctor@123
-            </div>
-            <div className="col-span-2">
-              <span className="block font-medium text-slate-700 dark:text-slate-200">Patient:</span>
-              aarav.test@example.com<br/>Patient@123
-            </div>
+          <div className={`grid ${isStaff ? 'grid-cols-2' : 'grid-cols-1'} gap-2 leading-relaxed`}>
+            {isStaff ? (
+              <>
+                <div>
+                  <span className="block font-medium text-slate-700 dark:text-slate-200">Admin:</span>
+                  admin@cityhospital.com<br/>Admin@1234
+                </div>
+                <div>
+                  <span className="block font-medium text-slate-700 dark:text-slate-200">Doctor:</span>
+                  doctor1@cityhospital.com<br/>Doctor@123
+                </div>
+              </>
+            ) : (
+              <div>
+                <span className="block font-medium text-slate-700 dark:text-slate-200">Patient:</span>
+                aarav.test@example.com<br/>Patient@123
+              </div>
+            )}
           </div>
         </div>
       </form>
