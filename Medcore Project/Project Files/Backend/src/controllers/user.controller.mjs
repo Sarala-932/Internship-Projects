@@ -42,9 +42,17 @@ export async function register(req, res) {
 // POST /api/auth/login
 export async function login(req, res) {
     try {
-        const {email, password} = req.body;
+        const {email, password, type} = req.body;
 
         const {user, accessToken, refreshToken} = await loginUserService(email, password);
+
+        // Role-based portal validation
+        if (type === "staff" && user.role === "patient") {
+            return res.status(403).json({message: "Unauthorized. Please use the Patient Portal."});
+        }
+        if (type === "patient" && user.role !== "patient") {
+            return res.status(403).json({message: "Unauthorized. Staff members must use the Staff Portal."});
+        }
 
         // Set secure cookies
         res.cookie("accessToken", accessToken, accessCookieOpts);

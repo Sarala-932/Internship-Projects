@@ -20,7 +20,7 @@ export default function Login() {
       toast.error("Please fill in all fields");
       return;
     }
-    await handleLogin({ email, password });
+    await handleLogin({ email, password, type });
   };
 
   return (
