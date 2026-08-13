@@ -7,6 +7,7 @@ export const useIPD = () => {
   const [loading, setLoading] = useState(true);
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
   
   const [admitting, setAdmitting] = useState(false);
   const [dischargingBedId, setDischargingBedId] = useState(null);
@@ -21,6 +22,15 @@ export const useIPD = () => {
       toast.error("Failed to load wards.");
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  const fetchPendingRequests = useCallback(async () => {
+    try {
+      const data = await ipdService.getPendingRequests();
+      setPendingRequests(data);
+    } catch (err) {
+      console.error("Failed to fetch pending requests", err);
     }
   }, []);
 
@@ -39,8 +49,9 @@ export const useIPD = () => {
 
   useEffect(() => {
     fetchWards();
+    fetchPendingRequests();
     fetchDropdownData();
-  }, [fetchWards, fetchDropdownData]);
+  }, [fetchWards, fetchPendingRequests, fetchDropdownData]);
 
   const admitPatient = async (admitForm) => {
     try {
@@ -48,6 +59,7 @@ export const useIPD = () => {
       await ipdService.admitPatient(admitForm);
       toast.success("Patient admitted successfully!");
       fetchWards();
+      fetchPendingRequests();
       return true;
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to admit patient");
@@ -60,8 +72,8 @@ export const useIPD = () => {
   const dischargePatient = async (bedId, admissionId, summary = "Discharged from Admin Portal") => {
     try {
       setDischargingBedId(bedId);
-      await ipdService.dischargePatient(admissionId, summary);
-      toast.success("Patient discharged successfully!");
+      const response = await ipdService.dischargePatient(admissionId, summary);
+      toast.success(response.message || "Patient discharged successfully!");
       fetchWards();
       return true;
     } catch (err) {
@@ -77,10 +89,12 @@ export const useIPD = () => {
     loading,
     patients,
     doctors,
+    pendingRequests,
     admitting,
     dischargingBedId,
     admitPatient,
     dischargePatient,
-    refreshWards: fetchWards
+    refreshWards: fetchWards,
+    refreshRequests: fetchPendingRequests
   };
 };

@@ -24,5 +24,10 @@ export const ipdService = {
   dischargePatient: async (admissionId, dischargeSummary) => {
     const { data } = await apiClient.post(`/ipd/discharge/${admissionId}`, { dischargeSummary });
     return data;
+  },
+
+  getPendingRequests: async () => {
+    const { data } = await apiClient.get("/ipd/requests/pending");
+    return data.requests || [];
   }
 };

@@ -33,6 +33,35 @@ export default function DoctorEncounter() {
   // Encounter metadata
   const [isCompleted, setIsCompleted] = useState(false);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  
+  // Admission Request State
+  const [admissionModalOpen, setAdmissionModalOpen] = useState(false);
+  const [admissionReason, setAdmissionReason] = useState("");
+  const [wardTypeRequested, setWardTypeRequested] = useState("General");
+  const [admissionPriority, setAdmissionPriority] = useState("Normal");
+
+  const handleRequestAdmission = async (e) => {
+    e.preventDefault();
+    if (!admissionReason) {
+      toast.error("Reason for admission is required");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      await doctorService.requestIPDAdmission({
+        patientId: appointment.patientId._id,
+        wardTypeRequested,
+        reasonForAdmission: admissionReason,
+        priority: admissionPriority
+      });
+      toast.success("Admission request submitted to admin!");
+      setAdmissionModalOpen(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to request admission");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -258,22 +287,34 @@ export default function DoctorEncounter() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-10">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <button 
-          onClick={() => navigate(-1)}
-          className="cursor-pointer p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-        </button>
-        <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <ClipboardPlus className="w-6 h-6 text-purple-500" />
-            Clinical Encounter
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            {new Date(appointment.scheduledAt).toLocaleDateString()} at {new Date(appointment.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => navigate(-1)}
+            className="cursor-pointer p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+          </button>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <ClipboardPlus className="w-6 h-6 text-purple-500" />
+              Clinical Encounter
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              {new Date(appointment.scheduledAt).toLocaleDateString()} at {new Date(appointment.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </p>
+          </div>
         </div>
+        
+        {!isCompleted && (
+          <button 
+            onClick={() => setAdmissionModalOpen(true)}
+            className="cursor-pointer px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 dark:text-orange-400 border border-orange-200 dark:border-orange-800/50 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm"
+          >
+            <Activity className="w-4 h-4" />
+            Request IPD Admission
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -566,6 +607,86 @@ export default function DoctorEncounter() {
         patientId={appointment.patientId?._id}
         patientName={`${appointment.patientId?.firstName} ${appointment.patientId?.lastName}`}
       />
+
+      {/* Request IPD Admission Modal */}
+      {admissionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Activity className="w-5 h-5 text-orange-500" />
+                Request IPD Admission
+              </h3>
+              <button 
+                onClick={() => setAdmissionModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:shadow-md transition-all"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <form onSubmit={handleRequestAdmission} className="p-6 space-y-5">
+              <div>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Ward Type Requested</label>
+                <select 
+                  value={wardTypeRequested} 
+                  onChange={(e) => setWardTypeRequested(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none appearance-none"
+                >
+                  <option value="General">General Ward</option>
+                  <option value="ICU">ICU (Intensive Care Unit)</option>
+                  <option value="Maternity">Maternity</option>
+                  <option value="Pediatric">Pediatric</option>
+                  <option value="Emergency">Emergency</option>
+                  <option value="Private">Private Room</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Priority</label>
+                <select 
+                  value={admissionPriority} 
+                  onChange={(e) => setAdmissionPriority(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none appearance-none"
+                >
+                  <option value="Normal">Normal</option>
+                  <option value="High">High</option>
+                  <option value="Critical">Critical</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Reason for Admission *</label>
+                <textarea 
+                  rows="3" 
+                  value={admissionReason} 
+                  onChange={(e) => setAdmissionReason(e.target.value)}
+                  required
+                  placeholder="E.g., Severe dengue fever, continuous monitoring required..."
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none resize-none"
+                />
+              </div>
+
+              <div className="pt-2 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setAdmissionModalOpen(false)}
+                  className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={submitting}
+                  className="flex-1 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold shadow-md shadow-orange-500/20 disabled:opacity-70 flex items-center justify-center gap-2 transition-colors"
+                >
+                  {submitting ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Submit Request"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

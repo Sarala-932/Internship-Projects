@@ -1,8 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, admitPatient, admitting }) {
-  const [admitForm, setAdmitForm] = useState({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
+export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, admitPatient, admitting, initialData }) {
+  const [admitForm, setAdmitForm] = useState({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "", requestId: "" });
+
+  useEffect(() => {
+    if (initialData && isOpen) {
+      setAdmitForm(prev => ({
+        ...prev,
+        patientId: initialData.patientId?._id || initialData.patientId || "",
+        attendingDoctorId: initialData.requestingDoctorId?._id || initialData.requestingDoctorId || "",
+        reasonForAdmission: initialData.reasonForAdmission || "",
+        requestId: initialData._id || ""
+      }));
+    }
+  }, [initialData, isOpen]);
 
   if (!isOpen) return null;
 
@@ -13,7 +25,7 @@ export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, 
     }
     const success = await admitPatient(admitForm);
     if (success) {
-      setAdmitForm({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
+      setAdmitForm({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "", requestId: "" });
       onClose();
     }
   };

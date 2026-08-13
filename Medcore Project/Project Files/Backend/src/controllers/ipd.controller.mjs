@@ -3,7 +3,9 @@ import {
     createWardService,
     admitPatientService,
     dischargePatientService,
-    getPatientAdmissionHistoryService
+    getPatientAdmissionHistoryService,
+    createAdmissionRequestService,
+    getPendingRequestsService
 } from "../services/ipd.service.mjs";
 import Patient from "../models/patient.model.mjs";
 
@@ -29,6 +31,33 @@ export const createWard = async (req, res) => {
     }
 };
 
+// ---------------- ADMISSION REQUESTS ----------------
+
+export const createAdmissionRequest = async (req, res) => {
+    try {
+        const hospitalId = req.user.hospitalId;
+        const doctorId = req.user._id;
+        const request = await createAdmissionRequestService(hospitalId, doctorId, req.body);
+        return res.status(201).json({ message: "Admission request submitted successfully", request });
+    } catch (err) {
+        console.error("createAdmissionRequest error:", err);
+        return res.status(400).json({ message: err.message || "Failed to create admission request" });
+    }
+};
+
+export const getPendingRequests = async (req, res) => {
+    try {
+        const hospitalId = req.user.hospitalId;
+        const requests = await getPendingRequestsService(hospitalId);
+        return res.json({ requests });
+    } catch (err) {
+        console.error("getPendingRequests error:", err);
+        return res.status(500).json({ message: "Failed to fetch admission requests" });
+    }
+};
+
+// ---------------- ADMISSION & DISCHARGE ----------------
+
 export const admitPatient = async (req, res) => {
     try {
         const hospitalId = req.user.hospitalId;
@@ -45,8 +74,9 @@ export const dischargePatient = async (req, res) => {
     try {
         const { id } = req.params;
         const { dischargeSummary } = req.body;
-        const admission = await dischargePatientService(id, dischargeSummary);
-        return res.json({ message: "Patient discharged successfully", admission });
+        const generatedBy = req.user._id; // Admin performing discharge
+        const result = await dischargePatientService(id, dischargeSummary, generatedBy);
+        return res.json({ message: "Patient discharged and bill generated successfully", ...result });
     } catch (err) {
         console.error("dischargePatient error:", err);
         return res.status(400).json({ message: err.message || "Failed to discharge patient" });
@@ -59,9 +89,7 @@ export const getMyAdmissions = async (req, res) => {
         if (req.user.role !== "patient") {
             return res.status(403).json({ message: "Access denied" });
         }
-        // Actually we need the Patient record ID, not the user ID. 
-        // We can find patient by userId.
-        // Wait, req.user._id is the User ID. Let's find patient ID first.
+        
         const patient = await Patient.findOne({ userId: req.user._id });
         if (!patient) return res.status(404).json({ message: "Patient profile not found" });
 

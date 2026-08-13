@@ -96,6 +96,11 @@ const doctorService = {
     if (query) url += `?${query}`;
     const response = await apiClient.get(url);
     return response.data;
+  },
+  // IPD Admission Requests
+  requestIPDAdmission: async (data) => {
+    const response = await apiClient.post("/ipd/requests", data);
+    return response.data;
   }
 };
 
