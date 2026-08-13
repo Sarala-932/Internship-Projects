@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Users, Activity, UserCheck, IndianRupee, Building2, TrendingUp, RefreshCw } from "lucide-react";
+import { Users, Activity, UserCheck, IndianRupee, Building2, TrendingUp, RefreshCw, Bed } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useAdminDashboard } from "../hook/useAdminDashboard";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -161,6 +161,7 @@ export default function AdminDashboard() {
             {[
               { label: "Add New Doctor", href: "/admin/staff", icon: UserCheck, color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20" },
               { label: "Add New Staff", href: "/admin/staff", icon: Users, color: "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20" },
+              { label: "Manage Beds & Wards", href: "/admin/ipd", icon: Bed, color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20" },
               { label: "View Reports", href: "#", icon: TrendingUp, color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20" },
             ].map((action, i) => (
               <a key={i} href={action.href} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
