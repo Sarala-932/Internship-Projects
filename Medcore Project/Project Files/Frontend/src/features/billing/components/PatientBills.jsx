@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useBilling } from "../hook/useBilling";
 import { useRazorpay } from "../hook/useRazorpay";
-import { CreditCard, FileText, Download, CheckCircle2, AlertCircle } from "lucide-react";
+import { CreditCard, FileText, Download, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientBills() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { bills, isLoading, fetchBills, initPayment, verifyPayment } = useBilling();
   const { openRazorpayModal } = useRazorpay();
   const { user } = useSelector((state) => state.auth);
@@ -170,11 +172,18 @@ export default function PatientBills() {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">My Invoices</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and pay your medical bills</p>
         </div>
+        <button
+          onClick={async () => { setIsRefreshing(true); await fetchBills(); setIsRefreshing(false); }}
+          className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
+          title="Refresh"
+        >
+          <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      {((isLoading && bills.length === 0) || isRefreshing) ? (
+        <div className="grid gap-4">
+          {Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}
         </div>
       ) : bills.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center shadow-sm">
