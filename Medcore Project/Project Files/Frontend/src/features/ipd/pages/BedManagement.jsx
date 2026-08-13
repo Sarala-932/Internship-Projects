@@ -12,6 +12,7 @@ export default function BedManagement() {
   const [isAdmitModalOpen, setIsAdmitModalOpen] = useState(false);
   const [admitForm, setAdmitForm] = useState({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
   const [admitting, setAdmitting] = useState(false);
+  const [dischargingBedId, setDischargingBedId] = useState(null);
 
   // Dropdown Lists
   const [patients, setPatients] = useState([]);
@@ -57,6 +58,19 @@ export default function BedManagement() {
       alert(err.response?.data?.message || "Failed to admit patient");
     } finally {
       setAdmitting(false);
+    }
+  };
+
+  const handleDischarge = async (bedId, admissionId) => {
+    if (!window.confirm("Are you sure you want to discharge this patient? The bed will become available and billing will be calculated.")) return;
+    try {
+      setDischargingBedId(bedId);
+      await apiClient.post(`/ipd/discharge/${admissionId}`, { dischargeSummary: "Discharged from Admin Portal" });
+      fetchWards(); // refresh grid
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to discharge patient");
+    } finally {
+      setDischargingBedId(null);
     }
   };
 
@@ -147,9 +161,18 @@ export default function BedManagement() {
                     </div>
                     
                     {isOccupied && patient ? (
-                      <div className="space-y-1">
-                        <p className="text-sm font-semibold truncate">{patient.firstName} {patient.lastName}</p>
-                        <p className="text-xs opacity-80">MRN: {patient.mrn}</p>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm font-semibold truncate">{patient.firstName} {patient.lastName}</p>
+                          <p className="text-xs opacity-80">MRN: {patient.mrn}</p>
+                        </div>
+                        <button
+                          onClick={() => handleDischarge(bed._id, bed.currentAdmissionId._id)}
+                          disabled={dischargingBedId === bed._id}
+                          className="w-full py-1.5 px-3 bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 text-rose-600 dark:text-rose-400 font-medium text-xs rounded-lg transition-colors border border-rose-200/50 dark:border-rose-800/50"
+                        >
+                          {dischargingBedId === bed._id ? "Discharging..." : "Discharge Patient"}
+                        </button>
                       </div>
                     ) : (
                       <div className="space-y-1">
