@@ -1,6 +1,8 @@
 import Ward from "../models/ward.model.mjs";
 import Bed from "../models/bed.model.mjs";
 import Admission from "../models/admission.model.mjs";
+import Notification from "../models/notification.model.mjs";
+import { emitToUser, broadcastDataUpdate } from "./socket.service.mjs";
 
 export const getWardsWithBedsService = async (hospitalId) => {
     // Get all wards for the hospital
@@ -76,6 +78,34 @@ export const admitPatientService = async (hospitalId, doctorId, data) => {
     bed.status = "occupied";
     bed.currentAdmissionId = admission._id;
     await bed.save();
+
+    // Trigger Notifications & Sockets
+    try {
+        const populatedAdmission = await Admission.findById(admission._id)
+            .populate('patientId')
+            .populate('wardId')
+            .populate('bedId');
+
+        const patientUserId = populatedAdmission.patientId?.userId;
+        if (patientUserId) {
+            const notif = await Notification.create({
+                userId: patientUserId,
+                title: "Bed Assigned",
+                message: `You have been admitted to ${populatedAdmission.wardId?.name} (Bed: ${populatedAdmission.bedId?.bedNumber}).`,
+                type: "SYSTEM",
+                link: "/patient/dashboard"
+            });
+            emitToUser(patientUserId, "notification", notif);
+            
+            // Tell the frontend to refresh admissions data
+            emitToUser(patientUserId, "data_updated", { resource: "admissions" });
+        }
+        
+        // Broadcast to admins/doctors
+        broadcastDataUpdate(hospitalId, "wards");
+    } catch (err) {
+        console.error("Failed to send admission notification:", err.message);
+    }
     
     return admission;
 };
@@ -115,6 +145,29 @@ export const dischargePatientService = async (admissionId, dischargeSummary) => 
         await bed.save();
     }
     
+    // Trigger Notifications & Sockets
+    try {
+        const patientUserId = admission.patientId?.userId;
+        if (patientUserId) {
+            const notif = await Notification.create({
+                userId: patientUserId,
+                title: "Discharged from Ward",
+                message: `You have been discharged from ${admission.wardId?.name}.`,
+                type: "SYSTEM",
+                link: "/patient/dashboard"
+            });
+            emitToUser(patientUserId, "notification", notif);
+            
+            // Tell the frontend to refresh admissions data
+            emitToUser(patientUserId, "data_updated", { resource: "admissions" });
+        }
+        
+        // Broadcast to admins/doctors
+        broadcastDataUpdate(admission.wardId?.hospitalId, "wards");
+    } catch (err) {
+        console.error("Failed to send discharge notification:", err.message);
+    }
+
     return admission;
 };
 

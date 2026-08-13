@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { usePatient } from "../hook/usePatient";
+import { useSocket } from "../../notification/hook/useSocket";
 
 export default function PatientDashboard() {
   const { activeProfile } = useSelector((state) => state.patient);
@@ -26,6 +27,25 @@ export default function PatientDashboard() {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProfile?._id]);
+
+  const socket = useSocket();
+  
+  useEffect(() => {
+    if (!socket) return;
+    
+    const handleDataUpdated = (data) => {
+      if (data.resource === "admissions") {
+        // Refetch admissions silently
+        getMyAdmissions().then(adms => setAdmissions(adms));
+      }
+    };
+    
+    socket.on("data_updated", handleDataUpdated);
+    
+    return () => {
+      socket.off("data_updated", handleDataUpdated);
+    };
+  }, [socket]);
 
   const upcomingAppointments = appointments
     .filter(a => a.status === "scheduled" || a.status === "checked_in" || a.status === "in_consultation")
@@ -89,7 +109,7 @@ export default function PatientDashboard() {
             <p className="text-emerald-50 mt-1">
               {(() => {
                 const active = admissions.find(a => a.status === 'admitted');
-                return `Ward: ${active.wardId?.name} | Bed: ${active.bedId?.bedNumber} | Attending: Dr. ${active.attendingDoctorId?.lastName}`;
+                return `Ward: ${active.wardId?.name} | Bed: ${active.bedId?.bedNumber} | Attending: Dr. ${active.attendingDoctorId?.firstName} ${active.attendingDoctorId?.lastName}`;
               })()}
             </p>
           </div>
