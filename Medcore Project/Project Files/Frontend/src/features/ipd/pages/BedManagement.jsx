@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BedDouble, Users, CheckCircle2, AlertCircle, Search, Plus } from "lucide-react";
+import toast from "react-hot-toast";
 import apiClient from "../../../shared/service/apiClient";
 
 export default function BedManagement() {
@@ -51,14 +52,20 @@ export default function BedManagement() {
   };
 
   const handleAdmit = async () => {
+    if (!admitForm.reasonForAdmission.trim()) {
+      toast.error("Please provide a reason for admission.");
+      return;
+    }
+    
     try {
       setAdmitting(true);
       await apiClient.post("/ipd/admit", admitForm);
       setIsAdmitModalOpen(false);
       setAdmitForm({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
+      toast.success("Patient admitted successfully!");
       fetchWards(); // refresh grid
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to admit patient");
+      toast.error(err.response?.data?.message || "Failed to admit patient");
     } finally {
       setAdmitting(false);
     }
@@ -76,9 +83,10 @@ export default function BedManagement() {
       setDischargeModal({ isOpen: false, bedId: null, admissionId: null });
       setDischargingBedId(bedId);
       await apiClient.post(`/ipd/discharge/${admissionId}`, { dischargeSummary: "Discharged from Admin Portal" });
+      toast.success("Patient discharged successfully!");
       fetchWards(); // refresh grid
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to discharge patient");
+      toast.error(err.response?.data?.message || "Failed to discharge patient");
     } finally {
       setDischargingBedId(null);
     }
