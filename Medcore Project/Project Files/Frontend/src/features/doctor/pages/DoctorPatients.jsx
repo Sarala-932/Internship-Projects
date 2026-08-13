@@ -52,6 +52,13 @@ export default function DoctorPatients() {
         </div>
         
         <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button 
+            onClick={async () => { setIsRefreshing(true); await refreshPatients(); setIsRefreshing(false); }}
+            className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
+            title="Refresh"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input 

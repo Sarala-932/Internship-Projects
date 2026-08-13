@@ -58,6 +58,13 @@ export default function DoctorDashboard() {
           <p className="text-blue-100 text-sm">You have {data.stats.appointmentsToday} appointments scheduled for today.</p>
         </div>
         <button 
+          onClick={async () => { setIsRefreshing(true); await refreshStats(); setIsRefreshing(false); }}
+          className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/20 mr-2"
+          title="Refresh"
+        >
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+        </button>
+        <button 
           onClick={() => navigate('/doctor/appointments')}
           className="cursor-pointer bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/20"
         >
