@@ -7,6 +7,11 @@ export default function BedManagement() {
   const [loading, setLoading] = useState(true);
   const [selectedWard, setSelectedWard] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Admit Modal State
+  const [isAdmitModalOpen, setIsAdmitModalOpen] = useState(false);
+  const [admitForm, setAdmitForm] = useState({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
+  const [admitting, setAdmitting] = useState(false);
 
   useEffect(() => {
     fetchWards();
@@ -42,7 +47,7 @@ export default function BedManagement() {
           </h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Manage hospital admissions and bed allocations in real-time.</p>
         </div>
-        <button className="bg-hospital-blue text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2">
+        <button onClick={() => setIsAdmitModalOpen(true)} className="bg-hospital-blue text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2 cursor-pointer shadow-sm">
           <Plus className="w-4 h-4" /> Admit Patient
         </button>
       </div>
@@ -130,6 +135,50 @@ export default function BedManagement() {
           <div className="text-center py-12 text-slate-500">No wards configured yet.</div>
         )}
       </div>
+
+      {/* Admit Modal */}
+      {isAdmitModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+              <h2 className="text-lg font-bold">Admit Patient</h2>
+              <button onClick={() => setIsAdmitModalOpen(false)} className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">×</button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Patient ID / MRN</label>
+                <input type="text" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" placeholder="e.g. 64a8c9..." />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Select Ward</label>
+                  <select className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2">
+                    <option value="">Choose Ward</option>
+                    {wards.map(w => <option key={w._id} value={w._id}>{w.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Select Bed</label>
+                  <select className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2">
+                    <option value="">Choose Bed</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Attending Doctor ID</label>
+                <input type="text" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" placeholder="Doctor's user ID..." />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Reason for Admission</label>
+                <textarea className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" rows="3" placeholder="Symptoms, diagnosis, etc."></textarea>
+              </div>
+              <button className="w-full bg-hospital-blue text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition" onClick={() => setIsAdmitModalOpen(false)}>
+                Confirm Admission
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
