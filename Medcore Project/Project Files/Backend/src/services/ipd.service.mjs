@@ -111,7 +111,9 @@ export const admitPatientService = async (hospitalId, doctorId, data) => {
 };
 
 export const dischargePatientService = async (admissionId, dischargeSummary) => {
-    const admission = await Admission.findById(admissionId).populate('wardId');
+    const admission = await Admission.findById(admissionId)
+        .populate('wardId')
+        .populate('patientId');
     
     if (!admission || admission.status === "discharged") {
         const error = new Error("Admission not found or already discharged");
