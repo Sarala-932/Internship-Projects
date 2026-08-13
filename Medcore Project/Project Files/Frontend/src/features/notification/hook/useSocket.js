@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { addLiveNotification } from "../state/notificationSlice";
@@ -13,18 +13,20 @@ export const getSocket = () => globalSocket;
 export const useSocket = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
+  const [socketInstance, setSocketInstance] = useState(globalSocket);
 
   useEffect(() => {
     if (!user || !token) {
       if (globalSocket) {
         globalSocket.disconnect();
         globalSocket = null;
+        setSocketInstance(null);
       }
       return;
     }
 
     if (globalSocket) {
-      // Already connected
+      setSocketInstance(globalSocket);
       return;
     }
 
@@ -41,6 +43,7 @@ export const useSocket = () => {
     });
 
     globalSocket = socket;
+    setSocketInstance(socket);
 
     socket.on("connect", () => {
       console.log("[Socket] ✅ CONNECTED! id:", socket.id);
@@ -70,10 +73,8 @@ export const useSocket = () => {
 
     return () => {
       // We do NOT disconnect on component unmount, because this is a singleton!
-      // Disconnection happens when user logs out (handled by user/token dependency check above)
     };
   }, [user, token, dispatch]);
 
-  return globalSocket;
+  return socketInstance;
 };
-
