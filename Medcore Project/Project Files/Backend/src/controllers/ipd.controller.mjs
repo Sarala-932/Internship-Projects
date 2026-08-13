@@ -32,7 +32,7 @@ export const createWard = async (req, res) => {
 export const admitPatient = async (req, res) => {
     try {
         const hospitalId = req.user.hospitalId;
-        const doctorId = req.user._id; // Assuming the logged in doctor/admin is admitting
+        const doctorId = req.body.attendingDoctorId || req.user._id; 
         const admission = await admitPatientService(hospitalId, doctorId, req.body);
         return res.status(201).json({ message: "Patient admitted successfully", admission });
     } catch (err) {
