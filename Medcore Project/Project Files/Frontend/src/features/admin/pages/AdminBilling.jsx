@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { FileText, Plus, RefreshCw, AlertCircle, Search, FileDigit, IndianRupee, Printer, User, Trash2, CheckCircle } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { setBills } from "../state/adminSlice";
 import TableSkeleton from "../../../shared/components/TableSkeleton";
 import { useRealtime } from "../../../shared/hooks/useRealtime";
 
 export default function AdminBilling() {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [bills, setBills] = useState([]);
+  const dispatch = useDispatch();
+  const { bills } = useSelector(state => state.admin);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -36,7 +39,7 @@ export default function AdminBilling() {
         apiClient.get(search ? `/billing?search=${encodeURIComponent(search)}` : "/billing"),
         apiClient.get("/patients")
       ]);
-      setBills(billsRes.data.bills || []);
+      dispatch(setBills(billsRes.data.bills || []));
       setPatients(patientsRes.data.patients || []);
     } catch (err) {
       setError("Failed to fetch billing data.");

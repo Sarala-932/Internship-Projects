@@ -5,6 +5,10 @@ const initialState = {
   staff: [],
   staffMeta: null,
   patients: [],
+  appointments: [],
+  bills: [],
+  labOrders: [],
+  pharmacyInventory: [],
   stats: null,
   loading: false,
   error: null,
@@ -37,6 +41,26 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    setAppointments: (state, action) => {
+      state.appointments = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    setBills: (state, action) => {
+      state.bills = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    setLabOrders: (state, action) => {
+      state.labOrders = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    setPharmacyInventory: (state, action) => {
+      state.pharmacyInventory = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
     setStats: (state, action) => {
       state.stats = action.payload;
       state.loading = false;
@@ -54,6 +78,10 @@ export const {
   setDepartments, 
   setStaff, 
   setPatients, 
+  setAppointments,
+  setBills,
+  setLabOrders,
+  setPharmacyInventory,
   setStats,
   clearAdminState 
 } = adminSlice.actions;

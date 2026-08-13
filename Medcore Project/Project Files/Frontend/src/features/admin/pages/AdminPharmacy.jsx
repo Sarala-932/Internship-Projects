@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Pill, Plus, RefreshCw, AlertCircle, Search, Package, IndianRupee, Calendar, FileText, CheckCircle2 } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { setPharmacyInventory } from "../state/adminSlice";
 import TableSkeleton from "../../../shared/components/TableSkeleton";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 import { useRealtime } from "../../../shared/hooks/useRealtime";

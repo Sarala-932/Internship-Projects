@@ -6,7 +6,8 @@ import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function AdminLab() {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [labOrders, setLabOrders] = useState([]);
+  const dispatch = useDispatch();
+  const { labOrders } = useSelector(state => state.admin);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
@@ -48,7 +49,7 @@ export default function AdminLab() {
         );
       }
 
-      setLabOrders(orders);
+      dispatch(setLabOrders(orders));
     } catch (err) {
       setError("Failed to fetch lab orders.");
       toast.error(err.response?.data?.message || "Error fetching lab orders");

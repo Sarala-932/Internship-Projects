@@ -3,14 +3,16 @@ import { Calendar, Plus, RefreshCw, AlertCircle, Clock, FileText, CheckCircle, S
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
 import TableSkeleton from "../../../shared/components/TableSkeleton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setAppointments } from "../state/adminSlice";
 import ReceptionistAppointmentEntry from "../components/ReceptionistAppointmentEntry";
 import { useRealtime } from "../../../shared/hooks/useRealtime";
 
 export default function AdminAppointments() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { user } = useSelector(state => state.auth);
-  const [appointments, setAppointments] = useState([]);
+  const dispatch = useDispatch();
+  const { appointments } = useSelector(state => state.admin);
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ export default function AdminAppointments() {
         apiClient.get("/patients"),
         apiClient.get("/users?role=doctor")
       ]);
-      setAppointments(apptsRes.data.appointments || []);
+      dispatch(setAppointments(apptsRes.data.appointments || []));
       setPatients(patientsRes.data.patients || []);
       setDoctors(usersRes.data.users || []);
     } catch (err) {
