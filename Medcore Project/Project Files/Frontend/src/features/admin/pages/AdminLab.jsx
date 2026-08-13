@@ -4,7 +4,7 @@ import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { setLabOrders } from "../state/adminSlice";
-import CardSkeleton from "../../../shared/components/CardSkeleton";
+import TableSkeleton from "../../../shared/components/TableSkeleton";
 
 export default function AdminLab() {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -239,9 +239,7 @@ export default function AdminLab() {
       {/* Content Area */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && labOrders.length === 0) || isRefreshing) ? (
-          <div className="flex flex-col gap-4 p-4">
-            {Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}
-          </div>
+          <TableSkeleton columns={6} rows={5} />
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />

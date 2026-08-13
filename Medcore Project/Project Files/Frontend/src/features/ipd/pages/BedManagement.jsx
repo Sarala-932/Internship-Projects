@@ -53,7 +53,7 @@ export default function BedManagement() {
     setIsAdmitModalOpen(true);
   };
 
-  if (loading) {
+  if (loading && wards.length === 0) {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

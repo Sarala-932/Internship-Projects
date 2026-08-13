@@ -13,7 +13,7 @@ export default function AdminPharmacy() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("inventory"); // 'inventory' | 'prescriptions'
   
-  const [inventory, setInventory] = useState([]);
+  const { pharmacyInventory: inventory } = useSelector(state => state.admin);
   const [pendingPrescriptions, setPendingPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -47,7 +47,7 @@ export default function AdminPharmacy() {
       if (search) url += `&search=${encodeURIComponent(search)}`;
       
       const res = await apiClient.get(url);
-      setInventory(res.data.inventory || []);
+      dispatch(setPharmacyInventory(res.data.inventory || []));
       setMeta(res.data.meta || null);
     } catch (err) {
       setError("Failed to fetch inventory.");
@@ -333,7 +333,7 @@ export default function AdminPharmacy() {
       {/* Content Area */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && ((activeTab === 'inventory' && inventory.length === 0) || (activeTab === 'prescriptions' && pendingPrescriptions.length === 0)) ? (
-          activeTab === 'inventory' ? <TableSkeleton columns={6} rows={5} /> : <div className="flex flex-col gap-4 p-4">{Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}</div>
+          activeTab === 'inventory' ? <TableSkeleton columns={6} rows={5} /> : <TableSkeleton columns={6} rows={5} />
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />

@@ -1,13 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setWards, setIpdPatients, setPendingRequests, setLoading } from "../../admin/state/adminSlice";
 import toast from "react-hot-toast";
 import { ipdService } from "../service/ipdService";
 
 export const useIPD = () => {
-  const [wards, setWards] = useState([]);
+  const dispatch = useDispatch();
+  const { wards, ipdPatients: patients, pendingRequests, loading: reduxLoading } = useSelector(state => state.admin);
   const [loading, setLoading] = useState(true);
-  const [patients, setPatients] = useState([]);
+  
   const [doctors, setDoctors] = useState([]);
-  const [pendingRequests, setPendingRequests] = useState([]);
+  
   
   const [admitting, setAdmitting] = useState(false);
   const [dischargingBedId, setDischargingBedId] = useState(null);
@@ -16,7 +19,7 @@ export const useIPD = () => {
     try {
       setLoading(true);
       const data = await ipdService.getWards();
-      setWards(data);
+      dispatch(setWards(data));
     } catch (err) {
       console.error(err);
       toast.error("Failed to load wards.");
@@ -28,7 +31,7 @@ export const useIPD = () => {
   const fetchPendingRequests = useCallback(async () => {
     try {
       const data = await ipdService.getPendingRequests();
-      setPendingRequests(data);
+      dispatch(setPendingRequests(data));
     } catch (err) {
       console.error("Failed to fetch pending requests", err);
     }
@@ -40,7 +43,7 @@ export const useIPD = () => {
         ipdService.getPatients(),
         ipdService.getDoctors()
       ]);
-      setPatients(patientsData);
+      dispatch(setIpdPatients(patientsData));
       setDoctors(doctorsData);
     } catch (err) {
       console.error("Failed to fetch dropdown data", err);
