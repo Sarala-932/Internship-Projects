@@ -10,7 +10,6 @@ export default function PatientRecords() {
   const [isLoading, setIsLoading] = useState(true);
   const { activeProfile } = useSelector((state) => state.patient);
 
-  useEffect(() => {
   const fetchRecords = async () => {
     try {
       setIsLoading(true);
@@ -33,6 +32,7 @@ export default function PatientRecords() {
       fetchRecords();
     }
   }, [activeProfile]);
+
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
