@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Pill, Plus, RefreshCw, AlertCircle, Search, Package, IndianRupee, Calendar, FileText, CheckCircle2 } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
+import TableSkeleton from "../../../shared/components/TableSkeleton";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 import { useRealtime } from "../../../shared/hooks/useRealtime";
 import Pagination from "../../../shared/components/Pagination";
 
@@ -328,9 +330,7 @@ export default function AdminPharmacy() {
       {/* Content Area */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && ((activeTab === 'inventory' && inventory.length === 0) || (activeTab === 'prescriptions' && pendingPrescriptions.length === 0)) ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
-          </div>
+          activeTab === 'inventory' ? <TableSkeleton columns={6} rows={5} /> : <div className="flex flex-col gap-4 p-4">{Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}</div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />

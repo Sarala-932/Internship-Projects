@@ -1,8 +1,9 @@
-import { ClipboardList, Download, FileText, FlaskConical } from "lucide-react";
+import { ClipboardList, Download, FileText, FlaskConical, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getMyLabRecordsService } from "../service/lab.service";
 import toast from "react-hot-toast";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientRecords() {
   const [labOrders, setLabOrders] = useState([]);
@@ -10,23 +11,24 @@ export default function PatientRecords() {
   const { activeProfile } = useSelector((state) => state.patient);
 
   useEffect(() => {
-    const fetchRecords = async () => {
-      try {
-        setIsLoading(true);
-        // Assuming backend getLabOrders respects hospitalId, and we need to pass patientId manually
-        // since we didn't build a patient-specific endpoint in the backend for labs.
-        const orders = await getMyLabRecordsService(activeProfile._id);
-        // Filter for completed orders
-        const myOrders = orders.filter((o) => o.overallStatus === "completed");
-        setLabOrders(myOrders);
-      } catch (error) {
-        console.error("Failed to fetch records:", error);
-        toast.error("Failed to load medical records");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
+  const fetchRecords = async () => {
+    try {
+      setIsLoading(true);
+      // Assuming backend getLabOrders respects hospitalId, and we need to pass patientId manually
+      // since we didn't build a patient-specific endpoint in the backend for labs.
+      const orders = await getMyLabRecordsService(activeProfile._id);
+      // Filter for completed orders
+      const myOrders = orders.filter((o) => o.overallStatus === "completed");
+      setLabOrders(myOrders);
+    } catch (error) {
+      console.error("Failed to fetch records:", error);
+      toast.error("Failed to load medical records");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (activeProfile?._id) {
       fetchRecords();
     }
@@ -35,14 +37,27 @@ export default function PatientRecords() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Medical Records</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View your lab reports and medical documents</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Medical Records</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View your lab reports and medical documents</p>
+        </div>
+        <button 
+          onClick={() => {
+            if (activeProfile?._id) {
+              fetchRecords();
+            }
+          }}
+          className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
+          title="Refresh"
+        >
+          <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}
         </div>
       ) : labOrders.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden flex flex-col items-center justify-center py-24">

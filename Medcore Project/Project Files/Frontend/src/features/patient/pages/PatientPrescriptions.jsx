@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Pill, Search, FileText, Calendar, Printer, X, Loader2 } from "lucide-react";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
+import { Pill, Search, FileText, Calendar, Printer, X, Loader2, RefreshCw } from "lucide-react";
 import { usePatient } from "../hook/usePatient";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
@@ -47,17 +48,28 @@ export default function PatientPrescriptions() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Prescriptions</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and download your digital prescriptions</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Prescriptions</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and download your digital prescriptions</p>
+        </div>
+        <button 
+          onClick={() => {
+            if (activeProfile?._id) {
+              getPrescriptions(activeProfile._id).then(setPrescriptions);
+            }
+          }}
+          className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
+          title="Refresh"
+        >
+          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
       {/* Content */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
         {loading && prescriptions.length === 0 ? (
-          <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-          </div>
+          <CardSkeleton count={3} />
         ) : prescriptions.length === 0 ? (
           <div className="text-center py-20">
             <Pill className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />

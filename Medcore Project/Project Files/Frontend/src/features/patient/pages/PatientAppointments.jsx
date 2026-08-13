@@ -55,13 +55,22 @@ export default function PatientAppointments() {
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Appointments</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your upcoming and past appointments</p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Book Appointment
-        </button>
+        <div className="flex items-center gap-3 mt-4 sm:mt-0">
+          <button 
+            onClick={fetchAppointments}
+            className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
+            title="Refresh"
+          >
+            <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Book Appointment
+          </button>
+        </div>
       </div>
 
       {/* List */}

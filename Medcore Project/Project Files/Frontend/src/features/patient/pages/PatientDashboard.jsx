@@ -1,4 +1,4 @@
-import { Calendar, Pill, Activity, ArrowRight, User } from "lucide-react";
+import { Calendar, Pill, Activity, ArrowRight, User, RefreshCw } from "lucide-react";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -54,8 +54,8 @@ export default function PatientDashboard() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
-        <div className="relative z-10">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden flex justify-between items-start">
+        <div className="relative z-10 flex-1">
           <h2 className="text-3xl font-bold mb-2">
             Welcome back, {activeProfile?.firstName || "Patient"}!
           </h2>
@@ -63,6 +63,19 @@ export default function PatientDashboard() {
             Here is your health overview. You have {upcomingAppointments.length} upcoming appointments.
           </p>
         </div>
+        <button 
+          onClick={() => {
+            if (activeProfile?._id) {
+              getAppointments(activeProfile._id).then(setAppointments);
+              getPrescriptions(activeProfile._id).then(setPrescriptions);
+              getMyAdmissions().then(setAdmissions);
+            }
+          }}
+          className="relative z-10 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl backdrop-blur-sm transition-colors cursor-pointer"
+          title="Refresh"
+        >
+          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+        </button>
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Activity className="w-48 h-48" />
         </div>

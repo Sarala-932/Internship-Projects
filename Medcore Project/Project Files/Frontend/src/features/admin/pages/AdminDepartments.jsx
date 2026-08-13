@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ListTree, Plus, RefreshCw, AlertCircle, Building2, CheckCircle } from "lucide-react";
 import { useAdminDepartments } from "../hook/useAdminDepartments";
 import toast from "react-hot-toast";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function AdminDepartments() {
   const { departments, masterSpecialities, loading, error, fetchDepartments, createDepartment } = useAdminDepartments();
@@ -76,8 +77,8 @@ export default function AdminDepartments() {
 
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden p-6">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array(6).fill(0).map((_, i) => <CardSkeleton key={i} />)}
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">

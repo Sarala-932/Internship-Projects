@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FlaskConical, Search, RefreshCw, AlertCircle, FileText, CheckCircle2, ChevronRight, Download, Trash2 } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function AdminLab() {
   const [labOrders, setLabOrders] = useState([]);
@@ -234,8 +235,8 @@ export default function AdminLab() {
       {/* Content Area */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && labOrders.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
+          <div className="flex flex-col gap-4 p-4">
+            {Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">

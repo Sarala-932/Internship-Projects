@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FileText, Plus, RefreshCw, AlertCircle, Search, FileDigit, IndianRupee, Printer, User, Trash2, CheckCircle } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
+import TableSkeleton from "../../../shared/components/TableSkeleton";
 import { useRealtime } from "../../../shared/hooks/useRealtime";
 
 export default function AdminBilling() {
@@ -311,9 +312,7 @@ export default function AdminBilling() {
       {/* Bills Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && bills.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
-          </div>
+          <TableSkeleton columns={5} rows={5} />
         ) : error && bills.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />
