@@ -12,10 +12,23 @@ export default function AdminDashboard() {
     fetchDashboardStats();
   }, [fetchDashboardStats]);
 
-  if (loading) {
+  if (loading && !data) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin" />
+      <div className="space-y-8 animate-pulse">
+        {/* Banner Skeleton */}
+        <div className="h-32 bg-slate-200 dark:bg-slate-700 rounded-2xl w-full"></div>
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+          <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+          <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+          <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+        </div>
+        {/* Chart Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="h-80 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
+          <div className="h-80 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
+        </div>
       </div>
     );
   }
