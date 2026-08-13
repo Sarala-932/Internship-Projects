@@ -53,7 +53,35 @@ export default function BedManagement() {
     setIsAdmitModalOpen(true);
   };
 
-  if (loading) return <div className="p-8 text-center">Loading wards...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="space-y-2">
+            <div className="h-8 w-64 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+            <div className="h-4 w-96 bg-slate-100 dark:bg-slate-800 rounded-lg max-w-full"></div>
+          </div>
+          <div className="h-10 w-36 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+        </div>
+        <div className="h-12 w-full bg-slate-100 dark:bg-slate-800 rounded-xl mt-6"></div>
+        <div className="space-y-8 mt-8">
+          {[1, 2].map((i) => (
+            <div key={i} className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-32 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+                <div className="h-6 w-24 bg-slate-100 dark:bg-slate-800 rounded-md"></div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map((j) => (
+                  <div key={j} className="h-32 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"></div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
