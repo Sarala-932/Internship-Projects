@@ -4,7 +4,7 @@ import { useIPD } from "../hook/useIPD";
 import BedCard from "../components/BedCard";
 import AdmitModal from "../components/AdmitModal";
 import DischargeModal from "../components/DischargeModal";
-import { useSocket } from "../../../shared/hooks/useSocket";
+import { useSocket } from "../../notification/hook/useSocket";
 
 export default function BedManagement() {
   const {
