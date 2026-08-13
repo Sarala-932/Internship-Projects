@@ -6,12 +6,12 @@ import { usePatient } from "../hook/usePatient";
 import { useSocket } from "../../notification/hook/useSocket";
 
 export default function PatientDashboard() {
-  const { activeProfile } = useSelector((state) => state.patient);
+  const { activeProfile, appointments: cachedApps, prescriptions: cachedPrescs, admissions: cachedAdms } = useSelector((state) => state.patient);
   const { getAppointments, getPrescriptions, getMyAdmissions, loading } = usePatient();
   
-  const [appointments, setAppointments] = useState([]);
-  const [prescriptions, setPrescriptions] = useState([]);
-  const [admissions, setAdmissions] = useState([]);
+  const [appointments, setAppointments] = useState(cachedApps || []);
+  const [prescriptions, setPrescriptions] = useState(cachedPrescs || []);
+  const [admissions, setAdmissions] = useState(cachedAdms || []);
 
   useEffect(() => {
     const fetchData = async () => {

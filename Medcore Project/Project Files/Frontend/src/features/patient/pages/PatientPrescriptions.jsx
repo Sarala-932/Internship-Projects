@@ -7,9 +7,9 @@ import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
 
 export default function PatientPrescriptions() {
-  const { activeProfile } = useSelector((state) => state.patient);
+  const { activeProfile, prescriptions: cachedPrescs } = useSelector((state) => state.patient);
   const { getPrescriptions, loading } = usePatient();
-  const [prescriptions, setPrescriptions] = useState([]);
+  const [prescriptions, setPrescriptions] = useState(cachedPrescs || []);
   const [previewPdfUrl, setPreviewPdfUrl] = useState(null);
   const [downloadingId, setDownloadingId] = useState(null);
 

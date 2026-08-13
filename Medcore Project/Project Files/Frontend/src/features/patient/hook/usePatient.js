@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { patientService } from "../service/patientService";
-import { setActiveProfile } from "../state/patientSlice";
+import { 
+  setActiveProfile, 
+  setAppointmentsData,
+  setPrescriptionsData,
+  setAdmissionsData 
+} from "../state/patientSlice";
 import toast from "react-hot-toast";
 
 export const usePatient = () => {
@@ -31,7 +36,9 @@ export const usePatient = () => {
     try {
       setLoading(true);
       const data = await patientService.getAppointments(patientId);
-      return data.appointments || [];
+      const apps = data.appointments || [];
+      dispatch(setAppointmentsData(apps));
+      return apps;
     } catch (err) {
       setError(err.message);
       toast.error("Failed to load appointments");
@@ -76,7 +83,9 @@ export const usePatient = () => {
     try {
       setLoading(true);
       const data = await patientService.getPrescriptions(patientId);
-      return data.prescriptions || [];
+      const prescs = data.prescriptions || [];
+      dispatch(setPrescriptionsData(prescs));
+      return prescs;
     } catch (err) {
       console.error("Prescription fetch error:", err.response?.data || err.message);
       return [];
@@ -89,7 +98,9 @@ export const usePatient = () => {
     try {
       setLoading(true);
       const data = await patientService.getMyAdmissions();
-      return data.admissions || [];
+      const adms = data.admissions || [];
+      dispatch(setAdmissionsData(adms));
+      return adms;
     } catch (err) {
       console.error("Admission fetch error:", err.response?.data || err.message);
       return [];

@@ -1,23 +1,23 @@
 import { ClipboardList, Download, FileText, FlaskConical, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getMyLabRecordsService } from "../service/lab.service";
+import { setLabRecordsData } from "../state/patientSlice";
 import toast from "react-hot-toast";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientRecords() {
-  const [labOrders, setLabOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { activeProfile } = useSelector((state) => state.patient);
+  const dispatch = useDispatch();
+  const { activeProfile, labRecords: cachedRecords } = useSelector((state) => state.patient);
+  const [labOrders, setLabOrders] = useState(cachedRecords || []);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchRecords = async () => {
     try {
-      setIsLoading(true);
-      // Assuming backend getLabOrders respects hospitalId, and we need to pass patientId manually
-      // since we didn't build a patient-specific endpoint in the backend for labs.
+      if (labOrders.length === 0) setIsLoading(true);
       const orders = await getMyLabRecordsService(activeProfile._id);
-      // Filter for completed orders
       const myOrders = orders.filter((o) => o.overallStatus === "completed");
+      dispatch(setLabRecordsData(myOrders));
       setLabOrders(myOrders);
     } catch (error) {
       console.error("Failed to fetch records:", error);

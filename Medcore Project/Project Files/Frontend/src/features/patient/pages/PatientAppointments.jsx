@@ -9,9 +9,9 @@ import { useRealtime } from "../../../shared/hooks/useRealtime";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientAppointments() {
-  const { activeProfile } = useSelector((state) => state.patient);
+  const { activeProfile, appointments: cachedApps } = useSelector((state) => state.patient);
   const { getAppointments, cancelAppointment, loading } = usePatient();
-  const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState(cachedApps || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
 
