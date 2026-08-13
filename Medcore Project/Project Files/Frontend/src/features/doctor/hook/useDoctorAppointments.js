@@ -10,7 +10,7 @@ export const useDoctorAppointments = (doctorId, filterDate) => {
 
   const getAppointments = () => {
     if (doctorId) {
-      dispatch(fetchAppointments({ doctorId, date: filterDate }));
+      return dispatch(fetchAppointments({ doctorId, date: filterDate }));
     }
   };
 

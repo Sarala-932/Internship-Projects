@@ -11,7 +11,7 @@ export const useDoctorDashboard = () => {
   }, [dispatch]);
 
   const refreshStats = () => {
-    dispatch(fetchDashboardStats());
+    return dispatch(fetchDashboardStats());
   };
 
   return {

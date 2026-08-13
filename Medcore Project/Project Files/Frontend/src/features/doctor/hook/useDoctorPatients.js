@@ -14,7 +14,7 @@ export const useDoctorPatients = (params = {}) => {
   }, [dispatch, paramsString]);
 
   const refreshPatients = () => {
-    dispatch(fetchPatients(JSON.parse(paramsString)));
+    return dispatch(fetchPatients(JSON.parse(paramsString)));
   };
 
   return {
