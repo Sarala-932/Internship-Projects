@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BedDouble, Users, CheckCircle2, AlertCircle, Search, Plus } from "lucide-react";
-import api from "../../../shared/utils/api";
+import apiClient from "../../../shared/service/apiClient";
 
 export default function BedManagement() {
   const [wards, setWards] = useState([]);
@@ -14,7 +14,7 @@ export default function BedManagement() {
 
   const fetchWards = async () => {
     try {
-      const { data } = await api.get("/ipd/wards");
+      const { data } = await apiClient.get("/ipd/wards");
       setWards(data.wards || []);
     } catch (err) {
       console.error(err);

@@ -6,17 +6,17 @@ import {
     dischargePatient,
     getMyAdmissions
 } from "../controllers/ipd.controller.mjs";
-import { isAuthenticated, isHospitalStaff } from "../middlewares/auth.middleware.mjs";
+import authentication, { authorize } from "../middleware/authMiddleware.mjs";
 
 const router = express.Router();
 
-router.use(isAuthenticated);
+router.use(authentication);
 
 // Patient routes
 router.get("/my-admissions", getMyAdmissions);
 
 // Staff routes
-router.use(isHospitalStaff);
+router.use(authorize("admin", "doctor", "nurse", "receptionist"));
 router.get("/wards", getWardsWithBeds);
 router.post("/wards", createWard);
 router.post("/admit", admitPatient);
