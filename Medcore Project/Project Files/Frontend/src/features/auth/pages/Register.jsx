@@ -70,30 +70,30 @@ export default function Register() {
       <form onSubmit={onSubmit} className="space-y-5">
         
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">First Name</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-slate-400" />
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">First Name</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-hospital-blue">
+                <User className="h-5 w-5 text-slate-400 group-focus-within:text-hospital-blue transition-colors" />
               </div>
               <input
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all"
+                className="block w-full pl-11 pr-4 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm"
                 placeholder="Rahul"
                 required
               />
             </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Last Name</label>
-            <div className="relative">
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Last Name</label>
+            <div className="relative group">
               <input
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="block w-full px-3 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all"
+                className="block w-full px-4 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm"
                 placeholder="Sharma"
                 required
               />
@@ -101,41 +101,41 @@ export default function Register() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Email Address</label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Mail className="h-5 w-5 text-slate-400" />
+        <div className="space-y-1.5">
+          <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Email Address</label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-hospital-blue">
+              <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-hospital-blue transition-colors" />
             </div>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all"
+              className="block w-full pl-11 pr-4 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm"
               placeholder="rahul@example.com"
               required
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Password</label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Lock className="h-5 w-5 text-slate-400" />
+        <div className="space-y-1.5">
+          <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Password</label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-hospital-blue">
+              <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-hospital-blue transition-colors" />
             </div>
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full pl-10 pr-10 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all"
+              className="block w-full pl-11 pr-11 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm"
               placeholder="••••••••"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
             >
               {showPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -147,25 +147,25 @@ export default function Register() {
         </div>
 
         {type === "patient" && (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Date of Birth</label>
+              <div className="space-y-1.5">
+                <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Date of Birth</label>
                 <input
                   type="date"
                   required
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
-                  className="block w-full px-3 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all"
+                  className="block w-full px-4 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Blood Group</label>
+              <div className="space-y-1.5">
+                <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Blood Group</label>
                 <select
                   value={bloodGroup}
                   onChange={(e) => setBloodGroup(e.target.value)}
-                  className="block w-full px-3 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all appearance-none bg-white"
+                  className="block w-full px-4 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm appearance-none"
                 >
                   <option value="" disabled>Select</option>
                   <option value="A+">A+</option>
@@ -181,17 +181,17 @@ export default function Register() {
               </div>
             </div>
             
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Select Hospital</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Building2 className="h-5 w-5 text-slate-400" />
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Select Hospital</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-hospital-blue">
+                <Building2 className="h-5 w-5 text-slate-400 group-focus-within:text-hospital-blue transition-colors" />
               </div>
               <select
                 required
                 value={selectedHospital}
                 onChange={(e) => setSelectedHospital(e.target.value)}
-                className="block w-full pl-10 pr-10 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-hospital-blue focus:border-hospital-blue dark:bg-slate-800 dark:text-white text-sm outline-none transition-all appearance-none"
+                className="block w-full pl-11 pr-10 py-3 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:ring-4 focus:ring-hospital-blue/10 focus:border-hospital-blue bg-slate-50/50 hover:bg-slate-50 focus:bg-white dark:bg-slate-800/40 dark:hover:bg-slate-800/60 dark:focus:bg-slate-800 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm appearance-none"
               >
                 <option value="" disabled>Select a hospital to connect with</option>
                 {hospitals.map(h => (
@@ -206,7 +206,7 @@ export default function Register() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-hospital-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hospital-blue dark:focus:ring-offset-slate-900 transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+          className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-[0_8px_16px_-6px_rgba(13,92,82,0.4)] dark:shadow-none text-[15px] font-bold text-white bg-hospital-blue hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-hospital-blue/30 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
         >
           {loading ? (
             <>
@@ -221,11 +221,11 @@ export default function Register() {
           )}
         </button>
 
-        <div className="text-center mt-6">
+        <div className="text-center mt-6 pt-2">
           <p className="text-sm text-slate-600 dark:text-slate-400">
             Already have an account?{" "}
-            <Link to={`/login?type=${type}`} className="font-medium text-hospital-blue hover:text-blue-600 dark:hover:text-blue-400">
-              Sign in
+            <Link to={`/login?type=${type}`} className="font-semibold text-hospital-blue hover:text-blue-700 dark:hover:text-blue-400 transition-colors">
+              Sign in here
             </Link>
           </p>
         </div>
