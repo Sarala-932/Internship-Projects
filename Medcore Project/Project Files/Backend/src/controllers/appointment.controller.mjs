@@ -31,7 +31,7 @@ export const bookAppointment = async (req, res) => {
         const appointment = await bookAppointmentService(hospitalId, req.userId, req.body);
 
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
-        const scheduleTime = new Date(appointment.scheduledAt).toLocaleString();
+        const scheduleTime = new Date(appointment.scheduledAt).toLocaleString('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
 
         // 1. Notify the Doctor
         const doctorUserId = appointment.doctorId?._id || appointment.doctorId;
@@ -91,7 +91,7 @@ export const bookAppointmentDesk = async (req, res) => {
         const appointment = await deskBookingService(hospitalId, req.userId, req.body);
 
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
-        const scheduleTime = new Date(appointment.scheduledAt).toLocaleString();
+        const scheduleTime = new Date(appointment.scheduledAt).toLocaleString('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
 
         // 1. Notify the Doctor
         const doctorUserId = appointment.doctorId?._id || appointment.doctorId;
@@ -243,7 +243,7 @@ export const cancelAppointment = async (req, res) => {
         const appointment = await cancelAppointmentService(req.params.id, reason);
 
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
-        const scheduleTime = new Date(appointment.scheduledAt).toLocaleString();
+        const scheduleTime = new Date(appointment.scheduledAt).toLocaleString('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
 
         // 1. Notify the Doctor
         const doctorUserId = appointment.doctorId?._id || appointment.doctorId;
