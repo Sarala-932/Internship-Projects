@@ -28,6 +28,20 @@ export default function BedManagement() {
     }
   };
 
+  const handleAdmit = async () => {
+    try {
+      setAdmitting(true);
+      await apiClient.post("/ipd/admit", admitForm);
+      setIsAdmitModalOpen(false);
+      setAdmitForm({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
+      fetchWards(); // refresh grid
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to admit patient");
+    } finally {
+      setAdmitting(false);
+    }
+  };
+
   const getStatusColor = (status) => {
     if (status === "available") return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800";
     if (status === "occupied") return "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
@@ -147,33 +161,68 @@ export default function BedManagement() {
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Patient ID / MRN</label>
-                <input type="text" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" placeholder="e.g. 64a8c9..." />
+                <input 
+                  type="text" 
+                  value={admitForm.patientId} 
+                  onChange={e => setAdmitForm({...admitForm, patientId: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" 
+                  placeholder="e.g. 64a8c9..." 
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Select Ward</label>
-                  <select className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2">
+                  <select 
+                    value={admitForm.wardId}
+                    onChange={e => setAdmitForm({...admitForm, wardId: e.target.value, bedId: ""})}
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
+                  >
                     <option value="">Choose Ward</option>
                     {wards.map(w => <option key={w._id} value={w._id}>{w.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Select Bed</label>
-                  <select className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2">
+                  <select 
+                    value={admitForm.bedId}
+                    onChange={e => setAdmitForm({...admitForm, bedId: e.target.value})}
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
+                  >
                     <option value="">Choose Bed</option>
+                    {admitForm.wardId && wards.find(w => w._id === admitForm.wardId)?.beds
+                        .filter(b => b.status === 'available')
+                        .map(b => (
+                          <option key={b._id} value={b._id}>{b.bedNumber}</option>
+                        ))}
                   </select>
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Attending Doctor ID</label>
-                <input type="text" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" placeholder="Doctor's user ID..." />
+                <input 
+                  type="text" 
+                  value={admitForm.attendingDoctorId}
+                  onChange={e => setAdmitForm({...admitForm, attendingDoctorId: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" 
+                  placeholder="Doctor's user ID..." 
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Reason for Admission</label>
-                <textarea className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" rows="3" placeholder="Symptoms, diagnosis, etc."></textarea>
+                <textarea 
+                  value={admitForm.reasonForAdmission}
+                  onChange={e => setAdmitForm({...admitForm, reasonForAdmission: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" 
+                  rows="3" 
+                  placeholder="Symptoms, diagnosis, etc."
+                ></textarea>
               </div>
-              <button className="w-full bg-hospital-blue text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition" onClick={() => setIsAdmitModalOpen(false)}>
-                Confirm Admission
+              <button 
+                className="w-full bg-hospital-blue text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition disabled:opacity-50" 
+                onClick={handleAdmit}
+                disabled={admitting || !admitForm.patientId || !admitForm.bedId || !admitForm.attendingDoctorId}
+              >
+                {admitting ? "Admitting..." : "Confirm Admission"}
               </button>
             </div>
           </div>
