@@ -10,6 +10,7 @@ import AdminPatients from "../../features/admin/pages/AdminPatients";
 import AdminPharmacy from "../../features/admin/pages/AdminPharmacy";
 import AdminBilling from "../../features/admin/pages/AdminBilling";
 import AdminLab from "../../features/admin/pages/AdminLab";
+import BedManagement from "../../features/ipd/pages/BedManagement";
 
 export const adminRoutes = [
   {
@@ -28,6 +29,7 @@ export const adminRoutes = [
           { path: "/admin/pharmacy", element: <AdminPharmacy /> },
           { path: "/admin/billing", element: <AdminBilling /> },
           { path: "/admin/lab", element: <AdminLab /> },
+          { path: "/admin/ipd", element: <BedManagement /> },
         ]
       }
     ]

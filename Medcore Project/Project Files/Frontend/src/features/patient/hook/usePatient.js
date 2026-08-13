@@ -85,6 +85,19 @@ export const usePatient = () => {
     }
   };
 
+  const getMyAdmissions = async () => {
+    try {
+      setLoading(true);
+      const data = await patientService.getMyAdmissions();
+      return data.admissions || [];
+    } catch (err) {
+      console.error("Admission fetch error:", err.response?.data || err.message);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const updateProfile = async (id, data) => {
     try {
       setLoading(true);
@@ -142,6 +155,7 @@ export const usePatient = () => {
     bookAppointment,
     cancelAppointment,
     getPrescriptions,
+    getMyAdmissions,
     updateProfile,
     fetchDepartments,
     fetchDoctorsByDepartment,

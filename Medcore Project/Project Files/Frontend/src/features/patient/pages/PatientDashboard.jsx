@@ -6,18 +6,21 @@ import { usePatient } from "../hook/usePatient";
 
 export default function PatientDashboard() {
   const { activeProfile } = useSelector((state) => state.patient);
-  const { getAppointments, getPrescriptions, loading } = usePatient();
+  const { getAppointments, getPrescriptions, getMyAdmissions, loading } = usePatient();
   
   const [appointments, setAppointments] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
+  const [admissions, setAdmissions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (activeProfile?._id) {
         const apps = await getAppointments(activeProfile._id);
         const prescs = await getPrescriptions(activeProfile._id);
+        const adms = await getMyAdmissions();
         setAppointments(apps);
         setPrescriptions(prescs);
+        setAdmissions(adms);
       }
     };
     fetchData();
@@ -75,6 +78,26 @@ export default function PatientDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Active Admission Banner (My Stay) */}
+      {admissions.some(a => a.status === 'admitted') && (
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-6 text-white shadow-md flex items-center justify-between">
+          <div>
+            <h3 className="text-xl font-bold flex items-center gap-2">
+               You are currently admitted.
+            </h3>
+            <p className="text-emerald-50 mt-1">
+              {(() => {
+                const active = admissions.find(a => a.status === 'admitted');
+                return `Ward: ${active.wardId?.name} | Bed: ${active.bedId?.bedNumber} | Attending: Dr. ${active.attendingDoctorId?.lastName}`;
+              })()}
+            </p>
+          </div>
+          <div className="hidden sm:block">
+            <span className="px-4 py-2 bg-white/20 rounded-lg text-sm font-semibold backdrop-blur-sm">Active Inpatient Stay</span>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Next Appointment */}

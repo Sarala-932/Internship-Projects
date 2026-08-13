@@ -37,6 +37,12 @@ export const patientService = {
     return response.data;
   },
 
+  // Get Admissions
+  getMyAdmissions: async () => {
+    const response = await apiClient.get("/ipd/my-admissions");
+    return response.data;
+  },
+
   // Fetch departments for booking
   getDepartments: async (hospitalId) => {
     const url = hospitalId ? `/departments?hospitalId=${hospitalId}` : "/departments";

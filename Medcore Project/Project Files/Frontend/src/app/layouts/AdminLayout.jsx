@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import {
   Activity, LogOut, LayoutDashboard, Building2,
-  Users, Calendar, FileText, Pill, Stethoscope, ListTree, ChevronRight, Shield, Sun, Moon, User as UserIcon, Settings
+  Users, Calendar, FileText, Pill, Stethoscope, ListTree, ChevronRight, Shield, Sun, Moon, User as UserIcon, Settings, Bed
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/state/authSlice";
@@ -17,6 +17,7 @@ const navLinks = [
   { path: "/admin/patients", label: "Patients", icon: Activity },
   { path: "/admin/pharmacy", label: "Pharmacy", icon: Pill },
   { path: "/admin/lab", label: "Laboratory", icon: Stethoscope },
+  { path: "/admin/ipd", label: "Bed Management", icon: Bed },
   { path: "/admin/billing", label: "Billing", icon: FileText },
 ];
 

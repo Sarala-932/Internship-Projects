@@ -18,6 +18,7 @@ import analyticsRoutes from "./routes/analytics.route.mjs";
 import masterRouter from "./routes/master.route.mjs";
 import ticketRouter from "./routes/ticket.route.mjs";
 import notificationRouter from "./routes/notification.route.mjs";
+import ipdRouter from "./routes/ipd.route.mjs";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.mjs";
 
@@ -50,6 +51,7 @@ app.use("/api/hospitals", hospitalRouter);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/master", masterRouter);
 app.use("/api/tickets", ticketRouter);
+app.use("/api/ipd", ipdRouter);
 app.use("/api/departments", departmentRouter);
 app.use("/api/users", userRouter);
 app.use("/api/doctors", doctorRouter);
