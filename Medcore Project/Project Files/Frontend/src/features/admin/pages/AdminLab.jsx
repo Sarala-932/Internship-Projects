@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FlaskConical, Search, RefreshCw, AlertCircle, FileText, CheckCircle2, ChevronRight, Download, Trash2 } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
@@ -60,10 +60,14 @@ export default function AdminLab() {
     }
   };
 
+  // Track last fetched tab to avoid cache collision between tabs
+  const lastTabRef = useRef(null);
+
   useEffect(() => {
-    // Always refetch when search or tab changes
-    // But on initial mount (no search), only fetch if cache is empty
-    if (!search && labOrders.length > 0) return;
+    // Always re-fetch when tab changes (data is tab-specific)
+    // For same tab: skip if data exists and no search (cache-first)
+    if (!search && labOrders.length > 0 && lastTabRef.current === activeTab) return;
+    lastTabRef.current = activeTab;
     const timer = setTimeout(() => {
       fetchLabOrders();
     }, 300);
