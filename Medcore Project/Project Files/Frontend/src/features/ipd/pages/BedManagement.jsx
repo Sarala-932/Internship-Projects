@@ -13,8 +13,13 @@ export default function BedManagement() {
   const [admitForm, setAdmitForm] = useState({ patientId: "", wardId: "", bedId: "", attendingDoctorId: "", reasonForAdmission: "" });
   const [admitting, setAdmitting] = useState(false);
 
+  // Dropdown Lists
+  const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+
   useEffect(() => {
     fetchWards();
+    fetchPatientsAndDoctors();
   }, []);
 
   const fetchWards = async () => {
@@ -25,6 +30,19 @@ export default function BedManagement() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchPatientsAndDoctors = async () => {
+    try {
+      const [patientsRes, doctorsRes] = await Promise.all([
+        apiClient.get("/patients?limit=500"),
+        apiClient.get("/users?role=doctor&limit=100")
+      ]);
+      setPatients(patientsRes.data.patients || []);
+      setDoctors(doctorsRes.data.users || []);
+    } catch (err) {
+      console.error("Failed to fetch dropdown data", err);
     }
   };
 
@@ -160,14 +178,17 @@ export default function BedManagement() {
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Patient ID / MRN</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-medium mb-1">Select Patient</label>
+                <select 
                   value={admitForm.patientId} 
                   onChange={e => setAdmitForm({...admitForm, patientId: e.target.value})}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" 
-                  placeholder="e.g. 64a8c9..." 
-                />
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
+                >
+                  <option value="">Choose Patient</option>
+                  {patients.map(p => (
+                    <option key={p._id} value={p._id}>{p.firstName} {p.lastName} (MRN: {p.mrn})</option>
+                  ))}
+                </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -198,14 +219,17 @@ export default function BedManagement() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Attending Doctor ID</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-medium mb-1">Attending Doctor</label>
+                <select 
                   value={admitForm.attendingDoctorId}
                   onChange={e => setAdmitForm({...admitForm, attendingDoctorId: e.target.value})}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" 
-                  placeholder="Doctor's user ID..." 
-                />
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
+                >
+                  <option value="">Choose Doctor</option>
+                  {doctors.map(d => (
+                    <option key={d._id} value={d._id}>Dr. {d.firstName} {d.lastName}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Reason for Admission</label>
