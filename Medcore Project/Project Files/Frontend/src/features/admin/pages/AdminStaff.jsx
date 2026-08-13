@@ -3,6 +3,7 @@ import { Users, Plus, RefreshCw, AlertCircle, ShieldCheck, Mail, Phone, Lock, Fi
 import { useSelector } from "react-redux";
 import { useAdminStaff } from "../hook/useAdminStaff";
 import Pagination from "../../../shared/components/Pagination";
+import TableSkeleton from "../../../shared/components/TableSkeleton";
 
 const STAFF_ROLES = [
   { value: "doctor", label: "Doctor" },
@@ -119,9 +120,7 @@ export default function AdminStaff() {
       {/* Staff Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && staff.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
-          </div>
+          <TableSkeleton columns={5} rows={5} />
         ) : error && staff.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />

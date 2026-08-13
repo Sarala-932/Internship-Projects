@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Activity, Plus, RefreshCw, AlertCircle, Search, User, Phone, Mail, Calendar, Droplet, CheckCircle } from "lucide-react";
 import { useAdminPatients } from "../hook/useAdminPatients";
+import TableSkeleton from "../../../shared/components/TableSkeleton";
 
 export default function AdminPatients() {
   const [search, setSearch] = useState("");
@@ -89,9 +90,7 @@ export default function AdminPatients() {
       {/* Patients Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && patients.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
-          </div>
+          <TableSkeleton columns={5} rows={5} />
         ) : error && patients.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />
