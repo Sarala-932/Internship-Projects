@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import BookAppointmentModal from "../components/BookAppointmentModal";
 import CancelAppointmentModal from "../components/CancelAppointmentModal";
 import { useRealtime } from "../../../shared/hooks/useRealtime";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientAppointments() {
   const { activeProfile } = useSelector((state) => state.patient);
@@ -66,9 +67,7 @@ export default function PatientAppointments() {
       {/* List */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
         {loading && appointments.length === 0 ? (
-          <div className="flex justify-center py-20">
-            <Clock className="w-8 h-8 text-slate-400 animate-spin" />
-          </div>
+          <CardSkeleton count={3} />
         ) : appointments.length === 0 ? (
           <div className="text-center py-20">
             <Calendar className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
@@ -81,7 +80,7 @@ export default function PatientAppointments() {
               <div key={app._id} className="p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
                 
                 {/* Date Box */}
-                <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 flex-shrink-0">
+                <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 shrink-0">
                   <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase">
                     {new Date(app.scheduledAt).toLocaleDateString("en-US", { month: "short" })}
                   </span>
