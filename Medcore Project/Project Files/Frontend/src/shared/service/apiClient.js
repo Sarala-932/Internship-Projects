@@ -59,7 +59,14 @@ apiClient.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const refreshResponse = await apiClient.post("/auth/refresh", {}, {withCredentials: true});
+                const refreshResponse = await axios.post(
+                    `${apiClient.defaults.baseURL}/auth/refresh`,
+                    {},
+                    {
+                        withCredentials: true,
+                        headers: {"Content-Type": "application/json"},
+                    },
+                );
 
                 const newToken = refreshResponse.data?.accessToken;
                 if (newToken) {

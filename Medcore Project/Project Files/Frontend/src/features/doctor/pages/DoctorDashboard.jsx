@@ -110,7 +110,7 @@ export default function DoctorDashboard() {
             Today's Queue
           </h3>
           <button onClick={refreshStats} className="cursor-pointer text-slate-500 hover:text-blue-600 transition-colors" title="Refresh Dashboard">
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className="w-4 h-4 " />
           </button>
         </div>
         
