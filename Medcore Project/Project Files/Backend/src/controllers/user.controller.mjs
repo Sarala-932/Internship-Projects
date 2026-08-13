@@ -28,10 +28,6 @@ export async function register(req, res) {
             phone: user.phone,
         };
 
-        if (otpResponse.sendResult && otpResponse.sendResult.success === false) {
-             responseObj.demoOtp = otpResponse.code;
-        }
-
         return res.status(201).json(responseObj);
     } catch (err) {
         console.error("Register error:", err);
@@ -90,9 +86,6 @@ export async function forgotPassword(req, res) {
         const otpResponse = await issueOtp(user.email, user.firstName, "password_reset");
         
         const responseObj = {message: "If this email exists, a reset code has been sent."};
-        if (otpResponse.sendResult && otpResponse.sendResult.success === false) {
-             responseObj.demoOtp = otpResponse.code;
-        }
         return res.json(responseObj);
     } catch (err) {
         console.error("forgotPassword error:", err);

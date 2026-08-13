@@ -55,6 +55,10 @@ export async function verifyOtp(req, res) {
         user.lastLoginAt = new Date();
         await user.save();
         
+        // Send the verified welcome email
+        const { sendWelcomeEmail } = await import("../utils/mailer.mjs");
+        sendWelcomeEmail({to: user.email, name: user.firstName});
+        
         const { issueTokenPair } = await import("../services/auth.service.mjs");
         const { accessCookieOpts, refreshCookieOpts } = await import("./token.controller.mjs");
         
@@ -90,12 +94,8 @@ export async function resendOtp(req, res) {
 
         const user = await User.findOne({email: String(email).toLowerCase()});
         if (user) {
-            const otpResponse = await issueOtp(user.email, user.firstName, purpose);
-            const responseObj = {message: "If the email exists, an OTP was sent."};
-            if (otpResponse.sendResult && otpResponse.sendResult.success === false) {
-                 responseObj.demoOtp = otpResponse.code;
-            }
-            return res.json(responseObj);
+            await issueOtp(user.email, user.firstName, purpose);
+            return res.json({message: "If the email exists, an OTP was sent."});
         }
         return res.json({message: "If the email exists, an OTP was sent."});
     } catch (err) {
