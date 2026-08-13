@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAppointments } from '../state/doctorSlice';
 import doctorService from '../service/doctorService';
@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 export const useDoctorAppointments = (doctorId, filterDate) => {
   const dispatch = useDispatch();
   const { list: appointments, loading, error } = useSelector((state) => state.doctor.appointments);
+  // Track what was last fetched to avoid redundant calls
+  const lastFetchKey = useRef(null);
 
   const getAppointments = () => {
     if (doctorId) {
@@ -15,7 +17,13 @@ export const useDoctorAppointments = (doctorId, filterDate) => {
   };
 
   useEffect(() => {
-    getAppointments();
+    if (!doctorId) return;
+    const fetchKey = `${doctorId}_${filterDate}`;
+    // Only fetch if data is empty OR the doctorId/filterDate actually changed
+    if (appointments.length === 0 || lastFetchKey.current !== fetchKey) {
+      lastFetchKey.current = fetchKey;
+      getAppointments();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doctorId, filterDate, dispatch]);
 
