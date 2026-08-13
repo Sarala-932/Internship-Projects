@@ -276,8 +276,21 @@ export default function DoctorEncounter() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
+      <div className="space-y-6 max-w-7xl mx-auto pb-10 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="h-16 bg-slate-200 dark:bg-slate-700 rounded-2xl w-full"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="space-y-6">
+            <div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
+            <div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
+          </div>
+          {/* Right Column */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="h-48 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
+            <div className="h-96 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
+          </div>
+        </div>
       </div>
     );
   }

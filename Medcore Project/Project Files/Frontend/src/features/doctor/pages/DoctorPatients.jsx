@@ -3,6 +3,7 @@ import { Users, Search, RefreshCw, AlertCircle, FileText } from "lucide-react";
 import { useDoctorPatients } from "../hook/useDoctorPatients";
 import PatientHistoryModal from "../components/PatientHistoryModal";
 import Pagination from "../../../shared/components/Pagination";
+import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function DoctorPatients() {
   const [searchInput, setSearchInput] = useState("");
@@ -72,9 +73,7 @@ export default function DoctorPatients() {
 
       {/* Main Grid */}
       {loading && patients.length === 0 ? (
-        <div className="flex items-center justify-center py-20">
-          <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
-        </div>
+        <CardSkeleton count={8} />
       ) : error && patients.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
           <AlertCircle className="w-8 h-8" />
