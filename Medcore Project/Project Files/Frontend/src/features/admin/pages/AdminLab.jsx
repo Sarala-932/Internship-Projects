@@ -61,9 +61,12 @@ export default function AdminLab() {
   };
 
   useEffect(() => {
+    // Always refetch when search or tab changes
+    // But on initial mount (no search), only fetch if cache is empty
+    if (!search && labOrders.length > 0) return;
     const timer = setTimeout(() => {
       fetchLabOrders();
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, [search, activeTab]);
 

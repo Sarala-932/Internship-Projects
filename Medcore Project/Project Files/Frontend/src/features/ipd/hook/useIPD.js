@@ -51,9 +51,10 @@ export const useIPD = () => {
   }, []);
 
   useEffect(() => {
-    fetchWards();
-    fetchPendingRequests();
-    fetchDropdownData();
+    // Cache-first: only fetch if data not already loaded
+    if (wards.length === 0) fetchWards();
+    if (pendingRequests.length === 0) fetchPendingRequests();
+    if (patients.length === 0) fetchDropdownData();
   }, [fetchWards, fetchPendingRequests, fetchDropdownData]);
 
   const admitPatient = async (admitForm) => {

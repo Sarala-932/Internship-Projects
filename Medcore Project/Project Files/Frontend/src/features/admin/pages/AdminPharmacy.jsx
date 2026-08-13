@@ -13,6 +13,7 @@ export default function AdminPharmacy() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("inventory"); // 'inventory' | 'prescriptions'
   
+  const dispatch = useDispatch();
   const { pharmacyInventory: inventory } = useSelector(state => state.admin);
   const [pendingPrescriptions, setPendingPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -82,8 +83,11 @@ export default function AdminPharmacy() {
 
   useEffect(() => {
     if (activeTab === "inventory") {
+      // Cache-first: skip if data exists and no search/page change
+      if (inventory.length > 0 && !search && page === 1) return;
       fetchInventory();
     } else {
+      if (pendingPrescriptions.length > 0) return;
       fetchPendingPrescriptions();
     }
   }, [search, activeTab, page]);

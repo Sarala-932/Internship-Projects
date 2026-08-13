@@ -11,7 +11,9 @@ export const useAdminDepartments = () => {
 
   const [masterSpecialities, setMasterSpecialities] = useState([]);
 
-  const fetchDepartments = useCallback(async () => {
+  const fetchDepartments = useCallback(async (force = false) => {
+    // Cache-first: skip fetch if data already loaded and not forced
+    if (!force && departments.length > 0) return;
     try {
       dispatch(setLoading(true));
       const [deptData, masterRes] = await Promise.all([
