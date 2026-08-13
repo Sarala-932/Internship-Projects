@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { FlaskConical, Search, RefreshCw, AlertCircle, FileText, CheckCircle2, ChevronRight, Download, Trash2 } from "lucide-react";
 import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { setLabOrders } from "../state/adminSlice";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function AdminLab() {
