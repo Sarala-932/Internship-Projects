@@ -8,6 +8,7 @@ import PatientHistoryModal from "../components/PatientHistoryModal";
 import TableSkeleton from "../../../shared/components/TableSkeleton";
 
 export default function DoctorAppointments() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [filterDate, setFilterDate] = useState(new Date().toISOString().split('T')[0]);
@@ -84,14 +85,14 @@ export default function DoctorAppointments() {
             className="cursor-pointer p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Main List */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && appointments.length === 0 ? (
+        {((loading && appointments.length === 0) || isRefreshing) ? (
           <TableSkeleton />
         ) : error && appointments.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">

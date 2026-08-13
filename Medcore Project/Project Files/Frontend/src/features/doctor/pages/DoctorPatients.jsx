@@ -6,6 +6,7 @@ import Pagination from "../../../shared/components/Pagination";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function DoctorPatients() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -66,13 +67,13 @@ export default function DoctorPatients() {
             className="cursor-pointer p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Main Grid */}
-      {loading && patients.length === 0 ? (
+      {((loading && patients.length === 0) || isRefreshing) ? (
         <CardSkeleton count={8} />
       ) : error && patients.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">

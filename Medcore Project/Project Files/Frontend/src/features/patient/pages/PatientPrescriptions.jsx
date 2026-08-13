@@ -7,6 +7,7 @@ import apiClient from "../../../shared/service/apiClient";
 import toast from "react-hot-toast";
 
 export default function PatientPrescriptions() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { activeProfile, prescriptions: cachedPrescs } = useSelector((state) => state.patient);
   const { getPrescriptions, loading } = usePatient();
   const [prescriptions, setPrescriptions] = useState(cachedPrescs || []);
@@ -54,21 +55,17 @@ export default function PatientPrescriptions() {
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and download your digital prescriptions</p>
         </div>
         <button 
-          onClick={() => {
-            if (activeProfile?._id) {
-              getPrescriptions(activeProfile._id).then(setPrescriptions);
-            }
-          }}
+          onClick={async () => { setIsRefreshing(true); if (activeProfile?._id) { await getPrescriptions(activeProfile._id).then(setPrescriptions); } setIsRefreshing(false); }}
           className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
           title="Refresh"
         >
-          <RefreshCw className="w-5 h-5 " />
+          <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
       {/* Content */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
-        {loading && prescriptions.length === 0 ? (
+        {((loading && prescriptions.length === 0) || isRefreshing) ? (
           <CardSkeleton count={3} />
         ) : prescriptions.length === 0 ? (
           <div className="text-center py-20">

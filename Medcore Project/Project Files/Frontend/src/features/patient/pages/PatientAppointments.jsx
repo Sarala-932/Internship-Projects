@@ -9,6 +9,7 @@ import { useRealtime } from "../../../shared/hooks/useRealtime";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientAppointments() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { activeProfile, appointments: cachedApps } = useSelector((state) => state.patient);
   const { getAppointments, cancelAppointment, loading } = usePatient();
   const [appointments, setAppointments] = useState(cachedApps || []);
@@ -57,11 +58,11 @@ export default function PatientAppointments() {
         </div>
         <div className="flex items-center gap-3 mt-4 sm:mt-0">
           <button 
-            onClick={fetchAppointments}
+            onClick={async () => { setIsRefreshing(true); await fetchAppointments(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
             title="Refresh"
           >
-            <RefreshCw className="w-5 h-5 " />
+            <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
@@ -75,7 +76,7 @@ export default function PatientAppointments() {
 
       {/* List */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
-        {loading && appointments.length === 0 ? (
+        {((loading && appointments.length === 0) || isRefreshing) ? (
           <CardSkeleton count={3} />
         ) : appointments.length === 0 ? (
           <div className="text-center py-20">

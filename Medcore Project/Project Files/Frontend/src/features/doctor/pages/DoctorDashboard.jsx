@@ -5,6 +5,7 @@ import { useDoctorDashboard } from "../hook/useDoctorDashboard";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function DoctorDashboard() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const { stats: data, loading, refreshStats } = useDoctorDashboard();
@@ -110,7 +111,7 @@ export default function DoctorDashboard() {
             Today's Queue
           </h3>
           <button onClick={refreshStats} className="cursor-pointer text-slate-500 hover:text-blue-600 transition-colors" title="Refresh Dashboard">
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
         

@@ -3,6 +3,7 @@ import { MessageSquare, RefreshCw, AlertCircle, CheckCircle, Clock, Search, File
 import { useSuperAdmin } from "../hook/useSuperAdmin";
 
 export default function SuperAdminTickets() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [tickets, setTickets] = useState([]);
   const { getTickets, updateTicketStatus, loading, error } = useSuperAdmin();
   const [statusFilter, setStatusFilter] = useState("");
@@ -51,18 +52,18 @@ export default function SuperAdminTickets() {
           <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
           
           <button 
-            onClick={fetchTickets}
+            onClick={async () => { setIsRefreshing(true); await fetchTickets(); setIsRefreshing(false); }}
             className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* List */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && tickets.length === 0 ? (
+        {((loading && tickets.length === 0) || isRefreshing) ? (
           <div className="flex items-center justify-center py-20">
             <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
           </div>

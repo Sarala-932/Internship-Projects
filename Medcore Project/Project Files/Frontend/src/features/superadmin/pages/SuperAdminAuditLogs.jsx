@@ -3,6 +3,7 @@ import { Clock, RefreshCw, AlertCircle, FileText, Filter } from "lucide-react";
 import { useSuperAdmin } from "../hook/useSuperAdmin";
 
 export default function SuperAdminAuditLogs() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [logs, setLogs] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -67,14 +68,14 @@ export default function SuperAdminAuditLogs() {
             className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && logs.length === 0 ? (
+        {((loading && logs.length === 0) || isRefreshing) ? (
           <div className="flex items-center justify-center py-20">
             <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
           </div>

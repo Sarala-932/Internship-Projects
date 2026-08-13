@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function AdminDepartments() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { departments, masterSpecialities, loading, error, fetchDepartments, createDepartment } = useAdminDepartments();
 
   const [showModal, setShowModal] = useState(false);
@@ -59,11 +60,11 @@ export default function AdminDepartments() {
         
         <div className="flex items-center gap-3">
           <button 
-            onClick={fetchDepartments}
+            onClick={async () => { setIsRefreshing(true); await fetchDepartments(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowModal(true)}
@@ -76,7 +77,7 @@ export default function AdminDepartments() {
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden p-6">
-        {loading ? (
+        {(loading || isRefreshing) ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array(6).fill(0).map((_, i) => <CardSkeleton key={i} />)}
           </div>

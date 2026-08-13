@@ -3,6 +3,7 @@ import { Users, Search, RefreshCw, AlertCircle, ShieldAlert, CheckCircle, Shield
 import { useSuperAdmin } from "../hook/useSuperAdmin";
 
 export default function SuperAdminUsers() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [users, setUsers] = useState([]);
   const { getUsers, updateUserStatus, loading, error } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,18 +79,18 @@ export default function SuperAdminUsers() {
           <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
           
           <button 
-            onClick={fetchUsers}
+            onClick={async () => { setIsRefreshing(true); await fetchUsers(); setIsRefreshing(false); }}
             className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && users.length === 0 ? (
+        {((loading && users.length === 0) || isRefreshing) ? (
           <div className="flex items-center justify-center py-20">
             <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
           </div>
@@ -97,7 +98,7 @@ export default function SuperAdminUsers() {
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
             <AlertCircle className="w-8 h-8" />
             <span className="font-medium">{error}</span>
-            <button onClick={fetchUsers} className="mt-2 text-sm text-blue-600 hover:underline cursor-pointer">Try Again</button>
+            <button onClick={async () => { setIsRefreshing(true); await fetchUsers(); setIsRefreshing(false); }} className="mt-2 text-sm text-blue-600 hover:underline cursor-pointer">Try Again</button>
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">

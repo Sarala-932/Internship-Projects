@@ -8,6 +8,7 @@ import ReceptionistAppointmentEntry from "../components/ReceptionistAppointmentE
 import { useRealtime } from "../../../shared/hooks/useRealtime";
 
 export default function AdminAppointments() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { user } = useSelector(state => state.auth);
   const [appointments, setAppointments] = useState([]);
   const [patients, setPatients] = useState([]);
@@ -84,11 +85,11 @@ export default function AdminAppointments() {
         
         <div className="flex items-center gap-3">
           <button 
-            onClick={fetchData}
+            onClick={async () => { setIsRefreshing(true); await fetchData(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowModal(true)}
@@ -102,7 +103,7 @@ export default function AdminAppointments() {
 
       {/* Appointments List */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && appointments.length === 0 ? (
+        {((loading && appointments.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={6} rows={5} />
         ) : error && appointments.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">

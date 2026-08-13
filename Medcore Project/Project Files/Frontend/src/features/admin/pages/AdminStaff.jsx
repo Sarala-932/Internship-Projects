@@ -15,6 +15,7 @@ const STAFF_ROLES = [
 ];
 
 export default function AdminStaff() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { user } = useSelector(state => state.auth);
   
   const [searchInput, setSearchInput] = useState("");
@@ -105,7 +106,7 @@ export default function AdminStaff() {
             className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowModal(true)}
@@ -119,7 +120,7 @@ export default function AdminStaff() {
 
       {/* Staff Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && staff.length === 0 ? (
+        {((loading && staff.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={5} rows={5} />
         ) : error && staff.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">

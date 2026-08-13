@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import CardSkeleton from "../../../shared/components/CardSkeleton";
 
 export default function PatientRecords() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const dispatch = useDispatch();
   const { activeProfile, labRecords: cachedRecords } = useSelector((state) => state.patient);
   const [labOrders, setLabOrders] = useState(cachedRecords || []);
@@ -43,19 +44,15 @@ export default function PatientRecords() {
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View your lab reports and medical documents</p>
         </div>
         <button 
-          onClick={() => {
-            if (activeProfile?._id) {
-              fetchRecords();
-            }
-          }}
+          onClick={async () => { setIsRefreshing(true); if (activeProfile?._id) { await fetchRecords(); } setIsRefreshing(false); }}
           className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
           title="Refresh"
         >
-          <RefreshCw className="w-5 h-5 " />
+          <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
-      {isLoading ? (
+      {(isLoading || isRefreshing) ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array(3).fill(0).map((_, i) => <CardSkeleton key={i} />)}
         </div>

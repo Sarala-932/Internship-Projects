@@ -4,6 +4,7 @@ import { useAdminPatients } from "../hook/useAdminPatients";
 import TableSkeleton from "../../../shared/components/TableSkeleton";
 
 export default function AdminPatients() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const { patients, loading, error, fetchPatients, registerPatient } = useAdminPatients();
 
@@ -75,7 +76,7 @@ export default function AdminPatients() {
             className="p-2 text-slate-500 hover:text-emerald-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
-            <RefreshCw className="w-4 h-4 " />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowModal(true)}
@@ -89,7 +90,7 @@ export default function AdminPatients() {
 
       {/* Patients Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-        {loading && patients.length === 0 ? (
+        {((loading && patients.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={5} rows={5} />
         ) : error && patients.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-red-500 gap-2">
