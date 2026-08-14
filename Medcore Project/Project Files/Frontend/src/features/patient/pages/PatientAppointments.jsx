@@ -24,7 +24,11 @@ export default function PatientAppointments() {
   };
 
   useEffect(() => {
-    fetchAppointments();
+    if (!cachedApps || cachedApps.length === 0) {
+      fetchAppointments();
+    } else {
+      setAppointments(cachedApps);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProfile?._id]);
 

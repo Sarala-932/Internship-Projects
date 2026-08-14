@@ -30,8 +30,13 @@ export default function PatientRecords() {
 
   useEffect(() => {
     if (activeProfile?._id) {
-      fetchRecords();
+      if (!cachedRecords || cachedRecords.length === 0) {
+        fetchRecords();
+      } else {
+        setLabOrders(cachedRecords);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProfile]);
 
 

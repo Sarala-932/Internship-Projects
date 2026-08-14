@@ -15,13 +15,17 @@ export default function PatientPrescriptions() {
   const [downloadingId, setDownloadingId] = useState(null);
 
   useEffect(() => {
-    const fetchPrescriptions = async () => {
-      if (activeProfile?._id) {
-        const data = await getPrescriptions(activeProfile._id);
-        setPrescriptions(data);
-      }
-    };
-    fetchPrescriptions();
+    if (!cachedPrescs || cachedPrescs.length === 0) {
+      const fetchPrescriptions = async () => {
+        if (activeProfile?._id) {
+          const data = await getPrescriptions(activeProfile._id);
+          setPrescriptions(data);
+        }
+      };
+      fetchPrescriptions();
+    } else {
+      setPrescriptions(cachedPrescs);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProfile?._id]);
 
