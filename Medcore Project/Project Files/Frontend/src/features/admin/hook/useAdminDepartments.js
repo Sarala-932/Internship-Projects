@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import adminService from "../service/admin.service";
 import { setDepartments, setLoading, setError } from "../state/adminSlice";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import apiClient from "../../../shared/service/apiClient";
 
@@ -28,19 +28,19 @@ export const useAdminDepartments = () => {
     }
   }, [dispatch]);
 
-  const createDepartment = async (payload) => {
+  const createDepartment = useCallback(async (payload) => {
     try {
       dispatch(setLoading(true));
       await adminService.createDepartment(payload);
       toast.success("Department added successfully");
-      await fetchDepartments();
+      await fetchDepartments(true); // force refresh so new dept appears
       return true;
     } catch (err) {
       dispatch(setError(err.response?.data?.message || "Failed to create department"));
       toast.error(err.response?.data?.message || "Failed to create department");
       return false;
     }
-  };
+  }, [dispatch, fetchDepartments]);
 
   return {
     departments,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ListTree, Plus, RefreshCw, AlertCircle, Building2, CheckCircle } from "lucide-react";
 import { useAdminDepartments } from "../hook/useAdminDepartments";
 import toast from "react-hot-toast";
@@ -41,8 +41,9 @@ export default function AdminDepartments() {
   };
 
   // Filter out master specialities that are already added to this hospital
-  const availableSpecialities = masterSpecialities.filter(
-    m => !departments.some(d => d.name === m.name)
+  const availableSpecialities = useMemo(
+    () => masterSpecialities.filter(m => !departments.some(d => d.name === m.name)),
+    [masterSpecialities, departments]
   );
 
   return (

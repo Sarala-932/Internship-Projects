@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAppointments } from '../state/doctorSlice';
 import doctorService from '../service/doctorService';
@@ -10,20 +10,22 @@ export const useDoctorAppointments = (doctorId, filterDate) => {
   // Track what was last fetched to avoid redundant calls
   const lastFetchKey = useRef(null);
 
-  const getAppointments = () => {
+  const getAppointments = useCallback(() => {
     if (doctorId) {
       return dispatch(fetchAppointments({ doctorId, date: filterDate }));
     }
-  };
+  }, [doctorId, filterDate, dispatch]);
 
   useEffect(() => {
     if (!doctorId) return;
     const fetchKey = `${doctorId}_${filterDate}`;
-    // Only fetch if data is empty OR the doctorId/filterDate actually changed
-    if (appointments.length === 0 || lastFetchKey.current !== fetchKey) {
-      lastFetchKey.current = fetchKey;
+    // Only skip if same fetch key was already run (regardless of data length)
+    if (lastFetchKey.current === fetchKey) return;
+    lastFetchKey.current = fetchKey;
+    const timer = setTimeout(() => {
       getAppointments();
-    }
+    }, 0);
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doctorId, filterDate, dispatch]);
 

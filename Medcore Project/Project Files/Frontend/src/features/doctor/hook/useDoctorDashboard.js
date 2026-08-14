@@ -7,8 +7,10 @@ export const useDoctorDashboard = () => {
   const { stats, loading, error } = useSelector((state) => state.doctor.dashboard);
 
   useEffect(() => {
-    dispatch(fetchDashboardStats());
-  }, [dispatch]);
+    if (!stats) {
+      dispatch(fetchDashboardStats());
+    }
+  }, [dispatch, stats]);
 
   const refreshStats = () => {
     return dispatch(fetchDashboardStats());

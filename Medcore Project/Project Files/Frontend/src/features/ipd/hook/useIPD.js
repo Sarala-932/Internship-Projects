@@ -1,32 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setWards, setIpdPatients, setPendingRequests, setLoading } from "../../admin/state/adminSlice";
+import { setWards, setIpdPatients, setPendingRequests } from "../../admin/state/adminSlice";
 import toast from "react-hot-toast";
 import { ipdService } from "../service/ipdService";
 
 export const useIPD = () => {
   const dispatch = useDispatch();
-  const { wards, ipdPatients: patients, pendingRequests, loading: reduxLoading } = useSelector(state => state.admin);
-  const [loading, setLoading] = useState(true);
+  const { wards, ipdPatients: patients, pendingRequests } = useSelector(state => state.admin);
+  const [loading, setIpdLoading] = useState(true);
   
   const [doctors, setDoctors] = useState([]);
-  
-  
   const [admitting, setAdmitting] = useState(false);
   const [dischargingBedId, setDischargingBedId] = useState(null);
 
   const fetchWards = useCallback(async () => {
     try {
-      setLoading(true);
+      setIpdLoading(true);
       const data = await ipdService.getWards();
       dispatch(setWards(data));
     } catch (err) {
       console.error(err);
       toast.error("Failed to load wards.");
     } finally {
-      setLoading(false);
+      setIpdLoading(false);
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchPendingRequests = useCallback(async () => {
     try {
@@ -35,7 +33,7 @@ export const useIPD = () => {
     } catch (err) {
       console.error("Failed to fetch pending requests", err);
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchDropdownData = useCallback(async () => {
     try {
@@ -48,10 +46,9 @@ export const useIPD = () => {
     } catch (err) {
       console.error("Failed to fetch dropdown data", err);
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    // Cache-first: only fetch if data not already loaded
     if (wards.length === 0) fetchWards();
     if (pendingRequests.length === 0) fetchPendingRequests();
     if (patients.length === 0) fetchDropdownData();
@@ -62,8 +59,8 @@ export const useIPD = () => {
       setAdmitting(true);
       await ipdService.admitPatient(admitForm);
       toast.success("Patient admitted successfully!");
-      fetchWards();
-      fetchPendingRequests();
+      await fetchWards();
+      await fetchPendingRequests();
       return true;
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to admit patient");
@@ -78,7 +75,7 @@ export const useIPD = () => {
       setDischargingBedId(bedId);
       const response = await ipdService.dischargePatient(admissionId, summary);
       toast.success(response.message || "Patient discharged successfully!");
-      fetchWards();
+      await fetchWards();
       return true;
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to discharge patient");

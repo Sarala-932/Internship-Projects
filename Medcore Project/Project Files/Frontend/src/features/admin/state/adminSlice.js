@@ -67,14 +67,17 @@ const adminSlice = createSlice({
     setWards: (state, action) => {
       state.wards = action.payload;
       state.loading = false;
+      state.error = null;
     },
     setIpdPatients: (state, action) => {
       state.ipdPatients = action.payload;
       state.loading = false;
+      state.error = null;
     },
     setPendingRequests: (state, action) => {
       state.pendingRequests = action.payload;
       state.loading = false;
+      state.error = null;
     },
     setStats: (state, action) => {
       state.stats = action.payload;
