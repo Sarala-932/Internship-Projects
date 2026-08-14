@@ -115,7 +115,7 @@ export default function PatientRecords() {
                   Download PDF
                 </a>
               ) : (
-                <button disabled className="w-full py-2 bg-slate-50 dark:bg-slate-800 text-slate-400 text-sm font-medium rounded-lg flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 cursor-not-allowed cursor-pointer">
+                <button disabled className="w-full py-2 bg-slate-50 dark:bg-slate-800 text-slate-400 text-sm font-medium rounded-lg flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 cursor-not-allowed">
                   No PDF Available
                 </button>
               )}
