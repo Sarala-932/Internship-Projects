@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { Resend } from "resend";
-import {config} from "../config/config.mjs"
+import {Resend} from "resend";
+import {config} from "../config/config.mjs";
 
 const resend = config.resendApiKey ? new Resend(config.resendApiKey) : null;
 
@@ -64,7 +64,7 @@ export function welcomeTemplate({name}) {
         <p style="color:#334155;margin:0 0 24px">Welcome to MedCore HMS! You can now access your dashboard and manage your clinical operations.</p>
         
         <div style="text-align:center;">
-          <a href="https://medcore.local/dashboard" style="display:inline-block;background:#059669;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 24px;border-radius:6px;">Go to Dashboard</a>
+          <a href="https://medcore-hms-theta.vercel.app/patient/dashboard" style="display:inline-block;background:#059669;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 24px;border-radius:6px;">Go to Dashboard</a>
         </div>
         
         <p style="color:#94a3b8;font-size:13px;margin:32px 0 0 0;">
@@ -78,11 +78,11 @@ export function welcomeTemplate({name}) {
 export async function sendOtpEmail({to, name, otp}) {
     try {
         if (resend) {
-            const { data, error } = await resend.emails.send({
+            const {data, error} = await resend.emails.send({
                 from: FROM,
                 to: [to],
                 subject: "MedCore HMS - Your Verification Code",
-                html: otpTemplate({name, otp})
+                html: otpTemplate({name, otp}),
             });
             if (error) throw new Error(error.message);
             return data;
@@ -92,30 +92,30 @@ export async function sendOtpEmail({to, name, otp}) {
             console.log(`\n[DEV MAIL] OTP for ${to}: ${otp}\n`);
             return {dev: true};
         }
-        
+
         const result = await transporter.sendMail({
             from: FROM,
             to,
             subject: "MedCore HMS - Your Verification Code",
             html: otpTemplate({name, otp}),
         });
-        
+
         return result;
     } catch (error) {
         console.error("Failed to send OTP Email:", error.message);
         console.log(`\n[FALLBACK DEV MAIL] OTP for ${to}: ${otp}\n`);
-        return { success: false, error: error.message };
+        return {success: false, error: error.message};
     }
 }
 
 export async function sendWelcomeEmail({to, name}) {
     try {
         if (resend) {
-            const { data, error } = await resend.emails.send({
+            const {data, error} = await resend.emails.send({
                 from: FROM,
                 to: [to],
                 subject: "Welcome to MedCore HMS - Email Verified",
-                html: welcomeTemplate({name})
+                html: welcomeTemplate({name}),
             });
             if (error) throw new Error(error.message);
             return data;
@@ -125,17 +125,17 @@ export async function sendWelcomeEmail({to, name}) {
             console.log(`\n[DEV MAIL] Welcome Email for ${to}\n`);
             return {dev: true};
         }
-        
+
         const result = await transporter.sendMail({
             from: FROM,
             to,
             subject: "Welcome to MedCore HMS - Email Verified",
             html: welcomeTemplate({name}),
         });
-        
+
         return result;
     } catch (error) {
         console.error("Failed to send Welcome Email:", error.message);
-        return { success: false, error: error.message };
+        return {success: false, error: error.message};
     }
 }
