@@ -98,7 +98,7 @@ export default function AdminLayout() {
         {/* Topbar */}
         <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 transition-colors">
           <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-white capitalize">{location.pathname.split("/").pop() || "Dashboard"}</h1>
+            <h1 className="text-lg font-bold text-slate-900 dark:text-white capitalize">{currentPage}</h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">Hospital Administration</p>
           </div>
           <div className="flex items-center gap-3">
