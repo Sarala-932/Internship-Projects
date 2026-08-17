@@ -48,8 +48,8 @@ export const useAuth = () => {
     }
   };
 
-  const handleLogout = () => {
-    // Get role from local storage before dispatching logout clears it
+  const handleLogout = async () => {
+  
     let currentRole = "patient";
     try {
       const userStr = localStorage.getItem("user");
@@ -57,6 +57,12 @@ export const useAuth = () => {
         currentRole = JSON.parse(userStr).role;
       }
     } catch(e) {}
+    
+    try {
+      await authService.logout(); 
+    } catch (e) {
+      console.error("Logout API failed", e);
+    }
     
     dispatch(logout());
     
