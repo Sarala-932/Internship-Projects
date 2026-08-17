@@ -19,7 +19,18 @@ export const initSocket = (server) => {
 
   io.use(async (socket, next) => {
     try {
-      const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(" ")[1];
+      let token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(" ")[1];
+      
+      // Parse cookie manually to get accessToken
+      const cookieHeader = socket.handshake.headers?.cookie;
+      if (!token && cookieHeader) {
+        const cookies = cookieHeader.split(';').map(c => c.trim());
+        const accessCookie = cookies.find(c => c.startsWith('accessToken='));
+        if (accessCookie) {
+          token = accessCookie.split('=')[1];
+        }
+      }
+
       if (!token) {
         return next(new Error("Authentication error"));
       }

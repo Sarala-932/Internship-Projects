@@ -79,7 +79,7 @@ export default function SuperAdminLayout() {
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" />
+                <Icon className="w-5 h-5 shrink-0" />
                 {link.label}
                 {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
               </Link>

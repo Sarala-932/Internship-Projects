@@ -26,10 +26,6 @@ const processQueue = (error, token = null) => {
 
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
         return config;
     },
     (error) => {
@@ -68,11 +64,6 @@ apiClient.interceptors.response.use(
                     },
                 );
 
-                const newToken = refreshResponse.data?.accessToken;
-                if (newToken) {
-                    localStorage.setItem("token", newToken);
-                }
-
                 isRefreshing = false;
                 processQueue(null);
 
@@ -94,7 +85,6 @@ apiClient.interceptors.response.use(
                         }
                     } catch (e) {}
 
-                    localStorage.removeItem("token");
                     localStorage.removeItem("user");
 
                     setTimeout(() => {

@@ -12,11 +12,11 @@ export const getSocket = () => globalSocket;
 
 export const useSocket = () => {
   const dispatch = useDispatch();
-  const { user, token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [socketInstance, setSocketInstance] = useState(globalSocket);
 
   useEffect(() => {
-    if (!user || !token) {
+    if (!user) {
       if (globalSocket) {
         globalSocket.disconnect();
         globalSocket = null;
@@ -30,11 +30,9 @@ export const useSocket = () => {
       return;
     }
 
-    const freshToken = localStorage.getItem("token") || token;
-
     console.log("[Socket] Connecting to", SOCKET_URL);
     const socket = io(SOCKET_URL, {
-      auth: { token: freshToken },
+      // Browser automatically sends HttpOnly cookies because of withCredentials: true
       withCredentials: true,
       transports: ["websocket", "polling"],
       reconnection: true,
@@ -74,7 +72,7 @@ export const useSocket = () => {
     return () => {
       // We do NOT disconnect on component unmount, because this is a singleton!
     };
-  }, [user, token, dispatch]);
+  }, [user, dispatch]);
 
   return socketInstance;
 };

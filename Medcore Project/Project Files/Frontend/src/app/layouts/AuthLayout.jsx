@@ -10,7 +10,7 @@ export default function AuthLayout() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className="flex flex-col min-h-screen justify-center items-center bg-gradient-to-br from-blue-50 via-indigo-50/50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 relative transition-colors duration-500 py-12 px-4 overflow-hidden">
+    <div className="flex flex-col min-h-screen justify-center items-center bg-linear-to-br from-blue-50 via-indigo-50/50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 relative transition-colors duration-500 py-12 px-4 overflow-hidden">
       
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/10 dark:bg-blue-600/5 blur-[80px] pointer-events-none" />
@@ -48,7 +48,7 @@ export default function AuthLayout() {
         </div>
       </div>
 
-      <div className="w-full max-w-[440px] p-8 sm:p-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 dark:border-slate-700/50 transition-all duration-300 relative z-10">
+      <div className="w-full max-w-110 p-8 sm:p-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 dark:border-slate-700/50 transition-all duration-300 relative z-10">
         {!['/verify-otp', '/forgot-password', '/reset-password'].includes(location.pathname) && (
           <div className="mb-8 text-center flex flex-col items-center">
             <div className={`w-16 h-16 rounded-2xl mb-6 flex items-center justify-center shadow-lg ${isStaff ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 shadow-indigo-900/10' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 shadow-blue-900/10'}`}>

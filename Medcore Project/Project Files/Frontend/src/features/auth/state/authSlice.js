@@ -13,7 +13,6 @@ const getUserFromStorage = () => {
 
 const initialState = {
   user: getUserFromStorage(),
-  token: localStorage.getItem("token") || null,
   status: "idle",
   error: null,
 };
@@ -27,17 +26,13 @@ const authSlice = createSlice({
         localStorage.setItem("lastRole", state.user.role);
       }
       state.user = null;
-      state.token = null;
       state.status = "idle";
       state.error = null;
-      localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
     setCredentials: (state, action) => {
       state.status = "succeeded";
-      state.token = action.payload.accessToken;
       state.user = action.payload.user;
-      localStorage.setItem("token", action.payload.accessToken);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     clearError: (state) => {

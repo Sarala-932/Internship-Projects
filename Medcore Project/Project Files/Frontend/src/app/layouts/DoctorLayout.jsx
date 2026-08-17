@@ -40,8 +40,8 @@ export default function DoctorLayout() {
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300 z-10 hidden md:flex">
-        <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+      <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300 z-10 md:flex">
+        <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700 shrink-0">
           <Link to="/doctor/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Stethoscope className="w-5 h-5 text-white" />
@@ -79,7 +79,7 @@ export default function DoctorLayout() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 sm:px-8 transition-colors duration-300 z-10 flex-shrink-0">
+        <header className="h-16 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 sm:px-8 transition-colors duration-300 z-10 shrink-0">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold text-slate-900 dark:text-white capitalize hidden sm:block">
               {location.pathname.split('/')[2]?.replace('-', ' ') || "Dashboard"}
