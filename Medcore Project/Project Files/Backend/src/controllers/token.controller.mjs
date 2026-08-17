@@ -1,7 +1,5 @@
 import {getAccessTokenService, logoutService} from "../services/auth.service.mjs";
 
-const isProd = process.env.NODE_ENV === "production";
-
 const accessCookieOpts = {
     httpOnly: true,
     secure: true,
