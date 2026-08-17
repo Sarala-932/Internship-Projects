@@ -2,9 +2,9 @@ import { Navigate, Outlet } from "react-router";
 import { useSelector } from "react-redux";
 
 export default function ProtectedRoute({ allowedRoles }) {
-  const { user, token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
-  if (!token || !user) {
+  if (!user) {
     const lastRole = localStorage.getItem("lastRole");
 
     const redirectUrl = (lastRole && lastRole !== "patient") ? "/login?type=staff" : "/login?type=patient";

@@ -8,7 +8,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import CreateHospitalModal from "../components/CreateHospitalModal";
 
 export default function SuperAdminDashboard() {
-  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [hospitals, setHospitals] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [analytics, setAnalytics] = useState(null);
@@ -24,7 +24,7 @@ export default function SuperAdminDashboard() {
 
   useEffect(() => {
     loadData();
-  }, [token]);
+  }, [user]);
 
   const stats = [
     { title: "Total Hospitals", value: analytics?.kpis?.totalHospitals || 0, icon: Building2, trend: "+12%", color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-100 dark:bg-blue-900/30", border: "border-blue-200 dark:border-blue-800" },

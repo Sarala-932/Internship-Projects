@@ -8,7 +8,7 @@ import CreateStaffModal from "../../admin/components/CreateStaffModal";
 import { useSuperAdmin } from "../hook/useSuperAdmin";
 
 export default function Hospitals() {
-  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [hospitals, setHospitals] = useState([]);
   const [verifying, setVerifying] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -23,7 +23,7 @@ export default function Hospitals() {
 
   useEffect(() => { 
     fetchHospitals(); 
-  }, [token]);
+  }, [user]);
 
   // Read URL query params to auto-open modal
   const [searchParams, setSearchParams] = useSearchParams();
