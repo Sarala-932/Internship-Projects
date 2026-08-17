@@ -3,6 +3,7 @@ import {
   Activity, LogOut, LayoutDashboard, Building2,
   Users, Calendar, FileText, Pill, Stethoscope, ListTree, ChevronRight, Shield, Sun, Moon, User as UserIcon, Settings, Bed
 } from "lucide-react";
+import apiClient from "../../shared/service/apiClient";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/state/authSlice";
 import { useDarkMode } from "../../shared/hooks/useDarkMode";
@@ -42,7 +43,8 @@ export default function AdminLayout() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await apiClient.post("/auth/logout"); } catch(e) { console.error("Logout API failed", e); }
     dispatch(logout());
     navigate("/login?type=staff");
   };

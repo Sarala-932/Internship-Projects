@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { Activity, LayoutDashboard, Calendar, Users, LogOut, Sun, Moon, Stethoscope } from "lucide-react";
+import apiClient from "../../shared/service/apiClient";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/state/authSlice";
 import { useDarkMode } from "../../shared/hooks/useDarkMode";
@@ -26,7 +27,8 @@ export default function DoctorLayout() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await apiClient.post("/auth/logout"); } catch(e) { console.error("Logout API failed", e); }
     dispatch(logout());
     navigate("/login");
   };

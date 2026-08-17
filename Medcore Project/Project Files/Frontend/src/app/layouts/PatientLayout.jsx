@@ -3,6 +3,7 @@ import {
   Activity, LogOut, LayoutDashboard, Calendar, ClipboardList,
   Sun, Moon, ChevronRight, User as UserIcon, Settings, Pill, FileText
 } from "lucide-react";
+import apiClient from "../../shared/service/apiClient";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/state/authSlice";
 import { useDarkMode } from "../../shared/hooks/useDarkMode";
@@ -49,7 +50,8 @@ export default function PatientLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await apiClient.post("/auth/logout"); } catch(e) { console.error("Logout API failed", e); }
     dispatch(logout());
     navigate("/login");
   };

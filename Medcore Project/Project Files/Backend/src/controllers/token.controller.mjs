@@ -5,16 +5,16 @@ const isProd = process.env.NODE_ENV === "production";
 const accessCookieOpts = {
     httpOnly: true,
     secure: true,
-    sameSite: "none", // Required for cross-origin cookies (Vercel + AWS)
-    maxAge: 60 * 60 * 1000, // 1 hr
+    sameSite: "none", 
+    maxAge: 60 * 60 * 1000,
     path: "/",
 };
 
 const refreshCookieOpts = {
     httpOnly: true,
     secure: true,
-    sameSite: "none", // Required for cross-origin cookies (Vercel + AWS)
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
     path: "/api/auth",
 };
 
@@ -41,8 +41,8 @@ export const getAccessToken = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         await logoutService(req.cookies?.refreshToken);
-        res.clearCookie("accessToken", {path: "/"});
-        res.clearCookie("refreshToken", {path: "/api/auth"});
+        res.clearCookie("accessToken", { ...accessCookieOpts, maxAge: 0 });
+        res.clearCookie("refreshToken", { ...refreshCookieOpts, maxAge: 0 });
         return res.status(200).json({message: "Logged out"});
     } catch {
         return res.status(500).json({message: "Logout failed"});
