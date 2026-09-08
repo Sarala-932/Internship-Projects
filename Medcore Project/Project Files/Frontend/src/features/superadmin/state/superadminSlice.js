@@ -31,12 +31,12 @@ const superadminSlice = createSlice({
   },
 });
 
-export const { 
-  setHospitals, 
-  setAuditLogs, 
-  setPlatformStats, 
-  setActiveFilter, 
-  clearSuperAdminState 
+export const {
+  setHospitals,
+  setAuditLogs,
+  setPlatformStats,
+  setActiveFilter,
+  clearSuperAdminState
 } = superadminSlice.actions;
 
 export default superadminSlice.reducer;

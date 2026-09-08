@@ -24,11 +24,10 @@ const pharmacyInventorySchema = new mongoose.Schema(
     {timestamps: true},
 );
 
-// Indexes
 pharmacyInventorySchema.index({hospitalId: 1, medicineName: 1});
 pharmacyInventorySchema.index({hospitalId: 1, batchNumber: 1}, {unique: true});
-pharmacyInventorySchema.index({hospitalId: 1, expiryDate: 1}); // for expiry alerts
-pharmacyInventorySchema.index({hospitalId: 1, quantity: 1}); // for low-stock alerts
+pharmacyInventorySchema.index({hospitalId: 1, expiryDate: 1});
+pharmacyInventorySchema.index({hospitalId: 1, quantity: 1});
 
 const PharmacyInventory = mongoose.model("PharmacyInventory", pharmacyInventorySchema);
 

@@ -1,35 +1,32 @@
 import mongoose from "mongoose";
 
-// Individual test result parameter — e.g. CBC mein WBC, RBC, HGB sab alag
 const resultValueSchema = new mongoose.Schema(
     {
-        parameter: {type: String}, // "WBC", "HGB", "Platelets"
-        value: {type: String}, // "11.2"
-        unit: {type: String}, // "g/dL"
-        refRange: {type: String}, // "12.0 - 16.0"
-        flag: {type: String}, // "L" (Low), "H" (High), "N" (Normal)
+        parameter: {type: String},
+        value: {type: String},
+        unit: {type: String},
+        refRange: {type: String},
+        flag: {type: String},
     },
     {_id: false},
 );
 
-// Result of a single test
 const resultSchema = new mongoose.Schema(
     {
         values: [resultValueSchema],
         notes: {type: String},
-        reportUrl: {type: String}, // PDF report
+        reportUrl: {type: String},
         completedAt: {type: Date},
-        completedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"}, // lab_tech
+        completedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     },
     {_id: false},
 );
 
-// Individual test inside an order
 const testSchema = new mongoose.Schema(
     {
-        name: {type: String, required: true}, // "CBC", "LFT", "Blood Sugar"
-        code: {type: String}, // LOINC code — international standard
-        sampleType: {type: String}, // "Blood", "Urine", "Stool"
+        name: {type: String, required: true},
+        code: {type: String},
+        sampleType: {type: String},
         status: {
             type: String,
             enum: ["ordered", "collected", "processing", "completed", "cancelled"],
@@ -46,25 +43,24 @@ const labOrderSchema = new mongoose.Schema(
         encounterId: {type: mongoose.Schema.Types.ObjectId, ref: "Encounter"},
         patientId: {type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true},
         orderedByDoctorId: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
-        orderNumber: {type: String, unique: true, trim: true}, // "LAB-2026-000045" — auto-generated
+        orderNumber: {type: String, unique: true, trim: true},
         tests: [testSchema],
         priority: {
             type: String,
-            enum: ["routine", "urgent", "stat"], // stat = emergency, do ASAP
+            enum: ["routine", "urgent", "stat"],
             default: "routine",
         },
         overallStatus: {
             type: String,
-            enum: ["pending", "partial", "completed"], // partial = some tests done
+            enum: ["pending", "partial", "completed"],
             default: "pending",
         },
     },
     {timestamps: true},
 );
 
-// Indexes
-labOrderSchema.index({hospitalId: 1, patientId: 1, createdAt: -1}); // patient's lab history
-labOrderSchema.index({hospitalId: 1, overallStatus: 1}); // lab dashboard — pending orders
+labOrderSchema.index({hospitalId: 1, patientId: 1, createdAt: -1});
+labOrderSchema.index({hospitalId: 1, overallStatus: 1});
 
 const LabOrder = mongoose.model("LabOrder", labOrderSchema);
 

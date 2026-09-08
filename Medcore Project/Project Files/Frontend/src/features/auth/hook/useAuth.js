@@ -15,17 +15,16 @@ export const useAuth = () => {
       setLoading(true);
       const data = await authService.login(credentials);
       dispatch(setCredentials(data));
-      
+
       const role = data.user.role;
       toast.success('Login successful!');
-      
-      // Navigate based on role
+
       if (role === 'super_admin') navigate("/super-admin/dashboard");
       else if (role === 'admin') navigate("/admin/dashboard");
       else if (role === 'doctor') navigate("/doctor/dashboard");
       else if (role === 'patient') navigate("/patient/dashboard");
       else navigate("/dashboard");
-      
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     } finally {
@@ -37,9 +36,9 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const response = await authService.register(userData);
-      
+
       toast.success('Registration successful. Please verify your email.');
-      
+
       navigate(`/verify-otp?email=${encodeURIComponent(userData.email)}`);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed');
@@ -49,7 +48,7 @@ export const useAuth = () => {
   };
 
   const handleLogout = async () => {
-  
+
     let currentRole = "patient";
     try {
       const userStr = localStorage.getItem("user");
@@ -57,15 +56,15 @@ export const useAuth = () => {
         currentRole = JSON.parse(userStr).role;
       }
     } catch(e) {}
-    
+
     try {
-      await authService.logout(); 
+      await authService.logout();
     } catch (e) {
       console.error("Logout API failed", e);
     }
-    
+
     dispatch(logout());
-    
+
     if (currentRole && currentRole !== "patient") {
       navigate('/login?type=staff');
     } else {
@@ -77,19 +76,17 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const data = await authService.verifyOtp(email, otp);
-      
-      // Auto login after verification
+
       dispatch(setCredentials(data));
       const role = data.user.role;
       toast.success('Email verified successfully! Welcome.');
-      
-      // Navigate based on role
+
       if (role === 'super_admin') navigate("/super-admin/dashboard");
       else if (role === 'admin') navigate("/admin/dashboard");
       else if (role === 'doctor') navigate("/doctor/dashboard");
       else if (role === 'patient') navigate("/patient/dashboard");
       else navigate("/dashboard");
-      
+
       return true;
     } catch (error) {
       toast.error(error.response?.data?.message || 'Invalid OTP');
@@ -103,7 +100,7 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const response = await authService.resendOtp(email);
-      
+
       toast.success(response.message || 'OTP resent successfully');
       return true;
     } catch (error) {

@@ -4,8 +4,7 @@ export default function BedCard({ bed, searchQuery, onDischargeClick, dischargin
   const isOccupied = bed.status === 'occupied';
   const patient = bed.currentAdmissionId?.patientId;
 
-  // Search filter logic
-  if (searchQuery && !bed.bedNumber.toLowerCase().includes(searchQuery.toLowerCase()) && 
+  if (searchQuery && !bed.bedNumber.toLowerCase().includes(searchQuery.toLowerCase()) &&
       !(patient && `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()))) {
     return null;
   }
@@ -30,7 +29,7 @@ export default function BedCard({ bed, searchQuery, onDischargeClick, dischargin
           </span>
         )}
       </div>
-      
+
       {isOccupied && patient ? (
         <div className="space-y-3">
           <div>

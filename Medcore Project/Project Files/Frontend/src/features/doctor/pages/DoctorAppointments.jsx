@@ -12,7 +12,7 @@ export default function DoctorAppointments() {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [filterDate, setFilterDate] = useState(new Date().toISOString().split('T')[0]);
-  
+
   const doctorId = user?._id || user?.id;
   const { appointments, loading, error, refreshAppointments, updateStatus } = useDoctorAppointments(doctorId, filterDate);
 
@@ -52,7 +52,7 @@ export default function DoctorAppointments() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -63,9 +63,9 @@ export default function DoctorAppointments() {
             Manage your daily schedule and consultation sessions.
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <input 
+          <input
             type="date"
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
@@ -80,7 +80,7 @@ export default function DoctorAppointments() {
               Clear
             </button>
           )}
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await refreshAppointments(); setIsRefreshing(false); }}
             className="cursor-pointer p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
@@ -90,7 +90,6 @@ export default function DoctorAppointments() {
         </div>
       </div>
 
-      {/* Main List */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && appointments.length === 0) || isRefreshing) ? (
           <TableSkeleton />
@@ -149,14 +148,14 @@ export default function DoctorAppointments() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       {apt.status === "scheduled" || apt.status === "checked_in" ? (
-                        <button 
+                        <button
                           onClick={() => handleStatusChange(apt._id, "in_consultation")}
                           className="cursor-pointer flex items-center justify-end gap-1.5 w-full text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold text-xs transition-colors"
                         >
                           <PlayCircle className="w-4 h-4" /> Start Consult
                         </button>
                       ) : apt.status === "in_consultation" ? (
-                        <button 
+                        <button
                           onClick={() => navigate(`/doctor/appointments/${apt._id}`)}
                           className="cursor-pointer flex items-center justify-end gap-1.5 w-full text-purple-600 hover:text-purple-700 dark:text-purple-400 font-semibold text-xs transition-colors"
                         >
@@ -164,13 +163,13 @@ export default function DoctorAppointments() {
                         </button>
                       ) : apt.status === "completed" ? (
                         <div className="flex flex-col items-end gap-2">
-                          <button 
+                          <button
                             onClick={() => navigate(`/doctor/appointments/${apt._id}`)}
                             className="cursor-pointer text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium text-xs transition-colors"
                           >
                             View Encounter
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleOpenHistory(apt.patientId)}
                             className="cursor-pointer text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 font-medium text-xs transition-colors flex items-center gap-1"
                           >
@@ -187,7 +186,7 @@ export default function DoctorAppointments() {
         )}
       </div>
 
-      <PatientHistoryModal 
+      <PatientHistoryModal
         isOpen={historyModalOpen}
         onClose={() => setHistoryModalOpen(false)}
         patientId={selectedPatientId}

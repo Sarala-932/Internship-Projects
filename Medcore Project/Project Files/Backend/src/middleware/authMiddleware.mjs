@@ -4,7 +4,7 @@ import {config} from "../config/config.mjs";
 
 const authentication = async (req, res, next) => {
     try {
-        const accessToken = req.cookies?.accessToken 
+        const accessToken = req.cookies?.accessToken
             || req.headers?.authorization?.replace("Bearer ", "");
         if (!accessToken) {
             return res.status(401).json({message: "Unauthorized — no token"});
@@ -14,7 +14,7 @@ const authentication = async (req, res, next) => {
         try {
             decode = jwt.verify(accessToken, config.jwtSecret);
         } catch (err) {
-            // Frontend "TokenExpiredError" dekh ke /refresh call karega
+
             const msg = err.name === "TokenExpiredError" ? "Access token expired" : "Invalid access token";
             return res.status(401).json({message: msg, code: err.name});
         }
@@ -29,7 +29,7 @@ const authentication = async (req, res, next) => {
 
         req.user = user;
         req.userId = user._id;
-        req.hospitalId = user.hospitalId; // 🔑 multi-tenant filter
+        req.hospitalId = user.hospitalId;
         req.role = user.role;
 
         next();
@@ -38,8 +38,6 @@ const authentication = async (req, res, next) => {
     }
 };
 
-// Role check middleware
-// Usage: router.get("/admin", authentication, authorize("admin"), handler)
 export const authorize =
     (...allowedRoles) =>
     (req, res, next) => {

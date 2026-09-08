@@ -65,7 +65,7 @@ export const deleteLabOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
         await deleteLabOrderService(orderId);
-        
+
         return res.status(200).json({
             message: "Lab order deleted successfully"
         });

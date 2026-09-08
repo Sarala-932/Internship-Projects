@@ -189,10 +189,10 @@ export const useSuperAdmin = () => {
     }
   };
 
-  return { 
-    getPlatformStats, 
-    getHospitals, 
-    verifyHospital, 
+  return {
+    getPlatformStats,
+    getHospitals,
+    verifyHospital,
     getAuditLogs,
     getSpecialities,
     updateSpecialityStatus,
@@ -203,7 +203,7 @@ export const useSuperAdmin = () => {
     updateUserStatus,
     updatePassword,
     updateProfile,
-    loading, 
-    error 
+    loading,
+    error
   };
 };

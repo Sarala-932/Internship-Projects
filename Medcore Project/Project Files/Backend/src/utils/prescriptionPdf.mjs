@@ -10,7 +10,6 @@ export const generatePrescriptionPdfBuffer = (prescription, doctor, patient, hos
             doc.on("end", () => resolve(Buffer.concat(buffers)));
             doc.on("error", (err) => reject(err));
 
-            // Hospital Header
             doc.fontSize(20).font("Helvetica-Bold").text(hospital?.name || "MedCore Hospital", { align: "center" });
             if (hospital?.address) {
                 const addr = `${hospital.address.line1 || ""}, ${hospital.address.city || ""}, ${hospital.address.state || ""} ${hospital.address.pincode || ""}`;
@@ -24,22 +23,18 @@ export const generatePrescriptionPdfBuffer = (prescription, doctor, patient, hos
             doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke("#cccccc");
             doc.moveDown(0.5);
 
-            // Title & Rx Number
             doc.fontSize(16).font("Helvetica-Bold").fillColor("#1a365d").text("MEDICAL PRESCRIPTION", { align: "center" });
             doc.fontSize(10).font("Helvetica").fillColor("#666666").text(`Rx No: ${prescription.rxNumber} | Date: ${new Date(prescription.createdAt || Date.now()).toLocaleDateString()}`, { align: "center" });
             doc.moveDown();
 
-            // Doctor & Patient Info Boxes
             const startY = doc.y;
 
-            // Doctor Info (Left)
             doc.fillColor("#000000").fontSize(11).font("Helvetica-Bold").text("DOCTOR DETAILS", 50, startY);
             doc.fontSize(10).font("Helvetica")
                .text(`Dr. ${doctor?.firstName || ""} ${doctor?.lastName || ""}`)
                .text(`Specialization: ${doctor?.specialization?.join(", ") || "General Physician"}`)
                .text(`Email: ${doctor?.email || "N/A"}`);
 
-            // Patient Info (Right)
             doc.fontSize(11).font("Helvetica-Bold").text("PATIENT DETAILS", 320, startY);
             doc.fontSize(10).font("Helvetica")
                .text(`Name: ${patient?.firstName || ""} ${patient?.lastName || ""}`)
@@ -51,11 +46,9 @@ export const generatePrescriptionPdfBuffer = (prescription, doctor, patient, hos
             doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke("#e2e8f0");
             doc.moveDown();
 
-            // Rx Symbol
             doc.fontSize(22).font("Helvetica-Bold").fillColor("#2b6cb0").text("Rx", 50, doc.y);
             doc.moveDown(0.5);
 
-            // Medicines Table Header
             const tableTop = doc.y;
             doc.fillColor("#ffffff").rect(50, tableTop, 500, 20).fill("#2b6cb0");
             doc.fillColor("#ffffff").fontSize(10).font("Helvetica-Bold");
@@ -91,14 +84,12 @@ export const generatePrescriptionPdfBuffer = (prescription, doctor, patient, hos
             doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke("#e2e8f0");
             doc.moveDown();
 
-            // General Instructions
             if (prescription.generalInstructions) {
                 doc.fontSize(10).font("Helvetica-Bold").fillColor("#2d3748").text("General Advice / Instructions:");
                 doc.fontSize(9).font("Helvetica").fillColor("#4a5568").text(prescription.generalInstructions);
                 doc.moveDown();
             }
 
-            // Footer Signature
             const footerY = Math.max(doc.y + 40, 680);
             doc.moveTo(380, footerY).lineTo(530, footerY).stroke("#000000");
             doc.fontSize(10).font("Helvetica-Bold").fillColor("#000000")

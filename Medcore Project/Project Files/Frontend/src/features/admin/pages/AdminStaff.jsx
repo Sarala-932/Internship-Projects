@@ -17,17 +17,16 @@ const STAFF_ROLES = [
 export default function AdminStaff() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { user } = useSelector(state => state.auth);
-  
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchInput);
-      setPage(1); // Reset to first page on search
+      setPage(1);
     }, 500);
     return () => clearTimeout(timer);
   }, [searchInput]);
@@ -58,12 +57,12 @@ export default function AdminStaff() {
     e.preventDefault();
     try {
       setSubmitting(true);
-      
+
       const payload = { ...formData, hospitalId: user?.hospitalId };
       if (payload.role !== "doctor" && payload.role !== "nurse") {
         delete payload.departmentId;
       }
-      
+
       const success = await createStaff(payload);
       if (success) {
         setShowModal(false);
@@ -78,7 +77,7 @@ export default function AdminStaff() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -89,26 +88,26 @@ export default function AdminStaff() {
             Manage your hospital's doctors, nurses, and administrative staff
           </p>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search staff by name or email..."
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
-          <button 
+          <button
             onClick={fetchStaff}
             className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={() => setShowModal(true)}
             className="flex items-center justify-center gap-2 w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm"
           >
@@ -199,7 +198,7 @@ export default function AdminStaff() {
                           <button
                             onClick={() => toggleStaffStatus(member._id)}
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                              member.isActive 
+                              member.isActive
                                 ? "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
                                 : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 dark:text-emerald-400"
                             }`}
@@ -227,7 +226,7 @@ export default function AdminStaff() {
                 <Users className="w-5 h-5 text-blue-500" /> Add New Staff Member
               </h3>
             </div>
-            
+
             <form onSubmit={handleCreate} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                 <div className="space-y-1.5">
@@ -271,7 +270,7 @@ export default function AdminStaff() {
                     ))}
                   </select>
                 </div>
-                
+
                 {(formData.role === "doctor" || formData.role === "nurse") && (
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex justify-between">

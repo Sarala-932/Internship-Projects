@@ -7,7 +7,6 @@ const createError = (message, status = 400) => {
     return err;
 };
 
-// Super Admin creates a new hospital (status: "pending")
 export const createHospitalService = async (data, creatorId) => {
     const { name, email, phone, address, code } = data;
 
@@ -49,7 +48,6 @@ export const createHospitalService = async (data, creatorId) => {
     return hospital;
 };
 
-// Super Admin verifies (approves) a pending hospital
 export const verifyHospitalService = async (hospitalId, verifiedByUserId) => {
     const hospital = await Hospital.findById(hospitalId);
 
@@ -74,7 +72,6 @@ export const verifyHospitalService = async (hospitalId, verifiedByUserId) => {
     return hospital;
 };
 
-// Get all hospitals (with optional status filter)
 export const getHospitalsService = async (query = {}) => {
     const filter = {};
     if (query.status) filter.status = query.status;
@@ -86,7 +83,6 @@ export const getHospitalsService = async (query = {}) => {
     return hospitals;
 };
 
-// Get a single hospital by ID
 export const getHospitalByIdService = async (hospitalId) => {
     const hospital = await Hospital.findById(hospitalId).select("-__v");
     if (!hospital) throw createError("Hospital not found", 404);

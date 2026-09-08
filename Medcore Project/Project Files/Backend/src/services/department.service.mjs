@@ -6,7 +6,6 @@ const createError = (message, status = 400) => {
     return err;
 };
 
-// Admin/Super Admin creates a department for their hospital
 export const createDepartmentService = async (data) => {
     const { hospitalId, name, code, headDoctorId, description } = data;
 
@@ -14,7 +13,6 @@ export const createDepartmentService = async (data) => {
         throw createError("hospitalId, name, and code are required", 400);
     }
 
-    // Check duplicate code within same hospital
     const existing = await Department.findOne({
         hospitalId,
         code: code.toUpperCase(),
@@ -35,7 +33,6 @@ export const createDepartmentService = async (data) => {
     return department;
 };
 
-// Get all departments for a hospital
 export const getDepartmentsService = async (hospitalId) => {
     if (!hospitalId) throw createError("hospitalId is required", 400);
 
@@ -47,7 +44,6 @@ export const getDepartmentsService = async (hospitalId) => {
     return departments;
 };
 
-// Get single department by ID
 export const getDepartmentByIdService = async (departmentId) => {
     const department = await Department.findById(departmentId)
         .populate("headDoctorId", "firstName lastName email")

@@ -12,7 +12,6 @@ export default function DoctorEncounter() {
   const [submitting, setSubmitting] = useState(false);
   const [appointment, setAppointment] = useState(null);
 
-  // Encounter Form State
   const [vitals, setVitals] = useState({
     bloodPressure: "", temperature: "", heartRate: "", weight: "", height: ""
   });
@@ -21,20 +20,16 @@ export default function DoctorEncounter() {
   const [clinicalNotes, setClinicalNotes] = useState("");
   const [followUpDate, setFollowUpDate] = useState("");
 
-  // Prescription Form State
   const [prescriptions, setPrescriptions] = useState([]);
   const [medicinesList, setMedicinesList] = useState([]);
-  
-  // Lab Order State
+
   const [labTests, setLabTests] = useState([]);
   const [labPriority, setLabPriority] = useState("routine");
   const [patientLabOrders, setPatientLabOrders] = useState([]);
-  
-  // Encounter metadata
+
   const [isCompleted, setIsCompleted] = useState(false);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
-  
-  // Admission Request State
+
   const [admissionModalOpen, setAdmissionModalOpen] = useState(false);
   const [admissionReason, setAdmissionReason] = useState("");
   const [wardTypeRequested, setWardTypeRequested] = useState("General");
@@ -78,7 +73,6 @@ export default function DoctorEncounter() {
       setAppointment(aptData);
       setMedicinesList(medRes.inventory || []);
 
-      // Fetch lab orders for this patient
       try {
         const labRes = await doctorService.getLabOrdersByPatient(aptData.patientId._id);
         setPatientLabOrders(labRes.orders || []);
@@ -90,12 +84,11 @@ export default function DoctorEncounter() {
         setIsCompleted(true);
       }
 
-      // If there's an encounter linked, fetch it
       if (apt.encounterId) {
         const encounterId = typeof apt.encounterId === 'object' ? apt.encounterId._id : apt.encounterId;
         const encRes = await doctorService.getEncounterById(encounterId);
         const encounter = encRes.encounter || encRes;
-        
+
         if (encounter) {
           if (encounter.status === "signed") {
             setIsCompleted(true);
@@ -193,8 +186,7 @@ export default function DoctorEncounter() {
   const saveEncounterData = async (isFinal) => {
     try {
       setSubmitting(true);
-      
-      // Step 1: Create or get Encounter
+
       const encRes = await doctorService.createEncounter(id);
       const encounter = encRes.encounter || encRes;
       const encounterId = encounter._id;
@@ -206,7 +198,6 @@ export default function DoctorEncounter() {
         return;
       }
 
-      // Step 2: Update Clinical Assessment
       await doctorService.updateEncounter(encounterId, {
         chiefComplaint,
         diagnosis,
@@ -214,7 +205,6 @@ export default function DoctorEncounter() {
         followUpDate: followUpDate || undefined
       });
 
-      // Step 3: Update Vitals if provided
       if (vitals.bloodPressure || vitals.temperature || vitals.heartRate || vitals.weight) {
         await doctorService.updateVitals(encounterId, {
           bloodPressure: vitals.bloodPressure,
@@ -224,7 +214,6 @@ export default function DoctorEncounter() {
         });
       }
 
-      // Step 4: Create Prescription if medicines exist
       const validMedicines = prescriptions.filter(p => p.medicineName && p.dosage);
       if (validMedicines.length > 0) {
         const payloadMeds = validMedicines.map(p => ({
@@ -234,7 +223,7 @@ export default function DoctorEncounter() {
           durationDays: parseInt(p.durationDays) || 1,
           instructions: p.instructions
         }));
-        
+
         await doctorService.createPrescription({
           patientId: appointment.patientId._id,
           encounterId: encounterId,
@@ -242,7 +231,6 @@ export default function DoctorEncounter() {
         });
       }
 
-      // Step 4.5: Create Lab Order if tests exist
       const validTests = labTests.filter(t => t.name.trim() !== "");
       if (validTests.length > 0) {
         await doctorService.createLabOrder({
@@ -256,17 +244,16 @@ export default function DoctorEncounter() {
         });
       }
 
-      // Step 5: Sign & Complete (only if isFinal)
       if (isFinal) {
         await doctorService.signEncounter(encounterId);
         toast.success("Encounter completed successfully!");
         navigate("/doctor/appointments");
       } else {
         toast.success("Progress saved. Patient can proceed for lab tests.");
-        setLabTests([]); // clear lab tests from form since they are ordered
-        fetchData(); // refresh data
+        setLabTests([]);
+        fetchData();
       }
-      
+
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to save encounter");
     } finally {
@@ -277,15 +264,15 @@ export default function DoctorEncounter() {
   if (loading) {
     return (
       <div className="space-y-6 max-w-7xl mx-auto pb-10 animate-pulse">
-        {/* Header Skeleton */}
+
         <div className="h-16 bg-slate-200 dark:bg-slate-700 rounded-2xl w-full"></div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column */}
+
           <div className="space-y-6">
             <div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
             <div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
           </div>
-          {/* Right Column */}
+
           <div className="lg:col-span-2 space-y-6">
             <div className="h-48 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
             <div className="h-96 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
@@ -299,10 +286,10 @@ export default function DoctorEncounter() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-10">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="cursor-pointer p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           >
@@ -318,9 +305,9 @@ export default function DoctorEncounter() {
             </p>
           </div>
         </div>
-        
+
         {!isCompleted && (
-          <button 
+          <button
             onClick={() => setAdmissionModalOpen(true)}
             className="cursor-pointer px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:hover:bg-orange-900/50 dark:text-orange-400 border border-orange-200 dark:border-orange-800/50 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm"
           >
@@ -331,9 +318,9 @@ export default function DoctorEncounter() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Patient Info & Vitals */}
+
         <div className="space-y-6">
-          {/* Patient Card */}
+
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-5">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
@@ -346,14 +333,14 @@ export default function DoctorEncounter() {
                 <p className="text-sm font-mono text-slate-500">{appointment.patientId?.mrn}</p>
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={() => setHistoryModalOpen(true)}
               className="cursor-pointer w-full mb-4 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 border border-indigo-100 dark:border-indigo-800 rounded-lg text-sm font-semibold text-indigo-700 dark:text-indigo-400 transition-colors flex items-center justify-center gap-2"
             >
               <CalendarDays className="w-4 h-4" /> View Past Records
             </button>
-            
+
             <div className="grid grid-cols-2 gap-4 text-sm mt-2 pt-4 border-t border-slate-100 dark:border-slate-700">
               <div>
                 <p className="text-slate-500 dark:text-slate-400">Gender</p>
@@ -370,7 +357,6 @@ export default function DoctorEncounter() {
             </div>
           </div>
 
-          {/* Vitals Form */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-5">
             <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
               <Activity className="w-4 h-4 text-red-500" />
@@ -401,10 +387,8 @@ export default function DoctorEncounter() {
           </div>
         </div>
 
-        {/* Right Column: Clinical Notes & Prescription */}
         <div className="lg:col-span-2 space-y-6">
-          
-          {/* Lab Reports Section */}
+
           {patientLabOrders.length > 0 && (
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
               <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
@@ -443,7 +427,7 @@ export default function DoctorEncounter() {
               <FileSignature className="w-5 h-5 text-blue-500" />
               Clinical Assessment
             </h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Chief Complaint</label>
@@ -451,14 +435,14 @@ export default function DoctorEncounter() {
                   className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none disabled:opacity-70"
                   placeholder="Patient's primary symptoms..." />
               </div>
-              
+
               <div>
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Diagnosis</label>
                 <input type="text" value={diagnosis} onChange={e => setDiagnosis(e.target.value)} disabled={isCompleted}
                   className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-70"
                   placeholder="Primary diagnosis (e.g., Viral Fever)" />
               </div>
-              
+
               <div>
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Clinical Notes</label>
                 <textarea rows="4" value={clinicalNotes} onChange={e => setClinicalNotes(e.target.value)} disabled={isCompleted}
@@ -481,7 +465,7 @@ export default function DoctorEncounter() {
                 </button>
               )}
             </div>
-            
+
             {prescriptions.length === 0 ? (
               <div className="text-center py-6 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
                 <p className="text-sm text-slate-500">No medicines prescribed yet.</p>
@@ -523,8 +507,7 @@ export default function DoctorEncounter() {
                 ))}
               </div>
             )}
-            
-            {/* Lab Tests Section */}
+
             <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -533,8 +516,8 @@ export default function DoctorEncounter() {
                 </h3>
                 {!isCompleted && (
                   <div className="flex items-center gap-4">
-                    <select 
-                      value={labPriority} 
+                    <select
+                      value={labPriority}
                       onChange={e => setLabPriority(e.target.value)}
                       disabled={isCompleted}
                       className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 outline-none"
@@ -550,7 +533,7 @@ export default function DoctorEncounter() {
                   </div>
                 )}
               </div>
-              
+
               {labTests.length === 0 ? (
                 <div className="text-center py-6 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
                   <p className="text-sm text-slate-500">No lab tests ordered.</p>
@@ -581,17 +564,17 @@ export default function DoctorEncounter() {
                 </div>
               )}
             </div>
-            
+
             <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="w-full sm:w-auto">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Follow-up Date</label>
                 <input type="date" value={followUpDate} onChange={e => setFollowUpDate(e.target.value)} disabled={isCompleted}
                   className="px-4 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-70" />
               </div>
-              
+
               {!isCompleted && (
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <button 
+                  <button
                     onClick={handleSaveProgress}
                     disabled={submitting}
                     className="cursor-pointer flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200 text-sm font-bold rounded-xl disabled:opacity-70 transition-colors shadow-sm"
@@ -599,7 +582,7 @@ export default function DoctorEncounter() {
                     {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                     Save Progress
                   </button>
-                  <button 
+                  <button
                     onClick={handleCompleteEncounter}
                     disabled={submitting}
                     className="cursor-pointer flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl disabled:opacity-70 transition-colors shadow-sm"
@@ -613,15 +596,14 @@ export default function DoctorEncounter() {
           </div>
         </div>
       </div>
-      
-      <PatientHistoryModal 
+
+      <PatientHistoryModal
         isOpen={historyModalOpen}
         onClose={() => setHistoryModalOpen(false)}
         patientId={appointment.patientId?._id}
         patientName={`${appointment.patientId?.firstName} ${appointment.patientId?.lastName}`}
       />
 
-      {/* Request IPD Admission Modal */}
       {admissionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -630,19 +612,19 @@ export default function DoctorEncounter() {
                 <Activity className="w-5 h-5 text-orange-500" />
                 Request IPD Admission
               </h3>
-              <button 
+              <button
                 onClick={() => setAdmissionModalOpen(false)}
                 className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:shadow-md transition-all"
               >
                 ✕
               </button>
             </div>
-            
+
             <form onSubmit={handleRequestAdmission} className="p-6 space-y-5">
               <div>
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Ward Type Requested</label>
-                <select 
-                  value={wardTypeRequested} 
+                <select
+                  value={wardTypeRequested}
                   onChange={(e) => setWardTypeRequested(e.target.value)}
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none appearance-none"
                 >
@@ -657,8 +639,8 @@ export default function DoctorEncounter() {
 
               <div>
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Priority</label>
-                <select 
-                  value={admissionPriority} 
+                <select
+                  value={admissionPriority}
                   onChange={(e) => setAdmissionPriority(e.target.value)}
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none appearance-none"
                 >
@@ -670,9 +652,9 @@ export default function DoctorEncounter() {
 
               <div>
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Reason for Admission *</label>
-                <textarea 
-                  rows="3" 
-                  value={admissionReason} 
+                <textarea
+                  rows="3"
+                  value={admissionReason}
                   onChange={(e) => setAdmissionReason(e.target.value)}
                   required
                   placeholder="E.g., Severe dengue fever, continuous monitoring required..."
@@ -681,15 +663,15 @@ export default function DoctorEncounter() {
               </div>
 
               <div className="pt-2 flex gap-3">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setAdmissionModalOpen(false)}
                   className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={submitting}
                   className="flex-1 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold shadow-md shadow-orange-500/20 disabled:opacity-70 flex items-center justify-center gap-2 transition-colors"
                 >

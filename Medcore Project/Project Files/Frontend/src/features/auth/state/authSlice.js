@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../../shared/service/apiClient";
 
-// Helper to safely parse user from localStorage
 const getUserFromStorage = () => {
   try {
     const userStr = localStorage.getItem("user");

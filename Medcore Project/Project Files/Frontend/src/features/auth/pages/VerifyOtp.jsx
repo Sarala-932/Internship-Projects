@@ -21,12 +21,11 @@ export default function VerifyOtp() {
 
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = element.value;
     setOtp(newOtp);
 
-    // Focus next input
     if (element.nextSibling && element.value) {
       element.nextSibling.focus();
     }
@@ -36,7 +35,7 @@ export default function VerifyOtp() {
     if (e.key === "Backspace") {
       const newOtp = [...otp];
       if (!otp[index] && e.target.previousSibling) {
-        // Move to previous input if current is empty
+
         e.target.previousSibling.focus();
       }
       newOtp[index] = "";
@@ -66,7 +65,7 @@ export default function VerifyOtp() {
     const success = await handleResendOtp(email);
     if (success) {
       setTimer(60);
-      setOtp(["", "", "", "", "", ""]); // Reset inputs
+      setOtp(["", "", "", "", "", ""]);
     }
   };
 
@@ -138,7 +137,7 @@ export default function VerifyOtp() {
           </button>
         </div>
       </form>
-      
+
       <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 text-center">
         <Link to="/login" className="text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors">
           &larr; Back to Login

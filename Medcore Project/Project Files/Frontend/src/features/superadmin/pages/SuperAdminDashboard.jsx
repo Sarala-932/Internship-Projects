@@ -35,7 +35,7 @@ export default function SuperAdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Banner */}
+
       <div className="bg-gradient-to-r from-slate-900 to-blue-900 rounded-2xl p-6 flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -54,7 +54,6 @@ export default function SuperAdminDashboard() {
         </button>
       </div>
 
-      {/* Stats - Global Analytics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat, i) => (
           <div key={i} className={`bg-white dark:bg-slate-800 rounded-xl p-5 border ${stat.border} shadow-sm`}>
@@ -69,7 +68,6 @@ export default function SuperAdminDashboard() {
         ))}
       </div>
 
-      {/* Analytics Chart */}
       {analytics?.charts?.hospitals && analytics.charts.hospitals.length > 0 && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
           <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
@@ -88,7 +86,7 @@ export default function SuperAdminDashboard() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   labelFormatter={(val) => new Date(val).toLocaleDateString()}
                 />
@@ -99,7 +97,6 @@ export default function SuperAdminDashboard() {
         </div>
       )}
 
-      {/* Hospitals Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
           <div>
@@ -175,7 +172,6 @@ export default function SuperAdminDashboard() {
         )}
       </div>
 
-      {/* Global Activity Logs (Document Requirements) */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -185,7 +181,7 @@ export default function SuperAdminDashboard() {
             Global Activity Logs
           </h3>
         </div>
-        
+
         {loading ? (
           <div className="flex justify-center p-8"><RefreshCw className="w-6 h-6 animate-spin text-slate-400" /></div>
         ) : !analytics?.activityLogs?.length ? (
@@ -214,13 +210,12 @@ export default function SuperAdminDashboard() {
         )}
       </div>
 
-      {/* Render the Modal directly on Dashboard */}
-      <CreateHospitalModal 
-        isOpen={showModal} 
-        onClose={() => setShowModal(false)} 
+      <CreateHospitalModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
         onSuccess={() => {
           loadData();
-        }} 
+        }}
       />
     </div>
   );

@@ -9,7 +9,6 @@ export const useAdminStaff = (params = {}) => {
   const { staff, staffMeta: meta, loading, error } = useSelector((state) => state.admin);
   const [departments, setDepartments] = useState([]);
 
-  // Serialize params to trigger re-fetch when they change
   const paramsString = JSON.stringify(params);
 
   const fetchStaff = useCallback(async () => {

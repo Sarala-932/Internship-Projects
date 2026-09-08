@@ -40,8 +40,8 @@ export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, 
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Select Patient</label>
-            <select 
-              value={admitForm.patientId} 
+            <select
+              value={admitForm.patientId}
               onChange={e => setAdmitForm({...admitForm, patientId: e.target.value})}
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
             >
@@ -54,7 +54,7 @@ export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Select Ward</label>
-              <select 
+              <select
                 value={admitForm.wardId}
                 onChange={e => setAdmitForm({...admitForm, wardId: e.target.value, bedId: ""})}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
@@ -65,7 +65,7 @@ export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, 
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Select Bed</label>
-              <select 
+              <select
                 value={admitForm.bedId}
                 onChange={e => setAdmitForm({...admitForm, bedId: e.target.value})}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
@@ -81,7 +81,7 @@ export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, 
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Attending Doctor</label>
-            <select 
+            <select
               value={admitForm.attendingDoctorId}
               onChange={e => setAdmitForm({...admitForm, attendingDoctorId: e.target.value})}
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
@@ -94,16 +94,16 @@ export default function AdmitModal({ isOpen, onClose, patients, doctors, wards, 
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Reason for Admission</label>
-            <textarea 
+            <textarea
               value={admitForm.reasonForAdmission}
               onChange={e => setAdmitForm({...admitForm, reasonForAdmission: e.target.value})}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2" 
-              rows="3" 
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2"
+              rows="3"
               placeholder="Symptoms, diagnosis, etc."
             ></textarea>
           </div>
-          <button 
-            className="w-full bg-hospital-blue text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition disabled:opacity-50" 
+          <button
+            className="w-full bg-hospital-blue text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition disabled:opacity-50"
             onClick={handleAdmit}
             disabled={admitting || !admitForm.patientId || !admitForm.bedId || !admitForm.attendingDoctorId}
           >

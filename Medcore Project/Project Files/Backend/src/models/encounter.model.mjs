@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Vitals — nurse enters at check-in
 const vitalsSchema = new mongoose.Schema(
     {
         heightCm: {type: Number},
@@ -12,15 +11,12 @@ const vitalsSchema = new mongoose.Schema(
         bpDiastolic: {type: Number},
         spo2: {type: Number},
         respiratoryRate: {type: Number},
-        recordedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"}, // nurse
+        recordedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
         recordedAt: {type: Date},
     },
     {_id: false},
 );
 
-// (Removed diagnosisSchema as we are using simple string for now)
-
-// Attachments — lab reports, X-rays, scans
 const attachmentSchema = new mongoose.Schema(
     {
         url: {type: String},
@@ -39,27 +35,26 @@ const encounterSchema = new mongoose.Schema(
         encounterDate: {type: Date, required: true},
         vitals: {type: vitalsSchema},
         chiefComplaint: {type: String},
-        historyOfPresentIllness: {type: String}, // HPI — SOAP: Subjective
-        examination: {type: String}, // SOAP: Objective
-        diagnosis: {type: String}, // SOAP: Assessment
+        historyOfPresentIllness: {type: String},
+        examination: {type: String},
+        diagnosis: {type: String},
         clinicalNotes: {type: String},
-        advice: {type: String}, // SOAP: Plan
+        advice: {type: String},
         followUpDate: {type: Date},
         attachments: [attachmentSchema],
         status: {
             type: String,
             enum: ["draft", "signed", "amended"],
-            default: "draft", // doctor signs = medical-legal lock
+            default: "draft",
         },
         signedAt: {type: Date},
     },
     {timestamps: true},
 );
 
-// Indexes
-encounterSchema.index({hospitalId: 1, patientId: 1, encounterDate: -1}); // patient history
-encounterSchema.index({appointmentId: 1}, {unique: true}); // 1 appointment = 1 encounter
-encounterSchema.index({doctorId: 1, encounterDate: -1}); // doctor's encounter history
+encounterSchema.index({hospitalId: 1, patientId: 1, encounterDate: -1});
+encounterSchema.index({appointmentId: 1}, {unique: true});
+encounterSchema.index({doctorId: 1, encounterDate: -1});
 
 const Encounter = mongoose.model("Encounter", encounterSchema);
 

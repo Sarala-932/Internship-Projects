@@ -6,8 +6,7 @@ export function useDarkMode() {
   useEffect(() => {
     const isDark = document.documentElement.classList.contains("dark");
     setIsDarkMode(isDark);
-    
-    // Listen for changes from other tabs/components
+
     const handleStorageChange = () => {
       setIsDarkMode(document.documentElement.classList.contains("dark"));
     };

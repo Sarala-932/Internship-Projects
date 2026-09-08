@@ -16,16 +16,15 @@ export default function AdminBilling() {
   const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
 
-  // Modal State
   const [showModal, setShowModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState({ show: false, bill: null });
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [submitting, setSubmitting] = useState(false);
-  
+
   const [patientId, setPatientId] = useState("");
   const [globalDiscount, setGlobalDiscount] = useState(0);
   const [globalTax, setGlobalTax] = useState(0);
-  
+
   const [items, setItems] = useState([
     { type: "consultation", description: "OPD Consultation", unitPrice: 0, quantity: 1, discount: 0, tax: 0 }
   ]);
@@ -34,7 +33,7 @@ export default function AdminBilling() {
     try {
       setLoading(true);
       setError(null);
-      // Fetch both bills and patients for the dropdown
+
       const [billsRes, patientsRes] = await Promise.all([
         apiClient.get(search ? `/billing?search=${encodeURIComponent(search)}` : "/billing"),
         apiClient.get("/patients")
@@ -58,7 +57,6 @@ export default function AdminBilling() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Form Handlers
   const handleAddItem = () => {
     setItems([...items, { type: "other", description: "", unitPrice: 0, quantity: 1, discount: 0, tax: 0 }]);
   };
@@ -80,7 +78,7 @@ export default function AdminBilling() {
 
     try {
       setSubmitting(true);
-      
+
       const payloadItems = items.map(item => ({
         ...item,
         unitPrice: Number(item.unitPrice),
@@ -119,7 +117,7 @@ export default function AdminBilling() {
   const calculateSubtotal = () => {
     return items.reduce((acc, item) => acc + (Number(item.unitPrice) * Number(item.quantity)), 0);
   };
-  
+
   const calculateTotal = () => {
     return calculateSubtotal() - Number(globalDiscount) + Number(globalTax);
   };
@@ -176,7 +174,7 @@ export default function AdminBilling() {
               <div style="margin-top: 8px;"><span class="status">${bill.status}</span></div>
             </div>
           </div>
-          
+
           <div class="patient-info">
             <h3 style="margin: 0 0 8px; color: #64748b; font-size: 14px; text-transform: uppercase;">Bill To:</h3>
             <p style="margin: 0; font-weight: 600; font-size: 18px;">${bill.patientId?.firstName} ${bill.patientId?.lastName}</p>
@@ -244,7 +242,7 @@ export default function AdminBilling() {
               </div>
             `}
           </div>
-          
+
           <div style="margin-top: 80px; text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px;">
             Thank you for choosing MedCore Hospital. Wishing you a speedy recovery!
           </div>
@@ -253,7 +251,7 @@ export default function AdminBilling() {
     `);
     printWindow.document.close();
     printWindow.focus();
-    // setTimeout to ensure images/fonts load before printing
+
     setTimeout(() => {
       printWindow.print();
     }, 500);
@@ -265,7 +263,7 @@ export default function AdminBilling() {
       case 'partial': return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
       case 'issued': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
       case 'draft': return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400';
-      case 'cancelled': 
+      case 'cancelled':
       case 'refunded': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
       default: return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400';
     }
@@ -273,7 +271,7 @@ export default function AdminBilling() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -284,26 +282,26 @@ export default function AdminBilling() {
             Generate patient invoices, track payments, and manage revenue.
           </p>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text" 
-              placeholder="Search invoice or patient..." 
+            <input
+              type="text"
+              placeholder="Search invoice or patient..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchData(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={() => setShowModal(true)}
             className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 w-full sm:w-auto rounded-xl text-sm font-semibold transition-all shadow-sm"
           >
@@ -313,7 +311,6 @@ export default function AdminBilling() {
         </div>
       </div>
 
-      {/* Bills Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && bills.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={5} rows={5} />
@@ -379,14 +376,14 @@ export default function AdminBilling() {
                     </td>
                     <td className="px-6 py-4 text-right space-x-3">
                       {bill.status !== 'paid' && (
-                        <button 
+                        <button
                           onClick={() => setPaymentModal({ show: true, bill })}
                           className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 font-semibold text-xs transition-colors"
                         >
                           Process Payment
                         </button>
                       )}
-                      <button 
+                      <button
                         onClick={() => handlePrint(bill)}
                         className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors" title="Print Invoice"
                       >
@@ -401,7 +398,6 @@ export default function AdminBilling() {
         )}
       </div>
 
-      {/* Generate Invoice Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-4xl border border-slate-200 dark:border-slate-800 overflow-hidden my-8 flex flex-col max-h-[90vh]">
@@ -410,7 +406,7 @@ export default function AdminBilling() {
                 <FileText className="w-5 h-5 text-blue-500" /> Generate New Invoice
               </h3>
             </div>
-            
+
             <div className="p-6 overflow-y-auto flex-1">
               <div className="mb-6">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 mb-2">
@@ -441,7 +437,7 @@ export default function AdminBilling() {
                   <div className="col-span-2 text-right">Total (₹)</div>
                   <div className="col-span-1"></div>
                 </div>
-                
+
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center bg-slate-50 dark:bg-slate-800/30 p-3 md:p-2 rounded-xl border border-slate-100 dark:border-slate-700/50">
                     <div className="col-span-1 md:col-span-2">
@@ -509,7 +505,7 @@ export default function AdminBilling() {
                 </div>
               </div>
             </div>
-            
+
             <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-end gap-3 flex-shrink-0">
               <button type="button" onClick={() => {setShowModal(false); resetForm();}}
                 className="px-5 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
@@ -525,7 +521,6 @@ export default function AdminBilling() {
         </div>
       )}
 
-      {/* Process Payment Modal */}
       {paymentModal.show && paymentModal.bill && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -534,7 +529,7 @@ export default function AdminBilling() {
                 Process Payment
               </h3>
             </div>
-            
+
             <form onSubmit={handleProcessPayment} className="p-6">
               <div className="mb-6 space-y-2 text-center bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50">
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Due Amount for {paymentModal.bill.billNumber}</p>

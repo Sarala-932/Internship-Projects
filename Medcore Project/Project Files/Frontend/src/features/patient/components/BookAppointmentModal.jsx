@@ -8,16 +8,16 @@ import apiClient from "../../../shared/service/apiClient";
 export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
   const { user } = useSelector((state) => state.auth);
   const { activeProfile } = useSelector((state) => state.patient);
-  
+
   const { fetchDepartments, fetchDoctorsByDepartment, fetchAvailableSlots, bookAppointment, loading } = usePatient();
-  
+
   const [step, setStep] = useState(1);
   const [hospitals, setHospitals] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [slots, setSlots] = useState([]);
   const [doctorSchedule, setDoctorSchedule] = useState("");
-  
+
   const [formData, setFormData] = useState({
     hospitalId: "",
     hospitalName: "",
@@ -30,7 +30,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
     reason: ""
   });
 
-  // Fetch departments when modal opens
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -80,7 +79,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
 
   const loadSlots = async (doctorId, date) => {
     const available = await fetchAvailableSlots(doctorId, date);
-    // Transform backend slots if necessary, assuming backend returns array of time strings or objects
+
     setSlots(Array.isArray(available) ? available : ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00", "15:30"]);
   };
 
@@ -109,13 +108,12 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
         const daysMap = { 0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday" };
         const activeDays = profile.availability.map(a => a.dayOfWeek);
         const daysStr = activeDays.map(d => daysMap[d]).join(" ");
-        
-        // Find which days are OFF
+
         const allDays = [0, 1, 2, 3, 4, 5, 6];
         const offDays = allDays.filter(d => !activeDays.includes(d)).map(d => daysMap[d]).join(", ");
-        
+
         const first = profile.availability[0];
-        
+
         let scheduleText = `Visit Schedule: Daily on ${daysStr} @ ${first.startTime} - ${first.endTime}.`;
         if (offDays) {
            scheduleText += ` (${offDays} Off)`;
@@ -156,7 +154,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
       return;
     }
 
-    // Combine date and time into scheduledAt
     const scheduledAt = new Date(`${formData.date}T${formData.time}:00`).toISOString();
 
     const payload = {
@@ -182,8 +179,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
-        {/* Header */}
+
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">Book Appointment</h2>
           <button onClick={onClose} className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors cursor-pointer">
@@ -191,7 +187,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
           </button>
         </div>
 
-        {/* Stepper Progress */}
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm">
           {[1, 2, 3, 4].map((s) => (
             <div key={s} className="flex items-center">
@@ -205,15 +200,13 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
           ))}
         </div>
 
-        {/* Content Area */}
         <div className="p-6 overflow-y-auto flex-1">
-          
-          {/* STEP 1: Department */}
+
           {step === 1 && (
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Select Department</h3>
-                
+
                 {!user?.hospitalId && hospitals.length > 0 && (
                   <select
                     value={formData.hospitalId}
@@ -226,11 +219,11 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
                   </select>
                 )}
               </div>
-              
+
               {departments.length === 0 && !loading && (
                 <p className="text-slate-500">No departments available in selected hospital.</p>
               )}
-              
+
               {departments.length > 0 && (
                 <div className="space-y-4">
                   <select
@@ -260,7 +253,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
             </div>
           )}
 
-          {/* STEP 2: Doctor */}
           {step === 2 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
@@ -295,7 +287,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
             </div>
           )}
 
-          {/* STEP 3: Date & Time */}
           {step === 3 && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -310,7 +301,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
                   </p>
                 </div>
               )}
-              
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Preferred Date</label>
                 <input
@@ -343,7 +334,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccess }) {
             </div>
           )}
 
-          {/* STEP 4: Confirm */}
           {step === 4 && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">

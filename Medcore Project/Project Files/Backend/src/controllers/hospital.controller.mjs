@@ -5,7 +5,6 @@ import {
     getHospitalByIdService,
 } from "../services/hospital.service.mjs";
 
-// POST /api/hospitals — Super Admin creates hospital
 export async function createHospital(req, res) {
     try {
         const hospital = await createHospitalService(req.body, req.user?._id);
@@ -20,7 +19,6 @@ export async function createHospital(req, res) {
     }
 }
 
-// PATCH /api/hospitals/:id/verify — Super Admin verifies hospital
 export async function verifyHospital(req, res) {
     try {
         const hospital = await verifyHospitalService(req.params.id, req.user._id);
@@ -35,7 +33,6 @@ export async function verifyHospital(req, res) {
     }
 }
 
-// GET /api/hospitals — Super Admin gets all hospitals
 export async function getHospitals(req, res) {
     try {
         const hospitals = await getHospitalsService(req.query);
@@ -47,7 +44,6 @@ export async function getHospitals(req, res) {
     }
 }
 
-// GET /api/hospitals/:id — Get single hospital
 export async function getHospitalById(req, res) {
     try {
         const hospital = await getHospitalByIdService(req.params.id);

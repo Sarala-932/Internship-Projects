@@ -28,11 +28,10 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
-  
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,9 +52,9 @@ export default function AdminLayout() {
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      {/* Sidebar */}
+
       <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors">
-        {/* Logo */}
+
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700">
           <Link to="/admin/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-hospital-blue rounded-lg flex items-center justify-center">
@@ -71,7 +70,6 @@ export default function AdminLayout() {
           </Link>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 py-6 px-3 space-y-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -95,9 +93,8 @@ export default function AdminLayout() {
         </nav>
       </aside>
 
-      {/* Main */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Topbar */}
+
         <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 transition-colors">
           <div>
             <h1 className="text-lg font-bold text-slate-900 dark:text-white capitalize">{currentPage}</h1>
@@ -110,12 +107,11 @@ export default function AdminLayout() {
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            
+
             <NotificationBell />
-            
-            {/* Profile Dropdown */}
+
             <div className="relative" ref={dropdownRef}>
-              <button 
+              <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white font-bold shadow-sm hover:ring-2 hover:ring-indigo-300 dark:hover:ring-indigo-700 transition-all cursor-pointer"
               >
@@ -132,9 +128,9 @@ export default function AdminLayout() {
                       {user?.role?.replace('_', ' ')}
                     </p>
                   </div>
-                  
+
                   <div className="py-2">
-                    <Link 
+                    <Link
                       to="/admin/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
@@ -144,7 +140,7 @@ export default function AdminLayout() {
                       </div>
                       My Profile
                     </Link>
-                    <Link 
+                    <Link
                       to="/admin/settings"
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
@@ -155,9 +151,9 @@ export default function AdminLayout() {
                       Account Settings
                     </Link>
                   </div>
-                  
+
                   <div className="px-2 pt-2 border-t border-slate-100 dark:border-slate-700">
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
                     >
@@ -170,7 +166,6 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        {/* Content */}
         <div className="flex-1 overflow-auto p-8">
           <Outlet />
         </div>

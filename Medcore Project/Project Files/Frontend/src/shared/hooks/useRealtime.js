@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { getSocket } from "../../features/notification/hook/useSocket";
 
-/**
- * Hook to automatically refresh data when a specific resource is updated globally
- * @param {string} resourceName - The name of the resource (e.g. "billing", "pharmacy", "appointment")
- * @param {function} refreshCallback - The function to call when an update happens
- */
 export const useRealtime = (resourceName, refreshCallback) => {
   useEffect(() => {
     let socket = getSocket();
@@ -29,7 +24,7 @@ export const useRealtime = (resourceName, refreshCallback) => {
     if (socket) {
       attachListener();
     } else {
-      // Poll every 500ms until socket is ready
+
       intervalId = setInterval(attachListener, 500);
     }
 

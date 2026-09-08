@@ -64,7 +64,7 @@ const doctorSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    // Dashboard Stats
+
     builder
       .addCase(fetchDashboardStats.pending, (state) => {
         state.dashboard.loading = true;
@@ -79,7 +79,6 @@ const doctorSlice = createSlice({
         state.dashboard.error = action.payload;
       });
 
-    // Appointments
     builder
       .addCase(fetchAppointments.pending, (state) => {
         state.appointments.loading = true;
@@ -94,7 +93,6 @@ const doctorSlice = createSlice({
         state.appointments.error = action.payload;
       });
 
-    // Patients
     builder
       .addCase(fetchPatients.pending, (state) => {
         state.patients.loading = true;

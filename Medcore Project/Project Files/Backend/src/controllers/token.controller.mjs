@@ -3,7 +3,7 @@ import {getAccessTokenService, logoutService} from "../services/auth.service.mjs
 const accessCookieOpts = {
     httpOnly: true,
     secure: true,
-    sameSite: "none", 
+    sameSite: "none",
     maxAge: 60 * 60 * 1000,
     path: "/",
 };
@@ -12,11 +12,10 @@ const refreshCookieOpts = {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 7 * 24 * 60 * 60 * 1000, 
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/api/auth",
 };
 
-// POST /api/auth/refresh
 export const getAccessToken = async (req, res) => {
     try {
         const refreshToken = req.cookies?.refreshToken;
@@ -35,7 +34,6 @@ export const getAccessToken = async (req, res) => {
     }
 };
 
-// POST /api/auth/logout
 export const logout = async (req, res) => {
     try {
         await logoutService(req.cookies?.refreshToken);

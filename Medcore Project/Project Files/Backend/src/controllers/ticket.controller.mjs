@@ -1,11 +1,10 @@
 import Ticket from "../models/ticket.model.mjs";
 import AuditLog from "../models/audit-logs.model.mjs";
 
-// POST /api/tickets — Create a new support ticket (Hospital Admin)
 export async function createTicket(req, res) {
     try {
         const { title, description, priority } = req.body;
-        
+
         if (!title || !description) {
             return res.status(400).json({ message: "Title and description are required" });
         }
@@ -27,9 +26,9 @@ export async function createTicket(req, res) {
             userId: req.user._id,
             userRole: req.user.role,
             hospitalId: req.user.hospitalId,
-            metadata: { 
+            metadata: {
                 action_detail: "create_ticket",
-                title 
+                title
             }
         });
 
@@ -40,11 +39,10 @@ export async function createTicket(req, res) {
     }
 }
 
-// GET /api/tickets — List tickets (Super Admin sees all, Hospital Admin sees theirs)
 export async function getTickets(req, res) {
     try {
         const filter = {};
-        
+
         if (req.user.role === "admin") {
             filter.hospitalId = req.user.hospitalId;
         }
@@ -66,11 +64,10 @@ export async function getTickets(req, res) {
     }
 }
 
-// PATCH /api/tickets/:id/status — Update ticket status (Super Admin)
 export async function updateTicketStatus(req, res) {
     try {
         const { status } = req.body;
-        
+
         if (!["open", "in_progress", "resolved"].includes(status)) {
             return res.status(400).json({ message: "Invalid status" });
         }
@@ -79,7 +76,7 @@ export async function updateTicketStatus(req, res) {
         if (!ticket) return res.status(404).json({ message: "Ticket not found" });
 
         ticket.status = status;
-        
+
         if (status === "resolved") {
             ticket.resolvedBy = req.user._id;
         }
@@ -93,9 +90,9 @@ export async function updateTicketStatus(req, res) {
             userId: req.user._id,
             userRole: req.user.role,
             hospitalId: req.user.hospitalId,
-            metadata: { 
+            metadata: {
                 action_detail: "update_ticket_status",
-                newStatus: status 
+                newStatus: status
             }
         });
 

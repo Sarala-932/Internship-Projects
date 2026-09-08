@@ -8,9 +8,8 @@ export default function AdminPatients() {
   const [search, setSearch] = useState("");
   const { patients, loading, error, fetchPatients, registerPatient } = useAdminPatients();
 
-  // Modal State
   const [showModal, setShowModal] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState(null); // Added for View Profile
+  const [selectedPatient, setSelectedPatient] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -22,11 +21,10 @@ export default function AdminPatients() {
     bloodGroup: "unknown"
   });
 
-  // Debounced search effect
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchPatients(search);
-    }, 500); // 500ms debounce
+    }, 500);
     return () => clearTimeout(timer);
   }, [search, fetchPatients]);
 
@@ -48,7 +46,7 @@ export default function AdminPatients() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header & Controls */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -59,26 +57,26 @@ export default function AdminPatients() {
             Manage hospital patients, EMR, and admission details.
           </p>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text" 
-              placeholder="Search by name, MRN, phone..." 
+            <input
+              type="text"
+              placeholder="Search by name, MRN, phone..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
             />
           </div>
-          <button 
+          <button
             onClick={() => fetchPatients(search)}
             className="p-2 text-slate-500 hover:text-emerald-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={() => setShowModal(true)}
             className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 w-full sm:w-auto rounded-xl text-sm font-semibold transition-all shadow-sm"
           >
@@ -88,7 +86,6 @@ export default function AdminPatients() {
         </div>
       </div>
 
-      {/* Patients Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && patients.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={5} rows={5} />
@@ -169,7 +166,7 @@ export default function AdminPatients() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button 
+                      <button
                         onClick={() => setSelectedPatient(patient)}
                         className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-semibold text-xs transition-colors"
                       >
@@ -184,7 +181,6 @@ export default function AdminPatients() {
         )}
       </div>
 
-      {/* Registration Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-2xl border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -193,7 +189,7 @@ export default function AdminPatients() {
                 <Activity className="w-5 h-5 text-emerald-500" /> Patient Registration
               </h3>
             </div>
-            
+
             <form onSubmit={handleRegister} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div className="space-y-1.5">
@@ -276,7 +272,6 @@ export default function AdminPatients() {
         </div>
       )}
 
-      {/* Patient Profile View Modal */}
       {selectedPatient && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -288,7 +283,7 @@ export default function AdminPatients() {
                 <AlertCircle className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-2xl font-bold text-emerald-700 dark:text-emerald-400">
@@ -333,9 +328,9 @@ export default function AdminPatients() {
                 <p className="text-xs text-slate-500 italic">Full Medical Records (EMR) module is coming in a future update.</p>
               </div>
             </div>
-            
+
             <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-right">
-              <button 
+              <button
                 onClick={() => setSelectedPatient(null)}
                 className="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-sm font-medium rounded-xl transition-colors"
               >

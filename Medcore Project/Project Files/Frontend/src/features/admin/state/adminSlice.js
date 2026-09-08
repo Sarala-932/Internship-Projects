@@ -90,12 +90,12 @@ const adminSlice = createSlice({
   }
 });
 
-export const { 
-  setLoading, 
-  setError, 
-  setDepartments, 
-  setStaff, 
-  setPatients, 
+export const {
+  setLoading,
+  setError,
+  setDepartments,
+  setStaff,
+  setPatients,
   setAppointments,
   setBills,
   setLabOrders,
@@ -104,7 +104,7 @@ export const {
   setIpdPatients,
   setPendingRequests,
   setStats,
-  clearAdminState 
+  clearAdminState
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

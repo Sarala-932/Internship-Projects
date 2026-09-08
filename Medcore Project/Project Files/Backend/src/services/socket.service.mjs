@@ -4,7 +4,7 @@ import User from "../models/user.model.mjs";
 import { config } from "../config/config.mjs";
 
 let io;
-const userSockets = new Map(); // Map<userId, Set<socketId>>
+const userSockets = new Map();
 
 export const initSocket = (server) => {
   io = new Server(server, {
@@ -20,8 +20,7 @@ export const initSocket = (server) => {
   io.use(async (socket, next) => {
     try {
       let token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(" ")[1];
-      
-      // Parse cookie manually to get accessToken
+
       const cookieHeader = socket.handshake.headers?.cookie;
       if (!token && cookieHeader) {
         const cookies = cookieHeader.split(';').map(c => c.trim());
@@ -51,7 +50,7 @@ export const initSocket = (server) => {
   io.on("connection", (socket) => {
     const userId = socket.user._id.toString();
     console.log(`User connected to socket: ${userId} (${socket.user.role})`);
-    
+
     if (!userSockets.has(userId)) {
       userSockets.set(userId, new Set());
     }
@@ -70,12 +69,6 @@ export const initSocket = (server) => {
   });
 };
 
-/**
- * Emit an event to a specific user
- * @param {string} userId - The recipient's user ID
- * @param {string} eventName - The socket event name
- * @param {object} payload - The data to send
- */
 export const emitToUser = (userId, eventName, payload) => {
   if (!io) {
     console.warn("Socket.io is not initialized yet.");
@@ -86,14 +79,11 @@ export const emitToUser = (userId, eventName, payload) => {
     socketIds.forEach(socketId => {
       io.to(socketId).emit(eventName, payload);
     });
-    return true; // Sent successfully
+    return true;
   }
-  return false; // User is offline
+  return false;
 };
 
-/**
- * Emit an event to a group of users by role (e.g. all admins)
- */
 export const emitToRole = async (hospitalId, role, eventName, payload) => {
   if (!io) return;
   const query = { role, isActive: true };
@@ -112,10 +102,10 @@ export const emitToRole = async (hospitalId, role, eventName, payload) => {
 export const broadcastDataUpdate = async (hospitalId, resource) => {
   if (!io) return;
   const payload = { resource, timestamp: new Date() };
-  
+
   const query = { isActive: true };
   if (hospitalId) query.hospitalId = hospitalId;
-  
+
   const users = await User.find(query).select("_id");
   users.forEach((user) => {
     const socketIds = userSockets.get(user._id.toString());

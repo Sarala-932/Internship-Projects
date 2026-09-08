@@ -5,7 +5,7 @@ const notificationService = {
     const res = await apiClient.get("/notifications");
     return res.data;
   },
-  
+
   markAsRead: async (id) => {
     const res = await apiClient.patch(`/notifications/${id}/read`);
     return res.data;

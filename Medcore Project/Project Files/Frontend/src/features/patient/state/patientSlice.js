@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  activeProfile: null, // Stores the specific Patient Profile matching the User
+  activeProfile: null,
   appointments: [],
   prescriptions: [],
   admissions: [],
@@ -33,13 +33,13 @@ const patientSlice = createSlice({
   }
 });
 
-export const { 
-  setActiveProfile, 
+export const {
+  setActiveProfile,
   setAppointmentsData,
   setPrescriptionsData,
   setAdmissionsData,
   setLabRecordsData,
-  clearPatientData 
+  clearPatientData
 } = patientSlice.actions;
 
 export default patientSlice.reducer;

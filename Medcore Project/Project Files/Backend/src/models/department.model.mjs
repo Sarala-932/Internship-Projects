@@ -32,7 +32,6 @@ const departmentSchema = new mongoose.Schema(
     {timestamps: true},
 );
 
-
 departmentSchema.index({hospitalId: 1, code: 1}, {unique: true});
 departmentSchema.index({hospitalId: 1, isActive: 1});
 

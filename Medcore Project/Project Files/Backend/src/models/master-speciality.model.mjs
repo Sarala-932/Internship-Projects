@@ -12,7 +12,7 @@ const masterSpecialitySchema = new mongoose.Schema(
             type: String,
         },
         icon: {
-            type: String, // lucide-react icon name e.g. "Heart", "Brain"
+            type: String,
             default: "Activity",
         },
         isActive: {

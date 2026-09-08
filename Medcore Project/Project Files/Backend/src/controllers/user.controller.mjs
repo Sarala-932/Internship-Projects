@@ -11,7 +11,6 @@ import {
 import User from "../models/user.model.mjs";
 import AuditLog from "../models/audit-logs.model.mjs";
 
-// POST /api/auth/register
 export async function register(req, res) {
     try {
         const user = await registerUserService(req.body);
@@ -35,14 +34,12 @@ export async function register(req, res) {
     }
 }
 
-// POST /api/auth/login
 export async function login(req, res) {
     try {
         const {email, password, type} = req.body;
 
         const {user, accessToken, refreshToken} = await loginUserService(email, password);
 
-        // Role-based portal validation
         if (type === "staff" && user.role === "patient") {
             return res.status(403).json({message: "Unauthorized. Please use the Patient Portal."});
         }
@@ -50,7 +47,6 @@ export async function login(req, res) {
             return res.status(403).json({message: "Unauthorized. Staff members must use the Staff Portal."});
         }
 
-        // Set secure cookies
         res.cookie("accessToken", accessToken, accessCookieOpts);
         res.cookie("refreshToken", refreshToken, refreshCookieOpts);
 
@@ -73,18 +69,17 @@ export async function login(req, res) {
     }
 }
 
-// POST /api/auth/forgot-password
 export async function forgotPassword(req, res) {
     try {
         const {email} = req.body;
         if (!email) return res.status(400).json({message: "Email is required"});
 
         const user = await User.findOne({email: email.toLowerCase()});
-        // Always return success to prevent email enumeration
+
         if (!user) return res.json({message: "If this email exists, a reset code has been sent."});
 
         const otpResponse = await issueOtp(user.email, user.firstName, "password_reset");
-        
+
         const responseObj = {message: "If this email exists, a reset code has been sent."};
         return res.json(responseObj);
     } catch (err) {
@@ -93,7 +88,6 @@ export async function forgotPassword(req, res) {
     }
 }
 
-// POST /api/auth/reset-password
 export async function resetPassword(req, res) {
     try {
         const {email, code, newPassword} = req.body;
@@ -104,7 +98,6 @@ export async function resetPassword(req, res) {
             return res.status(400).json({message: "Password must be at least 8 characters"});
         }
 
-        // Verify OTP
         const Otp = (await import("../models/otp.model.mjs")).default;
         const {compareOtp} = await import("../utils/otp.mjs");
         const bcrypt = (await import("bcrypt")).default;
@@ -139,7 +132,6 @@ export async function resetPassword(req, res) {
     }
 }
 
-// GET /api/auth/me (protected route)
 export async function getMe(req, res) {
     try {
         const user = await getUserByIdService(req.user._id);
@@ -151,7 +143,6 @@ export async function getMe(req, res) {
     }
 }
 
-// POST /api/users/staff — Admin/Super Admin creates staff accounts
 export async function createStaffUser(req, res) {
     try {
         const user = await createStaffUserService(req.body, req.user.role);
@@ -174,7 +165,6 @@ export async function createStaffUser(req, res) {
     }
 }
 
-// PATCH /api/users/profile — User updates their own profile
 export async function updateProfile(req, res) {
     try {
         const user = await updateProfileService(req.user._id, req.body);
@@ -196,7 +186,6 @@ export async function updateProfile(req, res) {
     }
 }
 
-// PATCH /api/users/password — User changes their password
 export async function changePassword(req, res) {
     try {
         const {oldPassword, newPassword} = req.body;
@@ -208,16 +197,14 @@ export async function changePassword(req, res) {
     }
 }
 
-// GET /api/users — List all users (excluding patients for super_admin)
 export async function getUsers(req, res) {
     try {
         const filter = {};
 
-        // Super admin shouldn't see patients by default
         if (req.user.role === "super_admin") {
             filter.role = {$ne: "patient"};
         } else if (req.user.role === "admin") {
-            // Hospital admin only sees their own hospital's staff
+
             filter.hospitalId = req.user.hospitalId;
             filter.role = {$ne: "super_admin"};
         }
@@ -268,7 +255,6 @@ export async function getUsers(req, res) {
     }
 }
 
-// PATCH /api/users/:id/status — Block/Unblock a user
 export async function toggleUserStatus(req, res) {
     try {
         const userToUpdate = await User.findById(req.params.id);
@@ -276,12 +262,10 @@ export async function toggleUserStatus(req, res) {
             return res.status(404).json({message: "User not found"});
         }
 
-        // Prevent suspending another super_admin
         if (userToUpdate.role === "super_admin" && req.user._id.toString() !== userToUpdate._id.toString()) {
             return res.status(403).json({message: "Cannot modify other super admins"});
         }
 
-        // Hospital admin can only modify their own hospital's users
         if (
             req.user.role === "admin" &&
             userToUpdate.hospitalId?.toString() !== req.user.hospitalId?.toString()

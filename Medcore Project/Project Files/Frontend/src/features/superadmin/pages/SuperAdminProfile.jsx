@@ -15,7 +15,6 @@ export default function SuperAdminProfile() {
     phone: ""
   });
 
-  // Pre-fill form when user loads
   useEffect(() => {
     if (user) {
       setFormData({
@@ -36,17 +35,16 @@ export default function SuperAdminProfile() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your personal information and account details</p>
       </div>
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
-        {/* Cover */}
+
         <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
 
-        {/* Profile Header */}
         <div className="px-8 pb-8">
           <div className="relative flex justify-between items-end -mt-12 mb-6">
             <div className="w-24 h-24 rounded-2xl bg-amber-500 border-4 border-white dark:border-slate-800 flex items-center justify-center shadow-lg">
@@ -55,7 +53,7 @@ export default function SuperAdminProfile() {
               </span>
             </div>
             {!isEditing && (
-              <button 
+              <button
                 onClick={() => setIsEditing(true)}
                 className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-xl transition-colors cursor-pointer"
               >
@@ -72,11 +70,9 @@ export default function SuperAdminProfile() {
           </div>
           <p className="text-sm font-medium text-amber-600 dark:text-amber-500 mb-8">System Super Administrator</p>
 
-          {/* Form / Details */}
           <form onSubmit={handleUpdate} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              {/* First Name */}
+
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">First Name</label>
                 <div className="relative">
@@ -93,7 +89,6 @@ export default function SuperAdminProfile() {
                 </div>
               </div>
 
-              {/* Last Name */}
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Last Name</label>
                 <div className="relative">
@@ -110,7 +105,6 @@ export default function SuperAdminProfile() {
                 </div>
               </div>
 
-              {/* Email (Read only) */}
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
                   Email Address
@@ -131,7 +125,6 @@ export default function SuperAdminProfile() {
                 </div>
               </div>
 
-              {/* Phone */}
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Phone Number</label>
                 <div className="relative">

@@ -6,7 +6,6 @@ import {
 } from "../services/patient.service.mjs";
 import Patient from "../models/patient.model.mjs";
 
-// GET /patients/me — returns patient profile linked to the logged-in user
 export const getMyProfile = async (req, res) => {
     try {
         const patient = await Patient.findOne({ userId: req.user._id })
@@ -59,7 +58,7 @@ export const getPatients = async (req, res) => {
 
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
-        
+
         const result = await getPatientsByHospitalService(hospitalId, req.query.search, page, limit);
         return res.status(200).json(result);
     } catch (error) {
@@ -80,7 +79,7 @@ export const updatePatient = async (req, res) => {
                 return res.status(403).json({ message: "Forbidden - you can only update your own profile" });
             }
         }
-        
+
         const patient = await updatePatientService(req.params.id, req.body);
         return res.status(200).json({
             message: "Patient updated successfully",

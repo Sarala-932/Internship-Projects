@@ -10,7 +10,7 @@ const stats = [
 export default function Dashboard() {
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
+
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
           <div key={item.name} className="relative overflow-hidden rounded-xl bg-white p-6 shadow-sm border border-slate-200">
@@ -31,7 +31,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Recent Appointments Placeholder */}
+
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Recent Appointments</h3>
@@ -67,7 +67,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Revenue Chart Placeholder */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 flex flex-col justify-center items-center text-slate-400 min-h-[300px]">
           <Activity className="w-12 h-12 mb-4 text-slate-300 dark:text-slate-600" />
           <p>Revenue Chart Area</p>

@@ -13,7 +13,7 @@ const billItemSchema = new mongoose.Schema(
         discount: {type: Number, default: 0, min: 0},
         tax: {type: Number, default: 0, min: 0},
         totalPrice: {type: Number, required: true, min: 0},
-        referenceId: {type: mongoose.Schema.Types.ObjectId}, // links to appointment/prescription/labOrder
+        referenceId: {type: mongoose.Schema.Types.ObjectId},
     },
     {_id: false},
 );
@@ -32,7 +32,7 @@ const paymentSchema = new mongoose.Schema(
 const billSchema = new mongoose.Schema(
     {
         hospitalId: {type: mongoose.Schema.Types.ObjectId, ref: "Hospital", required: true, index: true},
-        billNumber: {type: String, required: true}, // auto-generated: INV-2026-0001
+        billNumber: {type: String, required: true},
         patientId: {type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true},
         encounterId: {type: mongoose.Schema.Types.ObjectId, ref: "Encounter"},
         items: [billItemSchema],
@@ -56,7 +56,6 @@ const billSchema = new mongoose.Schema(
     {timestamps: true},
 );
 
-// Indexes
 billSchema.index({hospitalId: 1, billNumber: 1}, {unique: true});
 billSchema.index({hospitalId: 1, patientId: 1, createdAt: -1});
 billSchema.index({hospitalId: 1, status: 1});

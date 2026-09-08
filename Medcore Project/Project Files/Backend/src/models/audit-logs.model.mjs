@@ -40,27 +40,25 @@ const auditLogSchema = new mongoose.Schema(
             ],
             required: true,
         },
-        resourceId: {type: mongoose.Schema.Types.ObjectId}, // affected document ID
+        resourceId: {type: mongoose.Schema.Types.ObjectId},
         ipAddress: {type: String},
         userAgent: {type: String},
-        method: {type: String}, // GET, POST, PUT, DELETE
-        endpoint: {type: String}, // /api/patients/:id
+        method: {type: String},
+        endpoint: {type: String},
         statusCode: {type: Number},
-        changes: {type: mongoose.Schema.Types.Mixed}, // { before: {...}, after: {...} } for updates
-        metadata: {type: mongoose.Schema.Types.Mixed}, // extra context
+        changes: {type: mongoose.Schema.Types.Mixed},
+        metadata: {type: mongoose.Schema.Types.Mixed},
         success: {type: Boolean, default: true},
         errorMessage: {type: String},
     },
     {timestamps: true},
 );
 
-// Indexes — audit logs are write-heavy, read for compliance reports
 auditLogSchema.index({hospitalId: 1, createdAt: -1});
 auditLogSchema.index({hospitalId: 1, userId: 1, createdAt: -1});
 auditLogSchema.index({hospitalId: 1, resource: 1, resourceId: 1});
 auditLogSchema.index({hospitalId: 1, action: 1, createdAt: -1});
 
-// TTL index — auto-delete logs older than 7 years (HIPAA requirement)
 auditLogSchema.index({createdAt: 1}, {expireAfterSeconds: 60 * 60 * 24 * 365 * 7});
 
 const AuditLog = mongoose.model("AuditLog", auditLogSchema);

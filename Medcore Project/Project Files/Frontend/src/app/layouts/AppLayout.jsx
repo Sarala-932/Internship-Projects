@@ -26,14 +26,14 @@ export default function AppLayout() {
     { path: "/billing", icon: CreditCard, label: "Billing", role: ["super_admin", "receptionist"] },
   ];
 
-  const filteredLinks = navLinks.filter(link => 
-    !link.role || 
+  const filteredLinks = navLinks.filter(link =>
+    !link.role ||
     (Array.isArray(link.role) ? link.role.includes(user?.role) : link.role === user?.role)
   );
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      {/* Sidebar */}
+
       <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300">
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700">
           <Link to="/dashboard" className="flex items-center gap-2">
@@ -48,14 +48,14 @@ export default function AppLayout() {
           {filteredLinks.map((link) => {
             const Icon = link.icon;
             const isActive = location.pathname === link.path;
-            
+
             return (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive 
-                    ? "bg-blue-50 text-hospital-blue dark:bg-blue-900/30 dark:text-blue-400" 
+                  isActive
+                    ? "bg-blue-50 text-hospital-blue dark:bg-blue-900/30 dark:text-blue-400"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
                 }`}
               >
@@ -88,15 +88,14 @@ export default function AppLayout() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Header */}
+
         <header className="h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-8 transition-colors duration-300">
           <h1 className="text-lg font-semibold text-slate-900 dark:text-white capitalize">
             {location.pathname.split('/')[1] || "Dashboard"}
           </h1>
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={toggleDarkMode}
               className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer"
               aria-label="Toggle Dark Mode"
@@ -109,7 +108,6 @@ export default function AppLayout() {
           </div>
         </header>
 
-        {/* Page Content */}
         <div className="flex-1 overflow-auto p-8">
           <Outlet />
         </div>

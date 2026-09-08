@@ -46,7 +46,6 @@ const admissionRequestSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Indexes for faster querying
 admissionRequestSchema.index({ hospitalId: 1, status: 1 });
 admissionRequestSchema.index({ patientId: 1, status: 1 });
 

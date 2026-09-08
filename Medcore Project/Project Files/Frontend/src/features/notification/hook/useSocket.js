@@ -32,7 +32,7 @@ export const useSocket = () => {
 
     console.log("[Socket] Connecting to", SOCKET_URL);
     const socket = io(SOCKET_URL, {
-      // Browser automatically sends HttpOnly cookies because of withCredentials: true
+
       withCredentials: true,
       transports: ["websocket", "polling"],
       reconnection: true,
@@ -70,7 +70,7 @@ export const useSocket = () => {
     });
 
     return () => {
-      // We do NOT disconnect on component unmount, because this is a singleton!
+
     };
   }, [user, dispatch]);
 

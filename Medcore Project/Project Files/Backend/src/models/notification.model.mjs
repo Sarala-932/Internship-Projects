@@ -27,14 +27,13 @@ const notificationSchema = new mongoose.Schema(
       default: false
     },
     link: {
-      type: String, // Optional URL to navigate to when clicked
+      type: String,
       default: ""
     }
   },
   { timestamps: true }
 );
 
-// Auto-delete notifications older than 30 days to prevent DB bloat
 notificationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
 
 const Notification = mongoose.model("Notification", notificationSchema);

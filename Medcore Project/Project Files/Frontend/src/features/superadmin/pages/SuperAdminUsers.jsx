@@ -24,19 +24,19 @@ export default function SuperAdminUsers() {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+    const matchesSearch =
       user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
     const matchesRole = roleFilter ? user.role === roleFilter : true;
-    
+
     return matchesSearch && matchesRole;
   });
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -47,12 +47,11 @@ export default function SuperAdminUsers() {
             Manage hospital staff and platform administrators
           </p>
         </div>
-        
-        {/* Filters */}
+
         <div className="flex items-center gap-2 bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
           <div className="relative flex items-center">
             <Search className="w-4 h-4 text-slate-400 absolute left-3" />
-            <input 
+            <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
@@ -60,10 +59,10 @@ export default function SuperAdminUsers() {
               className="bg-transparent text-sm text-slate-700 dark:text-slate-300 pl-9 pr-3 py-1.5 border-none focus:ring-0 outline-none w-48"
             />
           </div>
-          
+
           <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-          
-          <select 
+
+          <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
             className="bg-transparent text-sm text-slate-700 dark:text-slate-300 font-medium py-1.5 pl-2 pr-8 border-none focus:ring-0 cursor-pointer outline-none"
@@ -75,10 +74,10 @@ export default function SuperAdminUsers() {
             <option value="receptionist">Receptionist</option>
             <option value="super_admin">Super Admin</option>
           </select>
-          
+
           <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-          
-          <button 
+
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchUsers(); setIsRefreshing(false); }}
             className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
@@ -88,7 +87,6 @@ export default function SuperAdminUsers() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && users.length === 0) || isRefreshing) ? (
           <div className="flex items-center justify-center py-20">
@@ -169,7 +167,7 @@ export default function SuperAdminUsers() {
                         <button
                           onClick={() => handleToggleStatus(user._id)}
                           className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                            user.isActive 
+                            user.isActive
                               ? "bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400"
                               : "bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 dark:text-emerald-400"
                           }`}

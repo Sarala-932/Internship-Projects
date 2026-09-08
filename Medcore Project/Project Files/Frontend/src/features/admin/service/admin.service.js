@@ -1,7 +1,7 @@
 import apiClient from "../../../shared/service/apiClient";
 
 const adminService = {
-  // --- Departments ---
+
   fetchDepartments: async () => {
     const res = await apiClient.get("/departments");
     return res.data;
@@ -12,7 +12,6 @@ const adminService = {
     return res.data;
   },
 
-  // --- Staff ---
   fetchStaff: async (params = {}) => {
     const queryParams = new URLSearchParams(params);
     const res = await apiClient.get(`/users?${queryParams.toString()}`);
@@ -29,7 +28,6 @@ const adminService = {
     return res.data;
   },
 
-  // --- Patients ---
   fetchPatients: async (search = "") => {
     const query = search ? `?search=${encodeURIComponent(search)}` : "";
     const res = await apiClient.get(`/patients${query}`);
@@ -41,7 +39,6 @@ const adminService = {
     return res.data;
   },
 
-  // --- Dashboard ---
   fetchDashboardStats: async () => {
     const res = await apiClient.get("/analytics/hospital");
     return res.data;

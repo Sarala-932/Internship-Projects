@@ -1,14 +1,13 @@
 import MasterSpeciality from "../models/master-speciality.model.mjs";
 import AuditLog from "../models/audit-logs.model.mjs";
 
-// GET /api/master/specialities — Public or Admin (used to fetch dropdowns)
 export async function getMasterSpecialities(req, res) {
     try {
         const { activeOnly } = req.query;
         const filter = activeOnly === 'true' ? { isActive: true } : {};
-        
+
         const specialities = await MasterSpeciality.find(filter).sort({ name: 1 });
-        
+
         return res.json({ specialities });
     } catch (err) {
         console.error("getMasterSpecialities Error:", err);
@@ -16,11 +15,10 @@ export async function getMasterSpecialities(req, res) {
     }
 }
 
-// POST /api/master/specialities — Super Admin Only
 export async function createMasterSpeciality(req, res) {
     try {
         const { name, description, icon } = req.body;
-        
+
         if (!name) {
             return res.status(400).json({ message: "Speciality name is required" });
         }
@@ -45,9 +43,9 @@ export async function createMasterSpeciality(req, res) {
             userId: req.user._id,
             userRole: req.user.role,
             hospitalId: req.user.hospitalId,
-            metadata: { 
+            metadata: {
                 action_detail: "create_speciality",
-                specialityName: name 
+                specialityName: name
             }
         });
 
@@ -58,7 +56,6 @@ export async function createMasterSpeciality(req, res) {
     }
 }
 
-// PATCH /api/master/specialities/:id/status — Super Admin Only
 export async function toggleSpecialityStatus(req, res) {
     try {
         const speciality = await MasterSpeciality.findById(req.params.id);
@@ -74,10 +71,10 @@ export async function toggleSpecialityStatus(req, res) {
             userId: req.user._id,
             userRole: req.user.role,
             hospitalId: req.user.hospitalId,
-            metadata: { 
+            metadata: {
                 action_detail: "update_speciality_status",
-                specialityName: speciality.name, 
-                isActive: speciality.isActive 
+                specialityName: speciality.name,
+                isActive: speciality.isActive
             }
         });
 

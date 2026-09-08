@@ -10,7 +10,7 @@ import { emitToUser, emitToRole, broadcastDataUpdate } from "../services/socket.
 export const generateBill = async (req, res) => {
     try {
         const bill = await generateBillService(req.hospitalId, req.userId, req.body);
-        // 1. Notify the Patient about new bill
+
         const patientUserId = bill.patientId?.userId;
         if (patientUserId) {
             const patNotif = await Notification.create({
@@ -23,7 +23,6 @@ export const generateBill = async (req, res) => {
             emitToUser(patientUserId, "notification", patNotif);
         }
 
-        // 2. Notify Admins about new bill
         emitToRole(req.hospitalId, "admin", "notification", {
             title: "New Bill Generated",
             message: `Bill ${bill.billNumber} generated for ₹${bill.totalAmount}`,
@@ -31,7 +30,6 @@ export const generateBill = async (req, res) => {
             link: "/admin/billing"
         });
 
-        // 3. Broadcast data update for billing
         broadcastDataUpdate(req.hospitalId, "billing");
 
         return res.status(201).json({
@@ -55,7 +53,7 @@ export const getBills = async (req, res) => {
             if (!patient) return res.status(404).json({ message: "Patient profile not found" });
             queryParams.patientId = patient._id.toString();
         }
-        
+
         const bills = await getBillsService(req.hospitalId, queryParams);
         return res.status(200).json({ bills });
     } catch (error) {
@@ -69,7 +67,7 @@ export const initializePayment = async (req, res) => {
     try {
         const { billId } = req.params;
         const result = await initializePaymentService(billId, req.hospitalId);
-        
+
         return res.status(200).json({
             message: "Payment initialized",
             ...result
@@ -85,10 +83,9 @@ export const verifyPayment = async (req, res) => {
     try {
         const { billId } = req.params;
         const bill = await verifyPaymentService(billId, req.body);
-        
-        // --- SEND NOTIFICATION ---
-        const patientUserId = bill.patientId?.userId || (bill.patientId && typeof bill.patientId === 'object' ? bill.patientId.userId : null); 
-        
+
+        const patientUserId = bill.patientId?.userId || (bill.patientId && typeof bill.patientId === 'object' ? bill.patientId.userId : null);
+
         if (patientUserId) {
             const patNotif = await Notification.create({
                 userId: patientUserId,
@@ -99,8 +96,7 @@ export const verifyPayment = async (req, res) => {
             });
             emitToUser(patientUserId, "notification", patNotif);
         }
-        
-        // Notify Admins
+
         const adminMessage = `Payment of ₹${bill.paidAmount} received for Invoice ${bill.billNumber} from patient.`;
         emitToRole(bill.hospitalId, "admin", "notification", {
             title: "New Payment Received",
@@ -109,7 +105,6 @@ export const verifyPayment = async (req, res) => {
             link: "/admin/billing"
         });
 
-        // Broadcast data update for billing and pharmacy
         broadcastDataUpdate(bill.hospitalId, "billing");
         broadcastDataUpdate(bill.hospitalId, "pharmacy");
 

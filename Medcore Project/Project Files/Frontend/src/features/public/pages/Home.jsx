@@ -21,7 +21,7 @@ export default function Home() {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
-        // Check local storage or system preference on mount
+
         const savedTheme = localStorage.getItem("theme");
         if (
             savedTheme === "dark" ||
@@ -49,7 +49,7 @@ export default function Home() {
 
     return (
         <div className="bg-white dark:bg-slate-900 min-h-screen font-sans text-slate-800 dark:text-slate-200 transition-colors duration-300">
-            {/* Navbar */}
+
             <header className="fixed w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 z-50 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
@@ -106,7 +106,6 @@ export default function Home() {
                 </div>
             </header>
 
-            {/* Hero Section */}
             <main className="pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="lg:grid lg:grid-cols-12 lg:gap-8">
@@ -154,7 +153,6 @@ export default function Home() {
                 </div>
             </main>
 
-            {/* Stats / Trust Strip */}
             <section className="bg-hospital-blue dark:bg-slate-800 py-10 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-blue-400/30 dark:divide-slate-700">
@@ -186,7 +184,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Services Section */}
             <section
                 id="services"
                 className="py-20 bg-slate-50 dark:bg-slate-900/50 transition-colors duration-300"
@@ -247,7 +244,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* About Section */}
             <section id="about" className="py-20 bg-white dark:bg-slate-900 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
@@ -282,7 +278,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Footer */}
             <footer
                 id="contact"
                 className="bg-slate-900 dark:bg-slate-950 text-slate-300 py-12 border-t border-slate-800 transition-colors duration-300"

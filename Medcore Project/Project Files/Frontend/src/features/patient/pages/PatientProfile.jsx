@@ -49,14 +49,14 @@ export default function PatientProfile() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your personal and health information</p>
       </div>
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden flex flex-col md:flex-row">
-        {/* Left Side: Summary */}
+
         <div className="md:w-1/3 bg-slate-50 dark:bg-slate-900/50 p-8 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col items-center text-center">
           <div className="w-24 h-24 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center text-3xl font-bold shadow-inner mb-4">
             {(activeProfile?.firstName || user?.firstName || "P")[0]}
@@ -67,7 +67,7 @@ export default function PatientProfile() {
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             MRN: <span className="font-semibold text-slate-700 dark:text-slate-300">{activeProfile?.mrn || "Pending"}</span>
           </p>
-          
+
           <div className="w-full mt-8 space-y-4">
             <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-left">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Blood Group</p>
@@ -84,12 +84,11 @@ export default function PatientProfile() {
           </div>
         </div>
 
-        {/* Right Side: Form */}
         <div className="md:w-2/3 p-8">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">Personal Details</h3>
             {!isEditing && (
-              <button 
+              <button
                 onClick={() => setIsEditing(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 text-sm font-semibold rounded-lg transition-colors cursor-pointer"
               >

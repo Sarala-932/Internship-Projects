@@ -8,7 +8,7 @@ import { useSocket } from "../../notification/hook/useSocket";
 export default function PatientDashboard() {
   const { activeProfile, appointments: cachedApps, prescriptions: cachedPrescs, admissions: cachedAdms } = useSelector((state) => state.patient);
   const { getAppointments, getPrescriptions, getMyAdmissions, loading } = usePatient();
-  
+
   const [appointments, setAppointments] = useState(cachedApps || []);
   const [prescriptions, setPrescriptions] = useState(cachedPrescs || []);
   const [admissions, setAdmissions] = useState(cachedAdms || []);
@@ -25,23 +25,23 @@ export default function PatientDashboard() {
       }
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [activeProfile?._id]);
 
   const socket = useSocket();
-  
+
   useEffect(() => {
     if (!socket) return;
-    
+
     const handleDataUpdated = (data) => {
       if (data.resource === "admissions") {
-        // Refetch admissions silently
+
         getMyAdmissions().then(adms => setAdmissions(adms));
       }
     };
-    
+
     socket.on("data_updated", handleDataUpdated);
-    
+
     return () => {
       socket.off("data_updated", handleDataUpdated);
     };
@@ -53,7 +53,7 @@ export default function PatientDashboard() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Welcome Banner */}
+
       <div className="bg-linear-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden flex justify-between items-start">
         <div className="relative z-10 flex-1">
           <h2 className="text-3xl font-bold mb-2">
@@ -68,7 +68,6 @@ export default function PatientDashboard() {
         </div>
       </div>
 
-      {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
@@ -99,7 +98,6 @@ export default function PatientDashboard() {
         </div>
       </div>
 
-      {/* Active Admission Banner (My Stay) */}
       {admissions.some(a => a.status === 'admitted') && (
         <div className="bg-linear-to-r from-emerald-500 to-teal-500 rounded-2xl p-6 text-white shadow-md flex items-center justify-between">
           <div>
@@ -120,7 +118,7 @@ export default function PatientDashboard() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Next Appointment */}
+
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
           <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
             <h3 className="font-bold text-slate-900 dark:text-white">Next Appointment</h3>
@@ -167,7 +165,6 @@ export default function PatientDashboard() {
           </div>
         </div>
 
-        {/* Recent Prescriptions */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
           <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
             <h3 className="font-bold text-slate-900 dark:text-white">Recent Prescriptions</h3>

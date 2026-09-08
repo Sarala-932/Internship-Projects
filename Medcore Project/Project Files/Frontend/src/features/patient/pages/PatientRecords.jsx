@@ -36,19 +36,18 @@ export default function PatientRecords() {
         setLabOrders(cachedRecords);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeProfile]);
 
+  }, [activeProfile]);
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Medical Records</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View your lab reports and medical documents</p>
         </div>
-        <button 
+        <button
           onClick={async () => { setIsRefreshing(true); if (activeProfile?._id) { await fetchRecords(); } setIsRefreshing(false); }}
           className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
           title="Refresh"
@@ -83,7 +82,7 @@ export default function PatientRecords() {
                   Completed
                 </span>
               </div>
-              
+
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
                 Lab Report
               </h3>
@@ -105,9 +104,9 @@ export default function PatientRecords() {
 
               {/* Find the first test that has a reportUrl */}
               {order.tests.find((t) => t.result?.reportUrl) ? (
-                <a 
-                  href={order.tests.find((t) => t.result?.reportUrl).result.reportUrl} 
-                  target="_blank" 
+                <a
+                  href={order.tests.find((t) => t.result?.reportUrl).result.reportUrl}
+                  target="_blank"
                   rel="noreferrer"
                   className="w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
                 >

@@ -7,14 +7,14 @@ import { emitToRole, emitToUser } from "./socket.service.mjs";
 import mongoose from "mongoose";
 
 export const addInventoryService = async (hospitalId, data) => {
-    // Upsert logic: if batchNumber exists for hospital, update quantity, else create
+
     const { batchNumber, quantity } = data;
-    
+
     let item = await PharmacyInventory.findOne({ hospitalId, batchNumber });
-    
+
     if (item) {
         item.quantity += quantity;
-        Object.assign(item, data); // Update other fields if provided
+        Object.assign(item, data);
         await item.save();
     } else {
         item = await PharmacyInventory.create({ ...data, hospitalId });
@@ -38,11 +38,11 @@ export const updateInventoryService = async (hospitalId, inventoryId, data) => {
 
 export const getInventoryService = async (hospitalId, queryParams) => {
     const query = { hospitalId, isActive: true };
-    
+
     if (queryParams.lowStock === 'true') {
         query.$expr = { $lte: ["$quantity", "$reorderLevel"] };
     }
-    
+
     if (queryParams.search) {
         query.medicineName = { $regex: queryParams.search, $options: "i" };
     }
@@ -95,9 +95,9 @@ export const dispenseMedicineService = async (hospitalId, pharmacistUserId, data
         const processedItems = [];
 
         for (const item of items) {
-            const inventory = await PharmacyInventory.findOne({ 
-                _id: item.inventoryId, 
-                hospitalId 
+            const inventory = await PharmacyInventory.findOne({
+                _id: item.inventoryId,
+                hospitalId
             });
 
             if (!inventory) {
@@ -108,11 +108,9 @@ export const dispenseMedicineService = async (hospitalId, pharmacistUserId, data
                 throw new Error(`Insufficient stock for ${inventory.medicineName}. Available: ${inventory.quantity}`);
             }
 
-            // Deduct stock
             inventory.quantity -= item.quantity;
             await inventory.save();
 
-            // --- AUTOMATION: Low Stock Alert ---
             if (inventory.quantity <= inventory.reorderLevel) {
                 const adminMessage = `Low Stock Alert: ${inventory.medicineName} is running low (Only ${inventory.quantity} left).`;
                 emitToRole(hospitalId, "admin", "notification", {
@@ -147,7 +145,6 @@ export const dispenseMedicineService = async (hospitalId, pharmacistUserId, data
             paymentStatus: "pending"
         });
 
-        // --- AUTOMATION: Generate Bill ---
         const billItems = processedItems.map(item => ({
             description: `Pharmacy: ${item.medicineName} (Qty: ${item.quantity})`,
             type: "medicine",
@@ -164,10 +161,8 @@ export const dispenseMedicineService = async (hospitalId, pharmacistUserId, data
             tax: 0
         });
 
-        // --- AUTOMATION: Update Prescription Status ---
         await Prescription.findByIdAndUpdate(prescriptionId, { status: "dispensed" });
 
-        // Notify Patient
         const patientUser = await mongoose.model("Patient").findById(patientId);
         if (patientUser && patientUser.userId) {
             emitToUser(patientUser.userId, "notification", {

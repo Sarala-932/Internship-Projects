@@ -7,7 +7,6 @@ import bcrypt from "bcrypt";
 export const bookAppointmentService = async (hospitalId, bookedByUserId, data) => {
     const { patientId, doctorId, departmentId, scheduledAt, durationMin = 15, type = "opd", reason } = data;
 
-    // 1. Verify Patient exists
     const patient = await Patient.findById(patientId);
     if (!patient) {
         const error = new Error("Patient not found");
@@ -15,7 +14,6 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
         throw error;
     }
 
-    // 2. Verify Doctor exists (doctorId is User ID of doctor)
     const doctorProfile = await Doctor.findOne({
         $or: [{ userId: doctorId }, { _id: doctorId }]
     });
@@ -34,7 +32,6 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
 
     const actualDoctorUserId = doctorProfile.userId;
 
-    // 3. Conflict Detection
     const slotStart = new Date(scheduledAt);
     if (isNaN(slotStart.getTime())) {
         const error = new Error("Invalid scheduledAt date format");
@@ -50,8 +47,6 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
 
     const slotEnd = new Date(slotStart.getTime() + durationMin * 60 * 1000);
 
-    // Query for any existing active appointment for this doctor that overlaps
-    // Overlap condition: existing.scheduledAt < slotEnd AND existingEnd > slotStart
     const activeAppointments = await Appointment.find({
         doctorId: actualDoctorUserId,
         status: { $nin: ["cancelled", "no_show"] }
@@ -69,7 +64,6 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
         throw error;
     }
 
-    // 4. Create Appointment
     const appointment = await Appointment.create({
         hospitalId,
         patientId,
@@ -91,22 +85,18 @@ export const bookAppointmentService = async (hospitalId, bookedByUserId, data) =
 };
 
 export const deskBookingService = async (hospitalId, bookedByUserId, data) => {
-    // Expected fields from desk form:
-    // patient details: firstName, lastName, phone, email, address, city, age, category, prefix
-    // appointment details: doctorId, departmentId, scheduledAt, type, reason, refBy
-    
-    let { 
-        patientId, // if existing
+
+    let {
+        patientId,
         firstName, lastName, phone, email, address, city, age, category, prefix,
         doctorId, departmentId, scheduledAt, type = "opd", reason, refBy
     } = data;
 
-    // 1. Resolve Patient
     if (!patientId && phone) {
-        // Try to find if user already exists by phone
+
         let user = await User.findOne({ phone, role: "patient" });
         if (!user) {
-            // Create user
+
             const hashedPassword = await bcrypt.hash("Password123!", 10);
             user = await User.create({
                 firstName: firstName || "Unknown",
@@ -118,10 +108,10 @@ export const deskBookingService = async (hospitalId, bookedByUserId, data) => {
                 hospitalId
             });
         }
-        
+
         let patientProfile = await Patient.findOne({ userId: user._id });
         if (!patientProfile) {
-            // Generate MRN
+
             const count = await Patient.countDocuments();
             const mrn = `MRN-${new Date().getFullYear()}${(count + 1).toString().padStart(5, '0')}`;
             patientProfile = await Patient.create({
@@ -144,7 +134,6 @@ export const deskBookingService = async (hospitalId, bookedByUserId, data) => {
         throw error;
     }
 
-    // 2. Delegate to standard bookAppointmentService
     const appointmentData = {
         patientId,
         doctorId,

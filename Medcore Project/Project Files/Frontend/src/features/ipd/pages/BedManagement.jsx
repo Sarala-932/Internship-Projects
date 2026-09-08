@@ -23,12 +23,11 @@ export default function BedManagement() {
 
   const [selectedWard, setSelectedWard] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [isAdmitModalOpen, setIsAdmitModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [dischargeModal, setDischargeModal] = useState({ isOpen: false, bedId: null, admissionId: null });
 
-  // Listen for real-time updates for IPD requests
   useSocket("data_updated", (data) => {
     if (data.resource === "ipd_requests") {
       refreshRequests();
@@ -97,7 +96,6 @@ export default function BedManagement() {
         </button>
       </div>
 
-      {/* Pending Admission Requests */}
       {pendingRequests && pendingRequests.length > 0 && (
         <div className="bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800/50 rounded-xl p-5 mb-6">
           <h2 className="text-lg font-bold text-orange-800 dark:text-orange-400 flex items-center gap-2 mb-4">
@@ -112,8 +110,8 @@ export default function BedManagement() {
                       {req.patientId?.firstName} {req.patientId?.lastName}
                     </h3>
                     <span className={`text-xs px-2 py-1 rounded-md font-bold uppercase ${
-                      req.priority === 'Critical' ? 'bg-red-100 text-red-700' : 
-                      req.priority === 'High' ? 'bg-orange-100 text-orange-700' : 
+                      req.priority === 'Critical' ? 'bg-red-100 text-red-700' :
+                      req.priority === 'High' ? 'bg-orange-100 text-orange-700' :
                       'bg-slate-100 text-slate-700'
                     }`}>
                       {req.priority}
@@ -126,7 +124,7 @@ export default function BedManagement() {
                     <Clock className="w-3 h-3" /> Requested by Dr. {req.requestingDoctorId?.firstName} {req.requestingDoctorId?.lastName} for <span className="font-bold text-slate-700 dark:text-slate-300 ml-1">{req.wardTypeRequested}</span>
                   </p>
                 </div>
-                <button 
+                <button
                   onClick={() => handleAssignBedClick(req)}
                   className="w-full py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold rounded-lg transition-colors cursor-pointer"
                 >
@@ -138,9 +136,8 @@ export default function BedManagement() {
         </div>
       )}
 
-      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-        <select 
+        <select
           className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-700 dark:text-slate-300 w-full sm:w-48 outline-none focus:border-hospital-blue"
           value={selectedWard}
           onChange={(e) => setSelectedWard(e.target.value)}
@@ -150,10 +147,10 @@ export default function BedManagement() {
             <option key={w._id} value={w._id}>{w.name} ({w.type})</option>
           ))}
         </select>
-        
+
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-          <input 
+          <input
             type="text"
             placeholder="Search beds or patients..."
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-700 dark:text-slate-300 outline-none focus:border-hospital-blue"
@@ -163,7 +160,6 @@ export default function BedManagement() {
         </div>
       </div>
 
-      {/* Wards Grid */}
       <div className="space-y-8">
         {filteredWards.map(ward => (
           <div key={ward._id} className="space-y-4">
@@ -173,10 +169,10 @@ export default function BedManagement() {
                 {ward.type} • {ward.beds.length} Beds
               </span>
             </div>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {ward.beds.map(bed => (
-                <BedCard 
+                <BedCard
                   key={bed._id}
                   bed={bed}
                   searchQuery={searchQuery}
@@ -192,7 +188,7 @@ export default function BedManagement() {
         )}
       </div>
 
-      <AdmitModal 
+      <AdmitModal
         isOpen={isAdmitModalOpen}
         onClose={() => { setIsAdmitModalOpen(false); setSelectedRequest(null); }}
         patients={patients}
@@ -203,7 +199,7 @@ export default function BedManagement() {
         initialData={selectedRequest}
       />
 
-      <DischargeModal 
+      <DischargeModal
         isOpen={dischargeModal.isOpen}
         onClose={() => setDischargeModal({ isOpen: false, bedId: null, admissionId: null })}
         bedId={dischargeModal.bedId}

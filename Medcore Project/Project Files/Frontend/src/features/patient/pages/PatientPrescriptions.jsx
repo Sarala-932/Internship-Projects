@@ -26,17 +26,16 @@ export default function PatientPrescriptions() {
     } else {
       setPrescriptions(cachedPrescs);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [activeProfile?._id]);
 
   const handlePreview = async (prescId) => {
     try {
       setDownloadingId(prescId);
       const response = await apiClient.get(`/prescriptions/${prescId}/pdf?format=base64`);
-      
+
       const { pdfBase64 } = response.data;
-      
-      // Use data URI to bypass IDM blob interception entirely
+
       const dataUri = `data:application/pdf;base64,${pdfBase64}`;
       setPreviewPdfUrl(dataUri);
     } catch (error) {
@@ -52,13 +51,13 @@ export default function PatientPrescriptions() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Prescriptions</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View and download your digital prescriptions</p>
         </div>
-        <button 
+        <button
           onClick={async () => { setIsRefreshing(true); if (activeProfile?._id) { await getPrescriptions(activeProfile._id).then(setPrescriptions); } setIsRefreshing(false); }}
           className="p-2 w-fit text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
           title="Refresh"
@@ -67,7 +66,6 @@ export default function PatientPrescriptions() {
         </button>
       </div>
 
-      {/* Content */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
         {((loading && prescriptions.length === 0) || isRefreshing) ? (
           <CardSkeleton count={3} />
@@ -103,8 +101,8 @@ export default function PatientPrescriptions() {
                       </div>
                     </div>
                   </div>
-                  
-                  <button 
+
+                  <button
                     onClick={() => handlePreview(presc._id)}
                     disabled={downloadingId === presc._id}
                     className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
@@ -151,7 +149,7 @@ export default function PatientPrescriptions() {
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-4xl h-[90vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700">
               <h3 className="font-bold text-lg text-slate-900 dark:text-white">Prescription Preview</h3>
-              <button 
+              <button
                 onClick={closePreview}
                 className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full text-slate-500 transition-colors cursor-pointer"
               >
@@ -159,16 +157,16 @@ export default function PatientPrescriptions() {
               </button>
             </div>
             <div className="flex-1 bg-slate-100 dark:bg-slate-900 w-full h-full">
-              <object 
-                data={`${previewPdfUrl}#toolbar=1&navpanes=0&scrollbar=1`} 
-                type="application/pdf" 
+              <object
+                data={`${previewPdfUrl}#toolbar=1&navpanes=0&scrollbar=1`}
+                type="application/pdf"
                 className="w-full h-full border-none"
                 title="Prescription PDF"
               >
                 <div className="flex flex-col items-center justify-center h-full p-6 text-center">
                   <p className="text-slate-500 mb-4">It looks like a download manager (like IDM) is blocking the preview.</p>
-                  <a 
-                    href={previewPdfUrl} 
+                  <a
+                    href={previewPdfUrl}
                     download="Prescription.pdf"
                     className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                   >

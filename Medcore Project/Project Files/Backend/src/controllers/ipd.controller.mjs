@@ -31,8 +31,6 @@ export const createWard = async (req, res) => {
     }
 };
 
-// ---------------- ADMISSION REQUESTS ----------------
-
 export const createAdmissionRequest = async (req, res) => {
     try {
         const hospitalId = req.user.hospitalId;
@@ -56,12 +54,10 @@ export const getPendingRequests = async (req, res) => {
     }
 };
 
-// ---------------- ADMISSION & DISCHARGE ----------------
-
 export const admitPatient = async (req, res) => {
     try {
         const hospitalId = req.user.hospitalId;
-        const doctorId = req.body.attendingDoctorId || req.user._id; 
+        const doctorId = req.body.attendingDoctorId || req.user._id;
         const admission = await admitPatientService(hospitalId, doctorId, req.body);
         return res.status(201).json({ message: "Patient admitted successfully", admission });
     } catch (err) {
@@ -74,7 +70,7 @@ export const dischargePatient = async (req, res) => {
     try {
         const { id } = req.params;
         const { dischargeSummary } = req.body;
-        const generatedBy = req.user._id; // Admin performing discharge
+        const generatedBy = req.user._id;
         const result = await dischargePatientService(id, dischargeSummary, generatedBy);
         return res.json({ message: "Patient discharged and bill generated successfully", ...result });
     } catch (err) {
@@ -85,11 +81,11 @@ export const dischargePatient = async (req, res) => {
 
 export const getMyAdmissions = async (req, res) => {
     try {
-        // Only for patients
+
         if (req.user.role !== "patient") {
             return res.status(403).json({ message: "Access denied" });
         }
-        
+
         const patient = await Patient.findOne({ userId: req.user._id });
         if (!patient) return res.status(404).json({ message: "Patient profile not found" });
 

@@ -26,8 +26,7 @@ export default function CancelAppointmentModal({ isOpen, onClose, appointment, o
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
       <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Header */}
+
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-red-50 dark:bg-red-900/20">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-red-600 dark:text-red-400">
@@ -35,7 +34,7 @@ export default function CancelAppointmentModal({ isOpen, onClose, appointment, o
             </div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">Cancel Appointment</h2>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-full transition-colors text-slate-500 dark:text-slate-400 cursor-pointer"
           >
@@ -43,7 +42,6 @@ export default function CancelAppointmentModal({ isOpen, onClose, appointment, o
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-4">
           <p className="text-sm text-slate-600 dark:text-slate-300">
             You are about to cancel your appointment with <span className="font-semibold text-slate-900 dark:text-white">Dr. {appointment.doctorId?.lastName}</span> on <span className="font-semibold text-slate-900 dark:text-white">{new Date(appointment.scheduledAt).toLocaleDateString()}</span>.
@@ -63,7 +61,6 @@ export default function CancelAppointmentModal({ isOpen, onClose, appointment, o
           </div>
         </div>
 
-        {/* Footer */}
         <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3">
           <button
             onClick={onClose}

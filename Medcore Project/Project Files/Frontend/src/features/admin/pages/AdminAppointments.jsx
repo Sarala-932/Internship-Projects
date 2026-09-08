@@ -18,15 +18,14 @@ export default function AdminAppointments() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Modal State
   const [showModal, setShowModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState(null); // Added for Details Modal
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   const fetchData = async () => {
     try {
       setLoading(true);
       setError(null);
-      // Fetch appointments, patients (for dropdown), and doctors (for dropdown)
+
       const [apptsRes, patientsRes, usersRes] = await Promise.all([
         apiClient.get("/appointments"),
         apiClient.get("/patients"),
@@ -65,7 +64,7 @@ export default function AdminAppointments() {
       case 'checked_in': return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
       case 'in_consultation': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
       case 'completed': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
-      case 'cancelled': 
+      case 'cancelled':
       case 'no_show': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
       default: return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400';
     }
@@ -73,7 +72,7 @@ export default function AdminAppointments() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -84,16 +83,16 @@ export default function AdminAppointments() {
             Manage upcoming patient consultations and doctor schedules.
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchData(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={() => setShowModal(true)}
             className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 w-full sm:w-auto rounded-xl text-sm font-semibold transition-all shadow-sm cursor-pointer"
           >
@@ -103,7 +102,6 @@ export default function AdminAppointments() {
         </div>
       </div>
 
-      {/* Appointments List */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && appointments.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={6} rows={5} />
@@ -167,7 +165,7 @@ export default function AdminAppointments() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <select 
+                      <select
                         value={appt.status}
                         onChange={(e) => handleStatusChange(appt._id, e.target.value)}
                         className={`text-xs font-bold px-2 py-1 rounded-lg uppercase tracking-wider outline-none cursor-pointer border border-transparent hover:border-slate-300 dark:hover:border-slate-600 transition-colors ${getStatusColor(appt.status)}`}
@@ -181,7 +179,7 @@ export default function AdminAppointments() {
                       </select>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button 
+                      <button
                         onClick={() => setSelectedAppointment(appt)}
                         className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold text-xs transition-colors cursor-pointer"
                       >
@@ -196,9 +194,8 @@ export default function AdminAppointments() {
         )}
       </div>
 
-      {/* Booking Modal */}
       {showModal && (
-        <ReceptionistAppointmentEntry 
+        <ReceptionistAppointmentEntry
           onClose={() => setShowModal(false)}
           onSuccess={() => {
             setShowModal(false);
@@ -207,7 +204,6 @@ export default function AdminAppointments() {
         />
       )}
 
-      {/* Appointment Details Modal */}
       {selectedAppointment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -219,7 +215,7 @@ export default function AdminAppointments() {
                 <AlertCircle className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="flex items-start gap-4 mb-6">
                 <div className="w-14 h-14 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-xl font-bold text-indigo-700 dark:text-indigo-400 mt-1">
@@ -264,10 +260,10 @@ export default function AdminAppointments() {
                 </p>
               </div>
             </div>
-            
+
             <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
               <p className="text-xs text-slate-500">Booked on {new Date(selectedAppointment.createdAt).toLocaleDateString()}</p>
-              <button 
+              <button
                 onClick={() => setSelectedAppointment(null)}
                 className="px-5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-sm font-medium rounded-xl transition-colors cursor-pointer"
               >

@@ -12,11 +12,10 @@ export default function DoctorPatients() {
   const [page, setPage] = useState(1);
   const [limit] = useState(12);
 
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchQuery(searchInput);
-      setPage(1); // Reset to first page on new search
+      setPage(1);
     }, 500);
     return () => clearTimeout(timer);
   }, [searchInput]);
@@ -39,7 +38,7 @@ export default function DoctorPatients() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-10">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -50,11 +49,11 @@ export default function DoctorPatients() {
             Search and view records of registered patients in your hospital.
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input 
+            <input
               type="text"
               placeholder="Search by MRN, Name, Phone..."
               value={searchInput}
@@ -62,7 +61,7 @@ export default function DoctorPatients() {
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
             />
           </div>
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await refreshPatients(); setIsRefreshing(false); }}
             className="cursor-pointer p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
@@ -72,7 +71,6 @@ export default function DoctorPatients() {
         </div>
       </div>
 
-      {/* Main Grid */}
       {((loading && patients.length === 0) || isRefreshing) ? (
         <CardSkeleton count={8} />
       ) : error && patients.length === 0 ? (
@@ -101,7 +99,7 @@ export default function DoctorPatients() {
                     <p className="text-xs font-mono text-slate-500 truncate">{patient.mrn}</p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2 mb-5 flex-1">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-500 dark:text-slate-400">Gender</span>
@@ -116,9 +114,9 @@ export default function DoctorPatients() {
                     <span className="font-medium text-slate-900 dark:text-white truncate max-w-[120px]">{patient.phone || "-"}</span>
                   </div>
                 </div>
-                
+
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-700 mt-auto flex gap-2">
-                  <button 
+                  <button
                     onClick={() => handleOpenHistory(patient)}
                     className="cursor-pointer flex-1 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 border border-indigo-100 dark:border-indigo-800 rounded-lg text-sm font-semibold text-indigo-700 dark:text-indigo-400 transition-colors flex items-center justify-center gap-1.5"
                   >
@@ -133,7 +131,7 @@ export default function DoctorPatients() {
         </div>
       )}
 
-      <PatientHistoryModal 
+      <PatientHistoryModal
         isOpen={historyModalOpen}
         onClose={() => setHistoryModalOpen(false)}
         patientId={selectedPatientId}

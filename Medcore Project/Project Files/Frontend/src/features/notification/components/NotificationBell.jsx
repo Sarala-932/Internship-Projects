@@ -8,7 +8,6 @@ export default function NotificationBell() {
   const dropdownRef = useRef(null);
   const { notifications, unreadCount, markAsRead } = useNotifications();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -39,7 +38,7 @@ export default function NotificationBell() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className="cursor-pointer p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative"
       >
@@ -61,7 +60,7 @@ export default function NotificationBell() {
               )}
             </h3>
             {unreadCount > 0 && (
-              <button 
+              <button
                 onClick={handleMarkAllAsRead}
                 className="cursor-pointer text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium flex items-center gap-1"
               >
@@ -82,8 +81,8 @@ export default function NotificationBell() {
             ) : (
               <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
                 {notifications.map((notif) => (
-                  <div 
-                    key={notif._id} 
+                  <div
+                    key={notif._id}
                     className={`p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 flex gap-3 ${!notif.isRead ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}
                   >
                     <div className="mt-0.5 p-2 rounded-full bg-white dark:bg-slate-700 shadow-sm border border-slate-100 dark:border-slate-600 h-fit">
@@ -119,7 +118,7 @@ export default function NotificationBell() {
               </div>
             )}
           </div>
-          
+
           <div className="p-3 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 text-center">
             <button className="cursor-pointer text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
               View All Notifications

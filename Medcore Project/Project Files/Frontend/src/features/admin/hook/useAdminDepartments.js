@@ -12,7 +12,7 @@ export const useAdminDepartments = () => {
   const [masterSpecialities, setMasterSpecialities] = useState([]);
 
   const fetchDepartments = useCallback(async (force = false) => {
-    // Cache-first: skip fetch if data already loaded and not forced
+
     if (!force && departments.length > 0) return;
     try {
       dispatch(setLoading(true));
@@ -33,7 +33,7 @@ export const useAdminDepartments = () => {
       dispatch(setLoading(true));
       await adminService.createDepartment(payload);
       toast.success("Department added successfully");
-      await fetchDepartments(true); // force refresh so new dept appears
+      await fetchDepartments(true);
       return true;
     } catch (err) {
       dispatch(setError(err.response?.data?.message || "Failed to create department"));

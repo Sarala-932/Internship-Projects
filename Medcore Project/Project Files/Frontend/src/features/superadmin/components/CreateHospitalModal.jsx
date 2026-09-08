@@ -13,7 +13,7 @@ export default function CreateHospitalModal({ isOpen, onClose, onSuccess }) {
     e.preventDefault();
     try {
       setCreating(true);
-      
+
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -27,8 +27,8 @@ export default function CreateHospitalModal({ isOpen, onClose, onSuccess }) {
       await apiClient.post("/hospitals", payload);
       toast.success("Hospital created!");
       setFormData({ name: "", email: "", city: "", phone: "", address: "" });
-      onSuccess(); // Refresh data
-      onClose(); // Close modal
+      onSuccess();
+      onClose();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to create hospital");
     } finally {

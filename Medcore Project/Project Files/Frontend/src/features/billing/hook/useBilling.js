@@ -24,7 +24,7 @@ export const useBilling = () => {
   const initPayment = async (billId) => {
     try {
       const data = await initializePaymentService(billId);
-      return data.razorpayOrder; // Returns the razorpay order object
+      return data.razorpayOrder;
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to initialize payment");
       throw err;
@@ -34,11 +34,11 @@ export const useBilling = () => {
   const verifyPayment = async (billId, paymentData) => {
     try {
       const data = await verifyPaymentService(billId, paymentData);
-      dispatch(updateBillStatus({ 
-        billId, 
-        status: "paid", 
-        paidAmount: data.bill.paidAmount, 
-        dueAmount: 0 
+      dispatch(updateBillStatus({
+        billId,
+        status: "paid",
+        paidAmount: data.bill.paidAmount,
+        dueAmount: 0
       }));
       toast.success("Payment successful!");
       return data.bill;

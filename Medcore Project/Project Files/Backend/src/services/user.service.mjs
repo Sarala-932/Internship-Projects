@@ -4,7 +4,6 @@ import { issueTokenPair } from "./auth.service.mjs";
 
 const VALID_ROLES = User.schema.path("role").enumValues;
 
-// Helper function to throw custom errors with status code
 const createError = (message, status = 400) => {
     const err = new Error(message);
     err.status = status;
@@ -74,7 +73,7 @@ export const loginUserService = async (email, password) => {
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });
-    
+
     if (!user) {
         throw createError("Invalid credentials", 401);
     }
@@ -92,10 +91,8 @@ export const loginUserService = async (email, password) => {
         throw createError("Email not verified. Verify OTP first.", 403);
     }
 
-    // Generate tokens via authServices
     const { accessToken, refreshToken } = await issueTokenPair(user);
 
-    // Update last login
     user.lastLoginAt = new Date();
     await user.save();
 
@@ -106,16 +103,14 @@ export const getUserByIdService = async (userId) => {
     const user = await User.findById(userId).select(
         "email firstName lastName phone role hospitalId departmentId isEmailVerified isActive avatarUrl createdAt"
     );
-    
+
     if (!user) {
         throw createError("User not found", 404);
     }
-    
+
     return user;
 };
 
-// Super Admin / Admin creates staff users (doctor, nurse, etc.)
-// These accounts are pre-verified (no OTP needed since admin is creating them)
 export const createStaffUserService = async (data, creatorRole) => {
     const { email, password, firstName, lastName, phone, role, hospitalId, departmentId } = data;
 
@@ -131,12 +126,10 @@ export const createStaffUserService = async (data, creatorRole) => {
         throw createError("Invalid role", 400);
     }
 
-    // Admin cannot create super_admin or other admin accounts
     if (creatorRole === "admin" && ["super_admin", "admin"].includes(role)) {
         throw createError("Admin cannot create admin/super_admin accounts", 403);
     }
 
-    // Staff users need a hospitalId
     if (!hospitalId) {
         throw createError("hospitalId is required for staff users", 400);
     }
@@ -157,16 +150,15 @@ export const createStaffUserService = async (data, creatorRole) => {
         role,
         hospitalId,
         departmentId: departmentId || undefined,
-        isEmailVerified: true, // Admin ne banaya hai, toh verified hai
+        isEmailVerified: true,
     });
 
     return user;
 };
 
-// Update user profile
 export const updateProfileService = async (userId, data) => {
     const { firstName, lastName, phone } = data;
-    
+
     if (!firstName || !lastName) {
         throw createError("First name and last name are required", 400);
     }
@@ -184,7 +176,6 @@ export const updateProfileService = async (userId, data) => {
     return user;
 };
 
-// Change password
 export const changePasswordService = async (userId, oldPassword, newPassword) => {
     if (!oldPassword || !newPassword) {
         throw createError("Old password and new password are required", 400);

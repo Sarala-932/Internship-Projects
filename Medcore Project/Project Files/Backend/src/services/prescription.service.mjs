@@ -8,7 +8,6 @@ import { generatePrescriptionPdfBuffer } from "../utils/prescriptionPdf.mjs";
 export const createPrescriptionService = async (hospitalId, doctorUserId, data) => {
     const { patientId, encounterId, medicines = [], generalInstructions } = data;
 
-    // Verify patient
     const patient = await Patient.findById(patientId);
     if (!patient) {
         const error = new Error("Patient not found");
@@ -16,7 +15,6 @@ export const createPrescriptionService = async (hospitalId, doctorUserId, data) 
         throw error;
     }
 
-    // Auto-generate rxNumber
     const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const random4 = Math.floor(1000 + Math.random() * 9000);
     const rxNumber = `RX-${today}-${random4}`;
@@ -104,7 +102,6 @@ export const searchMedicinesService = async (hospitalId, queryStr) => {
 
     const regex = new RegExp(queryStr, "i");
 
-    // Try finding in pharmacy inventory for this hospital
     let items = [];
     if (hospitalId) {
         items = await PharmacyInventory.find({
@@ -123,7 +120,6 @@ export const searchMedicinesService = async (hospitalId, queryStr) => {
         }));
     }
 
-    // Fallback static standard medicine suggestions if inventory is empty
     const commonMedicines = [
         { name: "Paracetamol 500mg", genericName: "Acetaminophen", category: "tablet" },
         { name: "Amoxicillin 500mg", genericName: "Amoxicillin", category: "capsule" },

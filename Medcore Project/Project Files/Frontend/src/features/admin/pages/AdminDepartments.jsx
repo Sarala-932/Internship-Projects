@@ -20,7 +20,6 @@ export default function AdminDepartments() {
     e.preventDefault();
     if (!formData.specialityId) return toast.error("Please select a speciality");
 
-    // Find selected master speciality to get its name and code
     const selectedMaster = masterSpecialities.find(s => s._id === formData.specialityId);
     if (!selectedMaster) return toast.error("Invalid speciality selected");
 
@@ -40,7 +39,6 @@ export default function AdminDepartments() {
     }
   };
 
-  // Filter out master specialities that are already added to this hospital
   const availableSpecialities = useMemo(
     () => masterSpecialities.filter(m => !departments.some(d => d.name === m.name)),
     [masterSpecialities, departments]
@@ -58,16 +56,16 @@ export default function AdminDepartments() {
             Manage the active departments and services offered in your hospital
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchDepartments(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-indigo-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm"
           >
@@ -98,8 +96,8 @@ export default function AdminDepartments() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {departments.map((dept) => (
-              <div 
-                key={dept._id} 
+              <div
+                key={dept._id}
                 className="p-5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all group"
               >
                 <div className="flex items-start justify-between mb-3">
@@ -143,7 +141,7 @@ export default function AdminDepartments() {
                 <AlertCircle className="w-5 h-5" />
               </button>
             </div>
-            
+
             <form onSubmit={handleCreate} className="p-6 space-y-5">
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Select Speciality *</label>
@@ -162,7 +160,7 @@ export default function AdminDepartments() {
                   <p className="text-xs text-amber-500 mt-1">All master specialities have already been added to your hospital.</p>
                 )}
               </div>
-              
+
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Custom Description (Optional)</label>
                 <textarea

@@ -9,7 +9,6 @@ export const createEncounterService = async (appointmentId, doctorUserId, hospit
         throw error;
     }
 
-    // Check if encounter already exists for this appointment
     let encounter = await Encounter.findOne({ appointmentId });
     if (encounter) {
         return encounter;
@@ -25,7 +24,6 @@ export const createEncounterService = async (appointmentId, doctorUserId, hospit
         ...data
     });
 
-    // Link encounter back to appointment & set status to in_consultation
     appointment.encounterId = encounter._id;
     appointment.status = "in_consultation";
     await appointment.save();
@@ -82,7 +80,6 @@ export const addVitalsService = async (encounterId, recordedByUserId, vitalsData
         throw error;
     }
 
-    // Auto-compute BMI if height and weight are provided
     let bmi = vitalsData.bmi;
     if (!bmi && vitalsData.heightCm && vitalsData.weightKg) {
         const heightM = vitalsData.heightCm / 100;
@@ -118,7 +115,6 @@ export const signEncounterService = async (encounterId, doctorUserId) => {
     encounter.signedAt = new Date();
     await encounter.save();
 
-    // Mark corresponding appointment as completed
     if (encounter.appointmentId) {
         await Appointment.findByIdAndUpdate(encounter.appointmentId, {
             status: "completed"

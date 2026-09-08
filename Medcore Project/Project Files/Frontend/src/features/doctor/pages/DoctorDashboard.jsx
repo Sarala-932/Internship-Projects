@@ -14,14 +14,14 @@ export default function DoctorDashboard() {
   if (loading && !data) {
     return (
       <div className="space-y-8 max-w-7xl mx-auto animate-pulse">
-        {/* Banner Skeleton */}
+
         <div className="h-32 bg-slate-200 dark:bg-slate-700 rounded-2xl w-full"></div>
-        {/* Stats Skeleton */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
           <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
         </div>
-        {/* Chart/Queue Skeleton */}
+
         <div className="h-96 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
       </div>
     );
@@ -51,13 +51,13 @@ export default function DoctorDashboard() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Welcome Banner */}
+
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">Good Morning, Dr. {user?.firstName}!</h2>
           <p className="text-blue-100 text-sm">You have {data.stats.appointmentsToday} appointments scheduled for today.</p>
         </div>
-        <button 
+        <button
           onClick={() => navigate('/doctor/appointments')}
           className="cursor-pointer bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/20"
         >
@@ -65,7 +65,6 @@ export default function DoctorDashboard() {
         </button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {stats.map((stat, i) => (
           <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
@@ -80,7 +79,6 @@ export default function DoctorDashboard() {
         ))}
       </div>
 
-      {/* Analytics Chart */}
       {data.charts?.appointments && data.charts.appointments.length > 0 && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
           <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
@@ -93,7 +91,7 @@ export default function DoctorDashboard() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   labelFormatter={(val) => new Date(val).toLocaleDateString()}
                 />
@@ -104,7 +102,6 @@ export default function DoctorDashboard() {
         </div>
       )}
 
-      {/* Today's Appointments */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
           <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -115,7 +112,7 @@ export default function DoctorDashboard() {
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
-        
+
         {data.recentAppointments?.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
             <Calendar className="w-12 h-12 mb-3 text-slate-300 dark:text-slate-600" />

@@ -15,16 +15,16 @@ export default function AdminDashboard() {
   if (loading && !data) {
     return (
       <div className="space-y-8 animate-pulse">
-        {/* Banner Skeleton */}
+
         <div className="h-32 bg-slate-200 dark:bg-slate-700 rounded-2xl w-full"></div>
-        {/* Stats Skeleton */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
           <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
           <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
           <div className="h-24 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
         </div>
-        {/* Chart Skeleton */}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="h-80 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
           <div className="h-80 bg-slate-100 dark:bg-slate-800 rounded-2xl"></div>
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Banner */}
+
       <div className="bg-gradient-to-r from-indigo-600 to-blue-700 rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-1">
           <Building2 className="w-5 h-5 text-indigo-200" />
@@ -54,7 +54,6 @@ export default function AdminDashboard() {
         <p className="text-indigo-200 text-sm mt-1">Here's your hospital's overview for today.</p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat, i) => (
           <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm">
@@ -69,10 +68,9 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Analytics Charts */}
       {data.charts && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Revenue Chart */}
+
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
             <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
               <IndianRupee className="w-5 h-5 text-emerald-500" />
@@ -84,7 +82,7 @@ export default function AdminDashboard() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => `₹${val}`} />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     labelFormatter={(val) => new Date(val).toLocaleDateString()}
                     formatter={(val) => [`₹${val}`, 'Revenue']}
@@ -95,7 +93,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Patients Chart */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
             <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
               <Users className="w-5 h-5 text-indigo-500" />
@@ -107,7 +104,7 @@ export default function AdminDashboard() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { weekday: 'short' })} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     labelFormatter={(val) => new Date(val).toLocaleDateString()}
                   />
@@ -119,9 +116,8 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Staff + Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Staff Table */}
+
         <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
             <h3 className="font-bold text-slate-900 dark:text-white">Staff Overview</h3>
@@ -147,7 +143,7 @@ export default function AdminDashboard() {
                     <td className="px-6 py-3 text-slate-600 dark:text-slate-300">{staff.departmentId?.name || "—"}</td>
                     <td className="px-6 py-3">
                       <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                        staff.isActive 
+                        staff.isActive
                           ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
                           : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
                       }`}>
@@ -167,7 +163,6 @@ export default function AdminDashboard() {
           </table>
         </div>
 
-        {/* Quick Actions */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
           <h3 className="font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h3>
           <div className="space-y-3">

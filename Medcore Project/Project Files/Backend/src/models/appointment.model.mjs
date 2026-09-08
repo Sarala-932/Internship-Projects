@@ -49,7 +49,7 @@ const appointmentSchema = new mongoose.Schema(
         cancelReason: {type: String},
         encounterId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Encounter",                         
+            ref: "Encounter",
         },
     },
     {timestamps: true},

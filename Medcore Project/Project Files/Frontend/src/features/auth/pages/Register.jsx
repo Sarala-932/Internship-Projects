@@ -39,18 +39,17 @@ export default function Register() {
       toast.error("Please fill in all fields");
       return;
     }
-    
+
     if (type === "patient" && !selectedHospital) {
       toast.error("Please select a hospital");
       return;
     }
-    
+
     if (type === "patient" && !dob) {
       toast.error("Please enter your date of birth");
       return;
     }
-    
-    // Add default role as patient if registering from outside
+
     const userData = {
       firstName,
       lastName,
@@ -68,7 +67,7 @@ export default function Register() {
   return (
     <div className="w-full">
       <form onSubmit={onSubmit} className="space-y-5">
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">First Name</label>
@@ -180,7 +179,7 @@ export default function Register() {
                 </select>
               </div>
             </div>
-            
+
             <div className="space-y-1.5">
               <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wide">Select Hospital</label>
             <div className="relative group">

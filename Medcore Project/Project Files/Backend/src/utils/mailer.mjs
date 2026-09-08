@@ -13,7 +13,7 @@ const transporter = config.mailUser
               user: config.mailUser,
               pass: config.mailPass,
           },
-          // Add timeouts to prevent hanging on Render/blocked ports
+
           connectionTimeout: 5000,
           greetingTimeout: 5000,
           socketTimeout: 5000,
@@ -33,15 +33,15 @@ export function otpTemplate({name, otp, minutes = 5}) {
       <div style="padding:32px;">
         <p style="color:#334155;margin:0 0 16px">Hi <strong>${name || "there"}</strong>,</p>
         <p style="color:#334155;margin:0 0 24px">Use the verification code below to confirm your email address.</p>
-        
+
         <div style="font-size:36px;font-weight:bold;letter-spacing:12px;color:#1d4ed8;text-align:center;padding:24px;background:#f0f9ff;border:2px dashed #3b82f6;border-radius:8px;margin:0 0 24px">
           ${otp}
         </div>
-        
+
         <p style="color:#64748b;font-size:14px;margin:0;text-align:center;">
           Expires in ${minutes} minutes
         </p>
-        
+
         <p style="color:#94a3b8;font-size:13px;margin:32px 0 0 0;">
           If you didn't request this, you can safely ignore this email.
         </p>
@@ -62,11 +62,11 @@ export function welcomeTemplate({name}) {
         <p style="color:#334155;margin:0 0 16px">Hi <strong>${name || "there"}</strong>,</p>
         <p style="color:#334155;margin:0 0 16px">Your email address has been successfully verified.</p>
         <p style="color:#334155;margin:0 0 24px">Welcome to MedCore HMS! You can now access your dashboard and manage your clinical operations.</p>
-        
+
         <div style="text-align:center;">
           <a href="https://medcore-hms-theta.vercel.app/patient/dashboard" style="display:inline-block;background:#059669;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 24px;border-radius:6px;">Go to Dashboard</a>
         </div>
-        
+
         <p style="color:#94a3b8;font-size:13px;margin:32px 0 0 0;">
           If you have any questions, feel free to reply to this email.
         </p>

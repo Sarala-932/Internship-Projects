@@ -87,7 +87,7 @@ export default function ResetPassword() {
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
-        {/* OTP Boxes */}
+
         <div>
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block mb-2">Reset Code</label>
           <div className="flex justify-between gap-2">
@@ -106,7 +106,6 @@ export default function ResetPassword() {
           </div>
         </div>
 
-        {/* New Password */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">New Password</label>
           <div className="relative">
@@ -127,7 +126,6 @@ export default function ResetPassword() {
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300 block">Confirm Password</label>
           <div className="relative">

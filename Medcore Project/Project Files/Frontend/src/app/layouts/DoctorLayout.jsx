@@ -13,7 +13,7 @@ export default function DoctorLayout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
-  
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
 
@@ -41,7 +41,7 @@ export default function DoctorLayout() {
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      {/* Sidebar */}
+
       <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300 z-10 md:flex">
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700 shrink-0">
           <Link to="/doctor/dashboard" className="flex items-center gap-2">
@@ -59,14 +59,14 @@ export default function DoctorLayout() {
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = location.pathname.startsWith(link.path);
-            
+
             return (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive 
-                    ? "bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 shadow-sm" 
+                  isActive
+                    ? "bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 shadow-sm"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700/50 dark:hover:text-white"
                 }`}
               >
@@ -78,32 +78,30 @@ export default function DoctorLayout() {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        {/* Top Header */}
+
         <header className="h-16 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 sm:px-8 transition-colors duration-300 z-10 shrink-0">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold text-slate-900 dark:text-white capitalize hidden sm:block">
               {location.pathname.split('/')[2]?.replace('-', ' ') || "Dashboard"}
             </h1>
           </div>
-          
+
           <div className="flex items-center gap-3 sm:gap-5">
-            <button 
+            <button
               onClick={toggleDarkMode}
               className="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer"
               aria-label="Toggle Dark Mode"
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            
+
             <NotificationBell />
-            
+
             <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
-            
-            {/* Profile Dropdown */}
+
             <div className="relative" ref={profileMenuRef}>
-              <button 
+              <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none cursor-pointer"
               >
@@ -118,16 +116,15 @@ export default function DoctorLayout() {
                 </div>
               </button>
 
-              {/* Dropdown Menu */}
               {showProfileMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-700/50 sm:hidden">
                     <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Dr. {user?.firstName}</p>
                     <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
                   </div>
-                  
-                  <Link 
-                    to="/doctor/profile" 
+
+                  <Link
+                    to="/doctor/profile"
                     className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                     onClick={() => setShowProfileMenu(false)}
                   >
@@ -147,7 +144,6 @@ export default function DoctorLayout() {
           </div>
         </header>
 
-        {/* Scrollable Page Content */}
         <div className="flex-1 overflow-auto bg-slate-50/50 dark:bg-slate-900/50">
           <div className="p-4 sm:p-8 max-w-[1600px] mx-auto min-h-full">
             <Outlet />

@@ -11,23 +11,21 @@ import Pagination from "../../../shared/components/Pagination";
 
 export default function AdminPharmacy() {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState("inventory"); // 'inventory' | 'prescriptions'
-  
+  const [activeTab, setActiveTab] = useState("inventory");
+
   const dispatch = useDispatch();
   const { pharmacyInventory: inventory } = useSelector(state => state.admin);
   const [pendingPrescriptions, setPendingPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  // Search & Pagination
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [meta, setMeta] = useState(null);
-  
+
   const [error, setError] = useState(null);
 
-  // Modal State - Inventory
   const [showModal, setShowModal] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -35,10 +33,9 @@ export default function AdminPharmacy() {
     medicineName: "", genericName: "", category: "tablet", batchNumber: "", quantity: 0, unitPrice: 0, mrp: 0, expiryDate: ""
   });
 
-  // Modal State - Dispense
   const [showDispenseModal, setShowDispenseModal] = useState(false);
   const [selectedPrescription, setSelectedPrescription] = useState(null);
-  const [dispenseItems, setDispenseItems] = useState([]); 
+  const [dispenseItems, setDispenseItems] = useState([]);
 
   const fetchInventory = async () => {
     try {
@@ -46,7 +43,7 @@ export default function AdminPharmacy() {
       setError(null);
       let url = `/pharmacy/inventory?page=${page}&limit=${limit}`;
       if (search) url += `&search=${encodeURIComponent(search)}`;
-      
+
       const res = await apiClient.get(url);
       dispatch(setPharmacyInventory(res.data.inventory || []));
       setMeta(res.data.meta || null);
@@ -72,7 +69,6 @@ export default function AdminPharmacy() {
     }
   };
 
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchInput);
@@ -83,7 +79,7 @@ export default function AdminPharmacy() {
 
   useEffect(() => {
     if (activeTab === "inventory") {
-      // Cache-first: skip if data exists and no search/page change
+
       if (inventory.length > 0 && !search && page === 1) return;
       fetchInventory();
     } else {
@@ -107,7 +103,7 @@ export default function AdminPharmacy() {
         unitPrice: Number(formData.unitPrice),
         mrp: Number(formData.mrp)
       };
-      
+
       let res;
       if (editItem) {
         res = await apiClient.patch(`/pharmacy/inventory/${editItem._id}`, payload);
@@ -116,7 +112,7 @@ export default function AdminPharmacy() {
         res = await apiClient.post("/pharmacy/inventory", payload);
         toast.success(res.data.message || "Stock added successfully");
       }
-      
+
       closeModal();
       fetchInventory();
     } catch (err) {
@@ -151,17 +147,15 @@ export default function AdminPharmacy() {
 
   const openDispenseModal = (prescription) => {
     setSelectedPrescription(prescription);
-    
-    // Auto-map medicines to inventory if possible
+
     const items = prescription.medicines.map(med => {
       const matchedInv = inventory.find(i => i.medicineName.toLowerCase() === med.name.toLowerCase());
-      
-      // Attempt to auto-calculate quantity based on frequency (e.g., 1-0-1, OD, BD) and durationDays
+
       let calcQty = 1;
       if (med.frequency) {
         let timesPerDay = 1;
         const freqStr = med.frequency.toLowerCase();
-        
+
         if (freqStr.includes('-')) {
           timesPerDay = freqStr.split('-').reduce((sum, val) => sum + (parseInt(val) || 0), 0);
         } else if (freqStr === 'od') {
@@ -173,26 +167,25 @@ export default function AdminPharmacy() {
         } else if (freqStr === 'qid') {
           timesPerDay = 4;
         }
-        
+
         let dose = 1;
         if (med.dosage) {
           const num = parseFloat(med.dosage);
-          if (!isNaN(num) && num > 0 && num < 10) { 
+          if (!isNaN(num) && num > 0 && num < 10) {
              dose = num;
           }
         }
-        
+
         const days = med.durationDays || 1;
         calcQty = (timesPerDay > 0 ? timesPerDay : 1) * dose * days;
       }
-      
-      // If it's a syrup, default to 1 bottle unless it specifies otherwise
+
       if (med.name.toLowerCase().includes('syrup')) {
           calcQty = 1;
       }
 
       const available = matchedInv ? matchedInv.quantity : 0;
-      // Cap at available stock
+
       const finalQty = Math.min(calcQty, available);
 
       return {
@@ -207,7 +200,7 @@ export default function AdminPharmacy() {
         unitPrice: matchedInv ? matchedInv.unitPrice : 0,
       };
     });
-    
+
     setDispenseItems(items);
     setShowDispenseModal(true);
   };
@@ -219,8 +212,7 @@ export default function AdminPharmacy() {
        newItems[index].inventoryId = value;
        newItems[index].availableQty = matchedInv ? matchedInv.quantity : 0;
        newItems[index].unitPrice = matchedInv ? matchedInv.unitPrice : 0;
-       
-       // Auto-fill quantity when user manually selects an inventory item
+
        if (matchedInv && newItems[index].dispenseQty === 0) {
            newItems[index].dispenseQty = Math.min(newItems[index].recommendedQty, matchedInv.quantity);
        }
@@ -249,11 +241,11 @@ export default function AdminPharmacy() {
         })),
         notes: "Dispensed via Admin Portal"
       });
-      
+
       toast.success("Medicines dispensed and Bill generated successfully!");
       setShowDispenseModal(false);
       fetchPendingPrescriptions();
-      fetchInventory(); 
+      fetchInventory();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to dispense medicines");
     } finally {
@@ -263,7 +255,7 @@ export default function AdminPharmacy() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -274,19 +266,19 @@ export default function AdminPharmacy() {
             Manage inventory and dispense patient prescriptions.
           </p>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder={activeTab === 'inventory' ? "Search medicines..." : "Search prescriptions..."}
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none"
             />
           </div>
-          <button 
+          <button
             onClick={activeTab === 'inventory' ? fetchInventory : fetchPendingPrescriptions}
             className="p-2 text-slate-500 hover:text-amber-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
@@ -294,7 +286,7 @@ export default function AdminPharmacy() {
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           {activeTab === 'inventory' && (
-            <button 
+            <button
               onClick={openAddModal}
               className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 w-full sm:w-auto rounded-xl text-sm font-semibold transition-all shadow-sm"
             >
@@ -305,13 +297,12 @@ export default function AdminPharmacy() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="flex items-center gap-4 border-b border-slate-200 dark:border-slate-700">
         <button
           onClick={() => setActiveTab('inventory')}
           className={`px-4 py-2 text-sm font-bold border-b-2 transition-colors ${
-            activeTab === 'inventory' 
-              ? 'border-amber-500 text-amber-600 dark:text-amber-500' 
+            activeTab === 'inventory'
+              ? 'border-amber-500 text-amber-600 dark:text-amber-500'
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
           }`}
         >
@@ -320,8 +311,8 @@ export default function AdminPharmacy() {
         <button
           onClick={() => setActiveTab('prescriptions')}
           className={`px-4 py-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
-            activeTab === 'prescriptions' 
-              ? 'border-amber-500 text-amber-600 dark:text-amber-500' 
+            activeTab === 'prescriptions'
+              ? 'border-amber-500 text-amber-600 dark:text-amber-500'
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
           }`}
         >
@@ -334,7 +325,6 @@ export default function AdminPharmacy() {
         </button>
       </div>
 
-      {/* Content Area */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {loading && ((activeTab === 'inventory' && inventory.length === 0) || (activeTab === 'prescriptions' && pendingPrescriptions.length === 0)) ? (
           activeTab === 'inventory' ? <TableSkeleton columns={6} rows={5} /> : <TableSkeleton columns={6} rows={5} />
@@ -344,7 +334,7 @@ export default function AdminPharmacy() {
             <span className="font-medium">{error}</span>
           </div>
         ) : activeTab === 'inventory' ? (
-          /* INVENTORY VIEW */
+
           inventory.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
               <Package className="w-14 h-14 mb-4 text-slate-300 dark:text-slate-600" />
@@ -413,7 +403,7 @@ export default function AdminPharmacy() {
             </div>
           )
         ) : (
-          /* PRESCRIPTIONS VIEW */
+
           pendingPrescriptions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
               <FileText className="w-14 h-14 mb-4 text-slate-300 dark:text-slate-600" />
@@ -435,7 +425,7 @@ export default function AdminPharmacy() {
                       <span className="px-2 py-0.5 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-xs font-medium">{presc.medicines.length} Medicines</span>
                     </div>
                   </div>
-                  <button 
+                  <button
                     onClick={() => openDispenseModal(presc)}
                     className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition-colors w-full md:w-auto justify-center"
                   >
@@ -449,7 +439,6 @@ export default function AdminPharmacy() {
         )}
       </div>
 
-      {/* Add/Edit Stock Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-2xl border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -458,9 +447,9 @@ export default function AdminPharmacy() {
                 <Package className="w-5 h-5 text-amber-500" /> {editItem ? "Edit Inventory" : "Add New Stock"}
               </h3>
             </div>
-            
+
             <form onSubmit={handleAddStock} className="p-6">
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Medicine Name <span className="text-red-500">*</span></label>
@@ -537,7 +526,6 @@ export default function AdminPharmacy() {
         </div>
       )}
 
-      {/* Dispense Modal */}
       {showDispenseModal && selectedPrescription && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-4xl border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -546,16 +534,14 @@ export default function AdminPharmacy() {
                 <Pill className="w-5 h-5 text-blue-500" /> Dispense Medicines & Bill
               </h3>
             </div>
-            
+
             <form onSubmit={handleDispenseSubmit} className="p-6 space-y-6">
-              
-              {/* Patient Info */}
+
               <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                 <h4 className="font-bold text-slate-900 dark:text-white">Patient: {selectedPrescription.patientId?.firstName} {selectedPrescription.patientId?.lastName}</h4>
                 <p className="text-sm text-slate-500 mt-1">Prescribed by Dr. {selectedPrescription.doctorId?.lastName} on {new Date(selectedPrescription.createdAt).toLocaleDateString()}</p>
               </div>
 
-              {/* Medicines Table */}
               <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase border-b border-slate-200 dark:border-slate-700">
@@ -574,7 +560,7 @@ export default function AdminPharmacy() {
                           <p className="text-xs text-slate-500">{item.dosage} • {item.frequency} • {item.durationDays} days</p>
                         </td>
                         <td className="px-4 py-3">
-                          <select 
+                          <select
                             value={item.inventoryId}
                             onChange={(e) => handleDispenseItemChange(index, "inventoryId", e.target.value)}
                             className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none"
@@ -591,7 +577,7 @@ export default function AdminPharmacy() {
                           )}
                         </td>
                         <td className="px-4 py-3">
-                          <input 
+                          <input
                             type="number"
                             min="0"
                             max={item.availableQty}

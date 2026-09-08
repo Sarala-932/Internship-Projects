@@ -11,12 +11,10 @@ export default function AuthLayout() {
 
   return (
     <div className="flex flex-col min-h-screen justify-center items-center bg-linear-to-br from-blue-50 via-indigo-50/50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 relative transition-colors duration-500 py-12 px-4 overflow-hidden">
-      
-      {/* Decorative Background Elements */}
+
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/10 dark:bg-blue-600/5 blur-[80px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-400/10 dark:bg-indigo-600/5 blur-[80px] pointer-events-none" />
 
-      {/* Top Navigation for Auth */}
       <div className="w-full p-6 sm:px-10 flex justify-between items-center absolute top-0 left-0 z-20">
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <div className="w-9 h-9 bg-hospital-blue rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/20">
@@ -24,15 +22,15 @@ export default function AuthLayout() {
           </div>
           <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Med<span className="text-hospital-blue dark:text-blue-400">Core</span></span>
         </Link>
-        
+
         <div className="flex items-center gap-3 sm:gap-5">
-            <button 
-              onClick={toggleDarkMode} 
+            <button
+              onClick={toggleDarkMode}
               className="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 rounded-full transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            
+
             <Link
                 to="/login?type=staff"
                 className="hidden sm:block text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-hospital-blue dark:hover:text-blue-400 transition-colors"
@@ -58,8 +56,8 @@ export default function AuthLayout() {
               {location.pathname === '/register' ? "Create Account" : (isStaff ? "Staff Portal" : "Patient Portal")}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-[15px]">
-              {location.pathname === '/register' 
-                ? "Join MedCore to book appointments & view records" 
+              {location.pathname === '/register'
+                ? "Join MedCore to book appointments & view records"
                 : (isStaff ? "Sign in to manage hospital operations" : "Sign in to access your medical records")}
             </p>
           </div>

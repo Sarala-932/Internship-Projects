@@ -65,4 +65,3 @@ app.use("/api/billing", billingRouter);
 app.use("/api/notifications", notificationRouter);
 
 export default app;
-

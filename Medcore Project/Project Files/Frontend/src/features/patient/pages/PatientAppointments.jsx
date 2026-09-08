@@ -29,7 +29,7 @@ export default function PatientAppointments() {
     } else {
       setAppointments(cachedApps);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [activeProfile?._id]);
 
   useRealtime("appointment", fetchAppointments);
@@ -54,14 +54,14 @@ export default function PatientAppointments() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Appointments</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage your upcoming and past appointments</p>
         </div>
         <div className="flex items-center gap-3 mt-4 sm:mt-0">
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchAppointments(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-blue-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors cursor-pointer"
             title="Refresh"
@@ -78,7 +78,6 @@ export default function PatientAppointments() {
         </div>
       </div>
 
-      {/* List */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
         {((loading && appointments.length === 0) || isRefreshing) ? (
           <CardSkeleton count={3} />
@@ -92,7 +91,7 @@ export default function PatientAppointments() {
           <div className="divide-y divide-slate-100 dark:divide-slate-700">
             {appointments.map((app) => (
               <div key={app._id} className="p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
-                
+
                 {/* Date Box */}
                 <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 shrink-0">
                   <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase">
@@ -116,7 +115,7 @@ export default function PatientAppointments() {
                     </div>
                     {getStatusBadge(app.status)}
                   </div>
-                  
+
                   <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-4 h-4" />
@@ -152,7 +151,7 @@ export default function PatientAppointments() {
         )}
       </div>
 
-      <BookAppointmentModal 
+      <BookAppointmentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchAppointments}

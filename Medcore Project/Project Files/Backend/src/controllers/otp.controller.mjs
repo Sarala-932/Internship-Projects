@@ -49,22 +49,20 @@ export async function verifyOtp(req, res) {
 
         otp.consumedAt = new Date();
         await otp.save();
-        
+
         const user = await User.findOne({email});
         user.isEmailVerified = true;
         user.lastLoginAt = new Date();
         await user.save();
-        
-        // Send the verified welcome email
+
         const { sendWelcomeEmail } = await import("../utils/mailer.mjs");
         sendWelcomeEmail({to: user.email, name: user.firstName});
-        
+
         const { issueTokenPair } = await import("../services/auth.service.mjs");
         const { accessCookieOpts, refreshCookieOpts } = await import("./token.controller.mjs");
-        
+
         const { accessToken, refreshToken } = await issueTokenPair(user);
-        
-        // Set secure cookies
+
         res.cookie("accessToken", accessToken, accessCookieOpts);
         res.cookie("refreshToken", refreshToken, refreshCookieOpts);
 

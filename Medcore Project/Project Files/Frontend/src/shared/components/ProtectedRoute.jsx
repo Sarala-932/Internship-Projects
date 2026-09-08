@@ -8,7 +8,7 @@ export default function ProtectedRoute({ allowedRoles }) {
     const lastRole = localStorage.getItem("lastRole");
 
     const redirectUrl = (lastRole && lastRole !== "patient") ? "/login?type=staff" : "/login?type=patient";
-    
+
     return <Navigate to={redirectUrl} replace />;
   }
 

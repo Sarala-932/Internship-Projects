@@ -45,7 +45,7 @@ export const createLabOrderService = async (hospitalId, doctorUserId, data) => {
 export const getLabOrdersService = async (hospitalId, queryParams) => {
     const query = {};
     if (hospitalId) query.hospitalId = hospitalId;
-    
+
     if (queryParams.patientId) query.patientId = queryParams.patientId;
     if (queryParams.status) query.overallStatus = queryParams.status;
     if (queryParams.priority) query.priority = queryParams.priority;
@@ -58,7 +58,7 @@ export const getLabOrdersService = async (hospitalId, queryParams) => {
 
 export const updateTestResultService = async (orderId, testName, labTechUserId, resultData) => {
     const labOrder = await LabOrder.findById(orderId);
-    
+
     if (!labOrder) {
         const error = new Error("Lab order not found");
         error.statusCode = 404;
@@ -72,7 +72,6 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
         throw error;
     }
 
-    // Update the specific test result
     labOrder.tests[testIndex].result = {
         values: resultData.values || [],
         notes: resultData.notes || "",
@@ -82,7 +81,6 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
     };
     labOrder.tests[testIndex].status = "completed";
 
-    // Check if overall status should be updated
     const allCompleted = labOrder.tests.every(t => t.status === "completed");
     const anyCompleted = labOrder.tests.some(t => t.status === "completed");
 
@@ -94,23 +92,19 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
 
     await labOrder.save();
 
-    // --- AUTOMATION: Generate PDF if fully completed ---
     if (allCompleted) {
         try {
-            // We need full details for the PDF
+
             const populatedOrder = await LabOrder.findById(orderId).populate("patientId");
             const hospital = await Hospital.findById(populatedOrder.hospitalId);
             const patient = populatedOrder.patientId;
 
-            // Generate PDF Buffer
             const pdfBuffer = await generateLabReportPdfBuffer(populatedOrder, patient, hospital);
-            
-            // Upload to Cloudinary
+
             const filename = `LAB_${populatedOrder.orderNumber}_${Date.now()}.pdf`;
             const uploadResult = await uploadPdfBufferToCloudinary(pdfBuffer, filename);
             const pdfUrl = uploadResult.secure_url;
 
-            // Save PDF URL to all tests so they all show the "View PDF" button
             labOrder.tests.forEach(t => {
                 if (t.result) {
                     t.result.reportUrl = pdfUrl;
@@ -118,7 +112,6 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
             });
             await labOrder.save();
 
-            // Send Notification to Patient
             const patientUserId = patient.userId;
             if (patientUserId) {
                 const notif = await Notification.create({
@@ -131,7 +124,6 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
                 emitToUser(patientUserId, "notification", notif);
             }
 
-            // Send Notification to Doctor
             const doctorUserId = populatedOrder.orderedByDoctorId;
             if (doctorUserId) {
                 const docNotif = await Notification.create({
@@ -145,7 +137,7 @@ export const updateTestResultService = async (orderId, testName, labTechUserId, 
             }
         } catch (automationError) {
             console.error("[Lab Automation Error]:", automationError);
-            // We don't throw the error because the test result itself was saved successfully.
+
         }
     }
 
@@ -159,7 +151,7 @@ export const deleteLabOrderService = async (orderId) => {
         error.statusCode = 404;
         throw error;
     }
-    
+
     await LabOrder.findByIdAndDelete(orderId);
     return true;
 };

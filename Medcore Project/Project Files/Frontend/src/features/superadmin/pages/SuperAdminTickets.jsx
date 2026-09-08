@@ -24,7 +24,7 @@ export default function SuperAdminTickets() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -35,10 +35,9 @@ export default function SuperAdminTickets() {
             Resolve issues reported by Hospital Administrators
           </p>
         </div>
-        
-        {/* Filters */}
+
         <div className="flex items-center gap-2 bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-          <select 
+          <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             className="bg-transparent text-sm text-slate-700 dark:text-slate-300 font-medium py-1.5 pl-3 pr-8 border-none focus:ring-0 cursor-pointer outline-none"
@@ -48,10 +47,10 @@ export default function SuperAdminTickets() {
             <option value="in_progress">In Progress</option>
             <option value="resolved">Resolved</option>
           </select>
-          
+
           <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-          
-          <button 
+
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchTickets(); setIsRefreshing(false); }}
             className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
@@ -61,7 +60,6 @@ export default function SuperAdminTickets() {
         </div>
       </div>
 
-      {/* List */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && tickets.length === 0) || isRefreshing) ? (
           <div className="flex items-center justify-center py-20">
@@ -95,23 +93,23 @@ export default function SuperAdminTickets() {
                          <CheckCircle className="w-3 h-3" />}
                         {ticket.status.replace('_', ' ')}
                       </span>
-                      
+
                       <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${
-                        ticket.priority === 'high' || ticket.priority === 'critical' 
-                          ? 'border-red-200 text-red-600 dark:border-red-800 dark:text-red-400' 
+                        ticket.priority === 'high' || ticket.priority === 'critical'
+                          ? 'border-red-200 text-red-600 dark:border-red-800 dark:text-red-400'
                           : 'border-slate-200 text-slate-500 dark:border-slate-700'
                       }`}>
                         Priority: {ticket.priority}
                       </span>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-lg font-bold text-slate-900 dark:text-white">{ticket.title}</h3>
                       <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-3xl whitespace-pre-wrap">
                         {ticket.description}
                       </p>
                     </div>
-                    
+
                     <div className="flex items-center gap-4 text-xs text-slate-500 pt-2">
                       <span>Hospital: <span className="font-semibold text-slate-700 dark:text-slate-300">{ticket.hospitalId?.name || "Unknown"}</span></span>
                       <span>•</span>
@@ -120,10 +118,10 @@ export default function SuperAdminTickets() {
                       <span>{new Date(ticket.createdAt).toLocaleString()}</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     {ticket.status !== 'open' && (
-                      <button 
+                      <button
                         onClick={() => handleUpdateStatus(ticket._id, 'open')}
                         className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
                       >
@@ -131,7 +129,7 @@ export default function SuperAdminTickets() {
                       </button>
                     )}
                     {ticket.status !== 'in_progress' && ticket.status !== 'resolved' && (
-                      <button 
+                      <button
                         onClick={() => handleUpdateStatus(ticket._id, 'in_progress')}
                         className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 cursor-pointer"
                       >
@@ -139,7 +137,7 @@ export default function SuperAdminTickets() {
                       </button>
                     )}
                     {ticket.status !== 'resolved' && (
-                      <button 
+                      <button
                         onClick={() => handleUpdateStatus(ticket._id, 'resolved')}
                         className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 cursor-pointer"
                       >

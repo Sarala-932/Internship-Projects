@@ -46,10 +46,10 @@ export const getBillsService = async (hospitalId, queryParams) => {
     if (hospitalId) {
         query.hospitalId = hospitalId;
     }
-    
+
     if (queryParams.search) {
         query.billNumber = { $regex: queryParams.search, $options: "i" };
-        // Could expand to search by patient name using aggregate or populate
+
     }
 
     if (queryParams.patientId) {
@@ -80,8 +80,7 @@ export const initializePaymentService = async (billId, hospitalId) => {
     }
 
     const amountToPay = bill.dueAmount;
-    
-    // Create Razorpay Order
+
     const razorpayOrder = await createRazorpayOrder(amountToPay, bill.billNumber);
 
     return {
@@ -92,7 +91,7 @@ export const initializePaymentService = async (billId, hospitalId) => {
 
 export const verifyPaymentService = async (billId, paymentData) => {
     const { method = "netbanking", transactionId } = paymentData;
-    
+
     const bill = await Bill.findById(billId);
     if (!bill) throw new Error("Bill not found");
 
@@ -103,17 +102,16 @@ export const verifyPaymentService = async (billId, paymentData) => {
     bill.paidAmount = bill.totalAmount;
     bill.dueAmount = 0;
     bill.status = "paid";
-    
+
     bill.payments.push({
         amount: bill.paidAmount,
-        method: method, 
+        method: method,
         transactionId: transactionId || "TXN_" + Date.now(),
         paidAt: new Date()
     });
 
     await bill.save();
 
-    // --- AUTOMATION: Mark ONLY the specific Pharmacy Dispenses as paid ---
     const dispenseIds = bill.items
         .filter(item => item.type === "medicine" && item.referenceId)
         .map(item => item.referenceId);

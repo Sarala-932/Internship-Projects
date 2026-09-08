@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { patientService } from "../service/patientService";
-import { 
-  setActiveProfile, 
+import {
+  setActiveProfile,
   setAppointmentsData,
   setPrescriptionsData,
-  setAdmissionsData 
+  setAdmissionsData
 } from "../state/patientSlice";
 import toast from "react-hot-toast";
 

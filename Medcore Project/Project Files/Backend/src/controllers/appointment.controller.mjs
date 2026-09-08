@@ -13,7 +13,6 @@ export const getActiveSocketsTest = async (req, res) => {
     return res.status(200).json({ sockets: getConnectedSockets() });
 };
 
-// Helper: Notify all admins of a hospital
 const notifyAdmins = async (hospitalId, title, message, type, link) => {
     try {
         emitToRole(hospitalId, "admin", "notification", { title, message, type, link });
@@ -33,7 +32,6 @@ export const bookAppointment = async (req, res) => {
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
         const scheduleTime = new Date(appointment.scheduledAt).toLocaleString('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
 
-        // 1. Notify the Doctor
         const doctorUserId = appointment.doctorId?._id || appointment.doctorId;
         if (doctorUserId) {
             const docNotif = await Notification.create({
@@ -46,7 +44,6 @@ export const bookAppointment = async (req, res) => {
             emitToUser(doctorUserId, "notification", docNotif);
         }
 
-        // 2. Notify the Patient
         const patientUserId = appointment.patientId?.userId;
         if (patientUserId) {
             const patNotif = await Notification.create({
@@ -59,7 +56,6 @@ export const bookAppointment = async (req, res) => {
             emitToUser(patientUserId, "notification", patNotif);
         }
 
-        // 3. Notify Admins
         await notifyAdmins(
             hospitalId,
             "New Appointment Booked",
@@ -68,7 +64,6 @@ export const bookAppointment = async (req, res) => {
             "/admin/appointments"
         );
 
-        // 4. Broadcast data update
         broadcastDataUpdate(hospitalId, "appointment");
 
         return res.status(201).json({
@@ -93,7 +88,6 @@ export const bookAppointmentDesk = async (req, res) => {
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
         const scheduleTime = new Date(appointment.scheduledAt).toLocaleString('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
 
-        // 1. Notify the Doctor
         const doctorUserId = appointment.doctorId?._id || appointment.doctorId;
         if (doctorUserId) {
             const docNotif = await Notification.create({
@@ -106,7 +100,6 @@ export const bookAppointmentDesk = async (req, res) => {
             emitToUser(doctorUserId, "notification", docNotif);
         }
 
-        // 2. Notify the Patient
         const patientUserId = appointment.patientId?.userId;
         if (patientUserId) {
             const patNotif = await Notification.create({
@@ -119,7 +112,6 @@ export const bookAppointmentDesk = async (req, res) => {
             emitToUser(patientUserId, "notification", patNotif);
         }
 
-        // 3. Notify Admins
         await notifyAdmins(
             hospitalId,
             "Desk Appointment Booked",
@@ -128,7 +120,6 @@ export const bookAppointmentDesk = async (req, res) => {
             "/admin/appointments"
         );
 
-        // 4. Broadcast data update
         broadcastDataUpdate(hospitalId, "appointment");
 
         return res.status(201).json({
@@ -189,7 +180,6 @@ export const updateAppointmentStatus = async (req, res) => {
 
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
 
-        // 1. Notify the Patient about status change
         const patientUserId = appointment.patientId?.userId;
         if (patientUserId) {
             const statusMessage =
@@ -209,7 +199,6 @@ export const updateAppointmentStatus = async (req, res) => {
             emitToUser(patientUserId, "notification", patNotif);
         }
 
-        // 2. Notify Admins
         const hospitalId = appointment.hospitalId;
         if (hospitalId) {
             await notifyAdmins(
@@ -221,7 +210,6 @@ export const updateAppointmentStatus = async (req, res) => {
             );
         }
 
-        // 3. Broadcast data update
         if (hospitalId) {
             broadcastDataUpdate(hospitalId, "appointment");
         }
@@ -245,7 +233,6 @@ export const cancelAppointment = async (req, res) => {
         const patientName = `${appointment.patientId?.firstName || ""} ${appointment.patientId?.lastName || ""}`.trim();
         const scheduleTime = new Date(appointment.scheduledAt).toLocaleString('en-US', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
 
-        // 1. Notify the Doctor
         const doctorUserId = appointment.doctorId?._id || appointment.doctorId;
         if (doctorUserId) {
             const docNotif = await Notification.create({
@@ -258,7 +245,6 @@ export const cancelAppointment = async (req, res) => {
             emitToUser(doctorUserId, "notification", docNotif);
         }
 
-        // 2. Notify the Patient
         const patientUserId = appointment.patientId?.userId;
         if (patientUserId) {
             const patNotif = await Notification.create({
@@ -271,7 +257,6 @@ export const cancelAppointment = async (req, res) => {
             emitToUser(patientUserId, "notification", patNotif);
         }
 
-        // 3. Notify Admins
         const hospitalId = appointment.hospitalId;
         if (hospitalId) {
             await notifyAdmins(
@@ -283,7 +268,6 @@ export const cancelAppointment = async (req, res) => {
             );
         }
 
-        // 4. Broadcast data update
         if (hospitalId) {
             broadcastDataUpdate(hospitalId, "appointment");
         }
@@ -298,4 +282,3 @@ export const cancelAppointment = async (req, res) => {
         });
     }
 };
-

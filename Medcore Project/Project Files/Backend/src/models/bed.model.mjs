@@ -27,7 +27,6 @@ const bedSchema = new mongoose.Schema(
     {timestamps: true}
 );
 
-// Prevent duplicate bed numbers within the same ward
 bedSchema.index({ wardId: 1, bedNumber: 1 }, { unique: true });
 
 const Bed = mongoose.model("Bed", bedSchema);

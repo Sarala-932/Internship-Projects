@@ -11,7 +11,7 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type") || "patient";
   const isStaff = type === "staff";
-  
+
   const { handleLogin, loading } = useAuth();
 
   const onSubmit = async (e) => {

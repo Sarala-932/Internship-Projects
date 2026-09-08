@@ -13,15 +13,13 @@ export default function AdminLab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("pending"); // pending, completed
+  const [activeTab, setActiveTab] = useState("pending");
 
-  // Modal State
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedTest, setSelectedTest] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  
-  // Form Data (Array of result parameters)
+
   const [results, setResults] = useState([]);
   const [notes, setNotes] = useState("");
 
@@ -29,21 +27,19 @@ export default function AdminLab() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const res = await apiClient.get(`/lab-orders`);
       let orders = res.data.orders || [];
-      
-      // Filter based on tab
+
       if (activeTab === "completed") {
         orders = orders.filter(o => o.overallStatus === "completed");
       } else {
         orders = orders.filter(o => o.overallStatus === "pending" || o.overallStatus === "partial");
       }
 
-      // Filter by search
       if (search) {
         const s = search.toLowerCase();
-        orders = orders.filter(o => 
+        orders = orders.filter(o =>
           o.orderNumber?.toLowerCase().includes(s) ||
           o.patientId?.firstName?.toLowerCase().includes(s) ||
           o.patientId?.lastName?.toLowerCase().includes(s) ||
@@ -60,12 +56,10 @@ export default function AdminLab() {
     }
   };
 
-  // Track last fetched tab to avoid cache collision between tabs
   const lastTabRef = useRef(null);
 
   useEffect(() => {
-    // Always re-fetch when tab changes (data is tab-specific)
-    // For same tab: skip if data exists and no search (cache-first)
+
     if (!search && labOrders.length > 0 && lastTabRef.current === activeTab) return;
     lastTabRef.current = activeTab;
     const timer = setTimeout(() => {
@@ -79,10 +73,9 @@ export default function AdminLab() {
     setSelectedTest(test);
     setNotes("");
 
-    // Initialize default parameters based on test name
     const defaultParams = getDefaultParams(test.name);
     setResults(defaultParams);
-    
+
     setShowModal(true);
   };
 
@@ -107,7 +100,7 @@ export default function AdminLab() {
         { parameter: "Fasting Blood Sugar", value: "", unit: "mg/dL", refRange: "70 - 100", flag: "Normal" },
       ];
     }
-    // Generic fallback
+
     return [
       { parameter: "Result", value: "", unit: "", refRange: "", flag: "Normal" }
     ];
@@ -116,8 +109,7 @@ export default function AdminLab() {
   const handleResultChange = (index, field, value) => {
     const newResults = [...results];
     newResults[index][field] = value;
-    
-    // Auto-calculate flags if possible
+
     if (field === "value" && newResults[index].refRange) {
         const numVal = parseFloat(value);
         if (!isNaN(numVal)) {
@@ -146,13 +138,13 @@ export default function AdminLab() {
             }
         }
     }
-    
+
     setResults(newResults);
   };
 
   const handleDeleteOrder = async (orderId) => {
     if (!window.confirm("Are you sure you want to delete this lab order? This action cannot be undone.")) return;
-    
+
     try {
       await apiClient.delete(`/lab-orders/${orderId}`);
       toast.success("Lab order deleted successfully");
@@ -169,14 +161,14 @@ export default function AdminLab() {
       await apiClient.patch(`/lab-orders/${selectedOrder._id}/results`, {
         testName: selectedTest.name,
         resultData: {
-          values: results.filter(r => r.value.trim() !== ""), // only send filled values
+          values: results.filter(r => r.value.trim() !== ""),
           notes: notes
         }
       });
-      
+
       toast.success("Test results saved successfully");
       setShowModal(false);
-      fetchLabOrders(); // Refresh the list
+      fetchLabOrders();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to save results");
     } finally {
@@ -186,7 +178,7 @@ export default function AdminLab() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -197,19 +189,19 @@ export default function AdminLab() {
             Manage lab orders and enter test results.
           </p>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search by order no, patient..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 outline-none"
             />
           </div>
-          <button 
+          <button
             onClick={async () => { setIsRefreshing(true); await fetchLabOrders(); setIsRefreshing(false); }}
             className="p-2 text-slate-500 hover:text-purple-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-purple-50 dark:hover:bg-slate-700 rounded-xl shadow-sm transition-colors"
             title="Refresh"
@@ -219,13 +211,12 @@ export default function AdminLab() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="flex items-center gap-4 border-b border-slate-200 dark:border-slate-700">
         <button
           onClick={() => setActiveTab('pending')}
           className={`px-4 py-2 text-sm font-bold border-b-2 transition-colors ${
-            activeTab === 'pending' 
-              ? 'border-purple-500 text-purple-600 dark:text-purple-500' 
+            activeTab === 'pending'
+              ? 'border-purple-500 text-purple-600 dark:text-purple-500'
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
           }`}
         >
@@ -234,8 +225,8 @@ export default function AdminLab() {
         <button
           onClick={() => setActiveTab('completed')}
           className={`px-4 py-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
-            activeTab === 'completed' 
-              ? 'border-purple-500 text-purple-600 dark:text-purple-500' 
+            activeTab === 'completed'
+              ? 'border-purple-500 text-purple-600 dark:text-purple-500'
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
           }`}
         >
@@ -243,7 +234,6 @@ export default function AdminLab() {
         </button>
       </div>
 
-      {/* Content Area */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && labOrders.length === 0) || isRefreshing) ? (
           <TableSkeleton columns={6} rows={5} />
@@ -291,7 +281,7 @@ export default function AdminLab() {
                     }`}>
                       {order.overallStatus.toUpperCase()}
                     </span>
-                    <button 
+                    <button
                       onClick={() => handleDeleteOrder(order._id)}
                       className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                       title="Delete Order"
@@ -301,7 +291,6 @@ export default function AdminLab() {
                   </div>
                 </div>
 
-                {/* Tests List */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {order.tests.map((test, idx) => (
                         <div key={idx} className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col justify-between">
@@ -313,9 +302,9 @@ export default function AdminLab() {
                                 <span className={`text-xs font-semibold ${test.status === 'completed' ? 'text-green-600' : 'text-amber-600'}`}>
                                     {test.status === 'completed' ? "RESULTS ENTERED" : "PENDING"}
                                 </span>
-                                
+
                                 {test.status !== 'completed' ? (
-                                    <button 
+                                    <button
                                         onClick={() => openEnterResults(order, test)}
                                         className="text-xs bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 px-3 py-1.5 rounded-lg font-medium text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-slate-600 transition-colors"
                                     >
@@ -340,7 +329,6 @@ export default function AdminLab() {
         )}
       </div>
 
-      {/* Enter Results Modal */}
       {showModal && selectedTest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-4xl border border-slate-200 dark:border-slate-800 overflow-hidden my-8">
@@ -349,9 +337,9 @@ export default function AdminLab() {
                 <FlaskConical className="w-5 h-5 text-purple-500" /> Enter Results: {selectedTest.name}
               </h3>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6">
-              
+
               <div className="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl border border-purple-100 dark:border-purple-900/30 mb-6">
                 <p className="text-sm text-purple-800 dark:text-purple-300">
                   <strong>Patient:</strong> {selectedOrder?.patientId?.firstName} {selectedOrder?.patientId?.lastName} ({selectedOrder?.patientId?.mrn})
@@ -415,7 +403,7 @@ export default function AdminLab() {
 
               <div className="mb-6">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Additional Notes / Remarks</label>
-                <textarea 
+                <textarea
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     rows={2}

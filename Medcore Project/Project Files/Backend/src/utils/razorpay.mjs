@@ -14,12 +14,12 @@ try {
 
 export const createRazorpayOrder = async (amountInINR, receiptId) => {
     if (!razorpayInstance) throw new Error("Razorpay not configured");
-    
+
     const options = {
-        amount: Math.round(amountInINR * 100), // amount in the smallest currency unit (paise)
+        amount: Math.round(amountInINR * 100),
         currency: "INR",
         receipt: receiptId,
     };
-    
+
     return razorpayInstance.orders.create(options);
 };

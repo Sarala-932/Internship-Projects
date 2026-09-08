@@ -14,23 +14,22 @@ export default function PatientBills() {
 
   useEffect(() => {
     fetchBills();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   const handlePay = async (bill) => {
     try {
-      // 1. Initialize Order from Backend
+
       const orderDetails = await initPayment(bill._id);
 
-      // 2. Open Razorpay Modal
       openRazorpayModal({
         orderDetails,
         userDetails: { name: user?.firstName, email: user?.email, phone: user?.phone },
         onSuccess: async (paymentResult) => {
-          // 3. Verify Payment with Backend
+
           await verifyPayment(bill._id, {
             transactionId: paymentResult.razorpayPaymentId,
-            method: "netbanking", // In a real app, Razorpay gives this info optionally, or we just pass 'razorpay'
+            method: "netbanking",
           });
         }
       });
@@ -83,7 +82,7 @@ export default function PatientBills() {
               <div style="margin-top: 8px;"><span class="status">${bill.status}</span></div>
             </div>
           </div>
-          
+
           <div class="patient-info">
             <h3 style="margin: 0 0 8px; color: #64748b; font-size: 14px; text-transform: uppercase;">Bill To:</h3>
             <p style="margin: 0; font-weight: 600; font-size: 18px;">${bill.patientId?.firstName} ${bill.patientId?.lastName}</p>
@@ -151,7 +150,7 @@ export default function PatientBills() {
               </div>
             `}
           </div>
-          
+
           <div style="margin-top: 80px; text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px;">
             Thank you for choosing MedCore Hospital. Wishing you a speedy recovery!
           </div>
@@ -198,8 +197,8 @@ export default function PatientBills() {
       ) : (
         <div className="grid gap-4">
           {bills.map((bill) => (
-            <div 
-              key={bill._id} 
+            <div
+              key={bill._id}
               className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-6 justify-between"
             >
               <div className="flex gap-4">
@@ -210,7 +209,7 @@ export default function PatientBills() {
                     bill.status === 'paid' ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'
                   }`} />
                 </div>
-                
+
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">{bill.billNumber}</h3>
@@ -218,11 +217,11 @@ export default function PatientBills() {
                       {bill.status}
                     </span>
                   </div>
-                  
+
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
                     Issued on {new Date(bill.issuedAt || bill.createdAt).toLocaleDateString()}
                   </p>
-                  
+
                   <div className="flex flex-col gap-1">
                     {bill.items.map((item, idx) => (
                       <div key={idx} className="text-sm flex items-center gap-2">
@@ -233,20 +232,20 @@ export default function PatientBills() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex flex-col items-start sm:items-end justify-between border-t sm:border-t-0 sm:border-l border-slate-100 dark:border-slate-700 pt-4 sm:pt-0 sm:pl-6 min-w-[200px]">
                 <div className="mb-4 sm:mb-0 w-full sm:w-auto">
                   <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold tracking-wider mb-1 sm:text-right">Total Amount</p>
                   <p className="text-2xl font-bold text-slate-900 dark:text-white sm:text-right">₹{bill.totalAmount}</p>
                 </div>
-                
+
                 <div className="w-full flex gap-2">
                   <button onClick={() => handlePrint(bill)} className="flex-1 sm:flex-none p-2 rounded-lg text-slate-500 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 transition-colors tooltip" title="Download / Print Receipt">
                     <Download className="w-5 h-5 mx-auto" />
                   </button>
-                  
+
                   {bill.status === "issued" ? (
-                    <button 
+                    <button
                       onClick={() => handlePay(bill)}
                       className="flex-1 sm:flex-none px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                     >

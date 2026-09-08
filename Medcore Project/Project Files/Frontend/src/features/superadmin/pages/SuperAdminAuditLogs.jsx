@@ -21,19 +21,19 @@ export default function SuperAdminAuditLogs() {
 
   useEffect(() => {
     fetchLogs(1);
-  }, [actionFilter]); // refetch when filter changes
+  }, [actionFilter]);
 
   const handleNextPage = () => {
     if (page < totalPages) fetchLogs(page + 1);
   };
-  
+
   const handlePrevPage = () => {
     if (page > 1) fetchLogs(page - 1);
   };
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -44,11 +44,10 @@ export default function SuperAdminAuditLogs() {
             Track system-wide activity, registrations, and administrative actions
           </p>
         </div>
-        
-        {/* Filters */}
+
         <div className="flex items-center gap-2 bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
           <Filter className="w-4 h-4 text-slate-400 ml-2" />
-          <select 
+          <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
             className="bg-transparent text-sm text-slate-700 dark:text-slate-300 font-medium py-1.5 pl-2 pr-8 border-none focus:ring-0 cursor-pointer outline-none"
@@ -60,10 +59,10 @@ export default function SuperAdminAuditLogs() {
             <option value="create_staff">Create Staff</option>
             <option value="update_profile">Update Profile</option>
           </select>
-          
+
           <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-          
-          <button 
+
+          <button
             onClick={() => fetchLogs(page)}
             className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             title="Refresh"
@@ -73,7 +72,6 @@ export default function SuperAdminAuditLogs() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
         {((loading && logs.length === 0) || isRefreshing) ? (
           <div className="flex items-center justify-center py-20">
@@ -138,7 +136,7 @@ export default function SuperAdminAuditLogs() {
                         )}
                         {log.metadata?.email && `(${log.metadata.email})`}
                         {log.metadata?.role && `[${log.metadata.role}]`}
-                        {/* Fallback to JSON if needed */}
+
                         {!log.metadata?.hospitalName && !log.metadata?.email && !log.metadata?.role && log.metadata && (
                            <span className="text-slate-400">{JSON.stringify(log.metadata)}</span>
                         )}
@@ -153,23 +151,22 @@ export default function SuperAdminAuditLogs() {
             </table>
           </div>
         )}
-        
-        {/* Pagination Footer */}
+
         {totalPages > 1 && (
           <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between bg-slate-50 dark:bg-slate-900/30">
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">
-              <button 
-                onClick={handlePrevPage} 
+              <button
+                onClick={handlePrevPage}
                 disabled={page === 1}
                 className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Previous
               </button>
-              <button 
-                onClick={handleNextPage} 
+              <button
+                onClick={handleNextPage}
                 disabled={page === totalPages}
                 className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >

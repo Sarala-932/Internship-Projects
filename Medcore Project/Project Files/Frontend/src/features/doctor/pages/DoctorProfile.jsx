@@ -6,14 +6,14 @@ export default function DoctorProfile() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
+
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">View your profile information</p>
       </div>
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden flex flex-col md:flex-row">
-        {/* Left Side: Summary */}
+
         <div className="md:w-1/3 bg-slate-50 dark:bg-slate-900/50 p-8 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col items-center text-center">
           <div className="w-24 h-24 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center text-3xl font-bold shadow-inner mb-4">
             {(user?.firstName || "D")[0]}
@@ -27,7 +27,6 @@ export default function DoctorProfile() {
           </p>
         </div>
 
-        {/* Right Side: Details */}
         <div className="md:w-2/3 p-8">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Account Details</h3>
 
@@ -57,7 +56,7 @@ export default function DoctorProfile() {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/30">
               <p className="text-sm text-blue-800 dark:text-blue-300">
                 To update your profile or change your specialization, please contact the Hospital Administrator.

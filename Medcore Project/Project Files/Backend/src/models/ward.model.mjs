@@ -31,7 +31,6 @@ const wardSchema = new mongoose.Schema(
     {timestamps: true}
 );
 
-// Prevent duplicate ward names per hospital
 wardSchema.index({ hospitalId: 1, name: 1 }, { unique: true });
 
 const Ward = mongoose.model("Ward", wardSchema);

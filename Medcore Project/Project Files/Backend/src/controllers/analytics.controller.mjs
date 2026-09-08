@@ -8,13 +8,11 @@ import Bill from "../models/bill.model.mjs";
 
 export async function getPlatformAnalytics(req, res) {
     try {
-        // Fetch KPIs
+
         const totalHospitals = await Hospital.countDocuments();
         const activeHospitals = await Hospital.countDocuments({status: "active"});
         const pendingHospitals = await Hospital.countDocuments({status: "pending"});
 
-        // Fetch Recent Global Activity Logs
-        // We look for actions related to platform management (hospital, subscription, etc.)
         const recentLogs = await AuditLog.find({
             resource: {$in: ["hospital"]},
         })
@@ -23,7 +21,6 @@ export async function getPlatformAnalytics(req, res) {
             .populate("userId", "firstName lastName email")
             .select("-__v");
 
-        // Charts Data (Last 7 Days)
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
         sevenDaysAgo.setHours(0, 0, 0, 0);
@@ -54,7 +51,6 @@ export async function getPlatformAnalytics(req, res) {
     }
 }
 
-// GET /api/analytics/audit-logs — Super Admin only, paginated audit logs
 export async function getAuditLogs(req, res) {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -63,7 +59,6 @@ export async function getAuditLogs(req, res) {
 
         const filter = {};
 
-        // Optional filters
         if (req.query.action) {
             filter.action = req.query.action;
         }
@@ -93,7 +88,6 @@ export async function getAuditLogs(req, res) {
     }
 }
 
-// Helper function to generate last N days array
 function getLastNDays(n) {
     const dates = [];
     for (let i = n - 1; i >= 0; i--) {
@@ -104,12 +98,10 @@ function getLastNDays(n) {
     return dates;
 }
 
-// GET /api/analytics/hospital — Admin Dashboard
 export async function getHospitalAnalytics(req, res) {
     try {
         const hospitalId = req.user.hospitalId;
 
-        // Total Staff (excluding super_admin and patient)
         const totalStaff = await User.countDocuments({
             hospitalId,
             role: {$nin: ["super_admin", "patient"]},
@@ -120,10 +112,8 @@ export async function getHospitalAnalytics(req, res) {
             isActive: true,
         });
 
-        // Real stats for patients and revenue
         const totalPatients = await Patient.countDocuments({hospitalId});
 
-        // Appointments today
         const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
         const endOfDay = new Date();
@@ -134,7 +124,6 @@ export async function getHospitalAnalytics(req, res) {
             scheduledAt: {$gte: startOfDay, $lte: endOfDay},
         });
 
-        // Revenue - Last 30 Days
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         thirtyDaysAgo.setHours(0, 0, 0, 0);
@@ -155,7 +144,6 @@ export async function getHospitalAnalytics(req, res) {
             .sort({createdAt: -1})
             .limit(5);
 
-        // Charts Data (Last 7 Days)
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
         sevenDaysAgo.setHours(0, 0, 0, 0);
@@ -200,13 +188,11 @@ export async function getHospitalAnalytics(req, res) {
     }
 }
 
-// GET /api/analytics/doctor — Doctor Dashboard
 export async function getDoctorAnalytics(req, res) {
     try {
         const hospitalId = req.user.hospitalId;
         const doctorId = req.user._id;
 
-        // Appointments today
         const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
         const endOfDay = new Date();
@@ -218,7 +204,6 @@ export async function getDoctorAnalytics(req, res) {
             scheduledAt: {$gte: startOfDay, $lte: endOfDay},
         });
 
-        // Total unique patients seen by this doctor
         const uniquePatients = await Appointment.distinct("patientId", {
             hospitalId,
             doctorId,
@@ -227,7 +212,6 @@ export async function getDoctorAnalytics(req, res) {
 
         const totalPatients = uniquePatients.length;
 
-        // Recent Appointments
         const recentAppointments = await Appointment.find({
             hospitalId,
             doctorId,
@@ -237,7 +221,6 @@ export async function getDoctorAnalytics(req, res) {
             .sort({scheduledAt: 1})
             .limit(10);
 
-        // Charts Data (Last 7 Days)
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
         sevenDaysAgo.setHours(0, 0, 0, 0);

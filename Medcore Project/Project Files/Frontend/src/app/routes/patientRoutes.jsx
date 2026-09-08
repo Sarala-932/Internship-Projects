@@ -21,7 +21,7 @@ export const patientRoutes = [
           { path: "/patient/records", element: <PatientRecords /> },
           { path: "/patient/bills", element: <PatientBills /> },
           { path: "/patient/profile", element: <PatientProfile /> },
-          // Alias /patient to /patient/dashboard
+
           { path: "/patient", element: <Navigate to="/patient/dashboard" replace /> }
         ]
       }

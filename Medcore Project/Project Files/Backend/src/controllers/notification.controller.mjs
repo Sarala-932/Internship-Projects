@@ -33,8 +33,7 @@ export const getMyNotifications = async (req, res) => {
 export const markAsRead = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // If id is "all", mark all as read
+
     if (id === "all") {
       await Notification.updateMany(
         { userId: req.user._id, isRead: false },

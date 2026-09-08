@@ -4,10 +4,9 @@ import {
     getDepartmentByIdService,
 } from "../services/department.service.mjs";
 
-// POST /api/departments — Admin/Super Admin creates department
 export async function createDepartment(req, res) {
     try {
-        // Admin can only create departments for their own hospital
+
         const hospitalId = req.user.role === "super_admin"
             ? req.body.hospitalId
             : req.user.hospitalId;
@@ -31,11 +30,9 @@ export async function createDepartment(req, res) {
     }
 }
 
-// GET /api/departments?hospitalId=xxx — Get departments for a hospital
 export async function getDepartments(req, res) {
     try {
-        // Admin sees only their hospital's departments
-        // Super admin and patients can see any hospital's departments by passing hospitalId
+
         const hospitalId = (req.user.role === "super_admin" || req.user.role === "patient")
             ? req.query.hospitalId || req.user.hospitalId
             : req.user.hospitalId;
@@ -53,7 +50,6 @@ export async function getDepartments(req, res) {
     }
 }
 
-// GET /api/departments/:id — Get single department
 export async function getDepartmentById(req, res) {
     try {
         const department = await getDepartmentByIdService(req.params.id);

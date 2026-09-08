@@ -6,7 +6,6 @@ export const useDoctorPatients = (params = {}) => {
   const dispatch = useDispatch();
   const { list: patients, meta, loading, error } = useSelector((state) => state.doctor.patients);
 
-  // Serialize params to trigger re-fetch when they change
   const paramsString = JSON.stringify(params);
 
   useEffect(() => {

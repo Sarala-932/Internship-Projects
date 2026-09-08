@@ -22,7 +22,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
     const [doctorSchedule, setDoctorSchedule] = useState("");
 
     const [formData, setFormData] = useState({
-        // Patient Details
+
         prefix: "Mr.",
         firstName: "",
         lastName: "",
@@ -33,7 +33,6 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
         address: "",
         city: "",
 
-        // Appointment Details
         departmentId: "",
         doctorId: "",
         scheduledAt: "",
@@ -49,7 +48,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
 
     const fetchDepartments = async () => {
         try {
-            // Admin route usually /departments
+
             const res = await apiClient.get("/departments");
             setDepartments(res.data.departments || []);
         } catch (err) {
@@ -91,8 +90,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
     const fetchDoctorSchedule = async (doctorId) => {
         try {
             const res = await apiClient.get(`/doctors/profile/${doctorId}`);
-            // In the API, the route is usually /doctors/profile/me or /doctors/profile/:id
-            // but if the route returns { doctor: ... } or just the doctor object directly
+
             const profile = res.data.doctor || res.data;
             if (profile && profile.availability && profile.availability.length > 0) {
                 const daysMap = {
@@ -165,7 +163,7 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-5xl border border-slate-200 dark:border-slate-800 overflow-hidden my-4 sm:my-8 flex flex-col max-h-[95vh]">
-                {/* Header */}
+
                 <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-blue-600 text-white shrink-0">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                         <Calendar className="w-5 h-5" />
@@ -179,10 +177,9 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
                     </button>
                 </div>
 
-                {/* Form Content */}
                 <div className="p-6 overflow-y-auto flex-1 bg-slate-50 dark:bg-slate-950">
                     <form id="desk-booking-form" onSubmit={handleSubmit} className="space-y-8">
-                        {/* Section 1: Patient Details */}
+
                         <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                             <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
                                 <User className="w-4 h-4 text-blue-500" /> Patient Details
@@ -332,7 +329,6 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
                             </div>
                         </div>
 
-                        {/* Section 2: Appointment Details */}
                         <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                             <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
                                 <Stethoscope className="w-4 h-4 text-blue-500" /> Appointment Details
@@ -482,7 +478,6 @@ export default function ReceptionistAppointmentEntry({onClose, onSuccess}) {
                     </form>
                 </div>
 
-                {/* Footer */}
                 <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end gap-3 shrink-0">
                     <button
                         type="button"

@@ -5,7 +5,7 @@ import doctorService from "../service/doctorService";
 export default function PatientHistoryModal({ isOpen, onClose, patientId, patientName }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [historyData, setHistoryData] = useState([]); 
+  const [historyData, setHistoryData] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
     try {
       setLoading(true);
       setError(null);
-      
+
       const [encountersRes, prescriptionsRes] = await Promise.all([
         doctorService.getEncountersByPatient(patientId),
         doctorService.getPrescriptionsByPatient(patientId)
@@ -27,9 +27,8 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
       const encounters = encountersRes.encounters || [];
       const prescriptions = prescriptionsRes.prescriptions || [];
 
-      // Combine by encounterId
       const combined = encounters.map(enc => {
-        const relatedRx = prescriptions.find(rx => 
+        const relatedRx = prescriptions.find(rx =>
           (rx.encounterId?._id || rx.encounterId) === enc._id
         );
         return {
@@ -38,12 +37,11 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
         };
       });
 
-      // Sort by date descending
       combined.sort((a, b) => new Date(b.encounter.createdAt) - new Date(a.encounter.createdAt));
-      
+
       setHistoryData(combined);
       if (combined.length > 0) {
-        setExpandedId(combined[0].encounter._id); 
+        setExpandedId(combined[0].encounter._id);
       }
     } catch (err) {
       setError("Failed to load patient history.");
@@ -58,8 +56,7 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-4xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
-        
-        {/* Header */}
+
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-2xl shrink-0">
           <div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -68,7 +65,7 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
             </h3>
             {patientName && <p className="text-sm text-slate-500 mt-0.5">{patientName}</p>}
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="cursor-pointer p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
           >
@@ -76,7 +73,6 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 overflow-y-auto flex-1">
           {loading ? (
             <div className="flex items-center justify-center py-20">
@@ -95,16 +91,16 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
           ) : (
             <div className="space-y-4">
               {historyData.map(({ encounter, prescription }) => (
-                <div 
-                  key={encounter._id} 
+                <div
+                  key={encounter._id}
                   className={`border rounded-xl overflow-hidden transition-colors ${
-                    expandedId === encounter._id 
-                      ? 'border-indigo-300 dark:border-indigo-700 bg-indigo-50/30 dark:bg-indigo-900/10' 
+                    expandedId === encounter._id
+                      ? 'border-indigo-300 dark:border-indigo-700 bg-indigo-50/30 dark:bg-indigo-900/10'
                       : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  {/* Header / Summary */}
-                  <div 
+
+                  <div
                     className="p-4 cursor-pointer flex items-center justify-between gap-4"
                     onClick={() => setExpandedId(expandedId === encounter._id ? null : encounter._id)}
                   >
@@ -129,7 +125,7 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
                         </span>
                       )}
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                        encounter.status === 'signed' 
+                        encounter.status === 'signed'
                           ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                           : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'
                       }`}>
@@ -138,11 +134,9 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
                     </div>
                   </div>
 
-                  {/* Expanded Content */}
                   {expandedId === encounter._id && (
                     <div className="p-5 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 grid grid-cols-1 md:grid-cols-2 gap-6">
-                      
-                      {/* Clinical Notes & Vitals */}
+
                       <div className="space-y-5">
                         <div>
                           <h4 className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 text-sm mb-2">
@@ -170,7 +164,6 @@ export default function PatientHistoryModal({ isOpen, onClose, patientId, patien
                         )}
                       </div>
 
-                      {/* Prescription Details */}
                       <div>
                         <h4 className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 text-sm mb-2">
                           <Pill className="w-4 h-4 text-emerald-500" /> Prescribed Medicines

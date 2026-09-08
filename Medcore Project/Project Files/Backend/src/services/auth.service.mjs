@@ -11,20 +11,16 @@ import {
 import {config} from "../config/config.mjs";
 const jwtRefreshSecret = config.jwtRefreshSecret;
 
-// Helper — custom error with status
 const authError = (message, status = 401) => {
     const err = new Error(message);
     err.status = status;
     return err;
 };
 
-// Fresh token pair banao — login + refresh dono use karenge
-
 export const issueTokenPair = async (user) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    // DB me hashed store — leak ho toh useless
     const hashed = await hashRefreshToken(refreshToken);
 
     await refreshTokenModel.create({
@@ -37,11 +33,6 @@ export const issueTokenPair = async (user) => {
     return {accessToken, refreshToken};
 };
 
-// Refresh flow with ROTATION
-// 1. JWT signature verify
-// 2. DB me matching hashed token dhundo
-// 3. Purana delete karo
-// 4. Naya pair issue karo
 export const getAccessTokenService = async (refreshToken) => {
     let decode;
     try {
@@ -54,7 +45,6 @@ export const getAccessTokenService = async (refreshToken) => {
     if (!user) throw authError("User not found", 401);
     if (!user.isEmailVerified) throw authError("Email not verified", 403);
 
-    // bcrypt hash query nahi kar sakte — user ke sabhi tokens le ke loop
     const candidates = await refreshTokenModel.find({userId: decode.id});
     let matched = null;
     for (const c of candidates) {
@@ -70,12 +60,10 @@ export const getAccessTokenService = async (refreshToken) => {
         throw authError("Refresh token expired", 401);
     }
 
-    // Rotation — purana delete, naya issue
     await refreshTokenModel.deleteOne({_id: matched._id});
     return issueTokenPair(user);
 };
 
-// Logout — DB se refresh token nikal do
 export const logoutService = async (refreshToken) => {
     if (!refreshToken) return;
     try {
@@ -88,6 +76,6 @@ export const logoutService = async (refreshToken) => {
             }
         }
     } catch {
-        // invalid token — kuch delete karne ko nahi, silent pass
+
     }
 };

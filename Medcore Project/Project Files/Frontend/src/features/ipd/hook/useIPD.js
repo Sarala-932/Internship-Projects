@@ -8,7 +8,7 @@ export const useIPD = () => {
   const dispatch = useDispatch();
   const { wards, ipdPatients: patients, pendingRequests } = useSelector(state => state.admin);
   const [loading, setIpdLoading] = useState(true);
-  
+
   const [doctors, setDoctors] = useState([]);
   const [admitting, setAdmitting] = useState(false);
   const [dischargingBedId, setDischargingBedId] = useState(null);

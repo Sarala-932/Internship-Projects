@@ -21,16 +21,15 @@ export default function Hospitals() {
     if (data) setHospitals(data.hospitals || []);
   };
 
-  useEffect(() => { 
-    fetchHospitals(); 
+  useEffect(() => {
+    fetchHospitals();
   }, [user]);
 
-  // Read URL query params to auto-open modal
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     if (searchParams.get("action") === "add") {
       setShowModal(true);
-      // Clean up the URL so refreshing doesn't keep opening it
+
       setSearchParams({});
     }
   }, [searchParams, setSearchParams]);
@@ -44,7 +43,7 @@ export default function Hospitals() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">Hospitals</h2>
@@ -59,7 +58,6 @@ export default function Hospitals() {
         </button>
       </div>
 
-      {/* Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -139,14 +137,13 @@ export default function Hospitals() {
         )}
       </div>
 
-      {/* Shared Modal Components */}
-      <CreateHospitalModal 
-        isOpen={showModal} 
-        onClose={() => setShowModal(false)} 
-        onSuccess={fetchHospitals} 
+      <CreateHospitalModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={fetchHospitals}
       />
 
-      <CreateStaffModal 
+      <CreateStaffModal
         isOpen={!!selectedHospitalForAdmin}
         onClose={() => setSelectedHospitalForAdmin(null)}
         onSuccess={fetchHospitals}

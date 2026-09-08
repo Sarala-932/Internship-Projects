@@ -27,7 +27,6 @@ export default function SuperAdminLayout() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -48,9 +47,9 @@ export default function SuperAdminLayout() {
 
   return (
     <div className="flex h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-300">
-      {/* Sidebar */}
+
       <aside className="w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col">
-        {/* Logo */}
+
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800">
           <Link to="/super-admin/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -66,7 +65,6 @@ export default function SuperAdminLayout() {
           </Link>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 py-6 px-3 space-y-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -90,9 +88,8 @@ export default function SuperAdminLayout() {
         </nav>
       </aside>
 
-      {/* Main */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Topbar */}
+
         <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 transition-colors">
           <div>
             <h1 className="text-lg font-bold text-slate-900 dark:text-white">{currentPage}</h1>
@@ -105,10 +102,9 @@ export default function SuperAdminLayout() {
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            
-            {/* Profile Dropdown */}
+
             <div className="relative" ref={dropdownRef}>
-              <button 
+              <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 dark:bg-slate-800 text-white font-semibold shadow-sm hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-600 transition-all cursor-pointer"
               >
@@ -125,9 +121,9 @@ export default function SuperAdminLayout() {
                       {user?.email}
                     </p>
                   </div>
-                  
+
                   <div className="py-2">
-                    <Link 
+                    <Link
                       to="/super-admin/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
@@ -137,7 +133,7 @@ export default function SuperAdminLayout() {
                       </div>
                       My Profile
                     </Link>
-                    <Link 
+                    <Link
                       to="/super-admin/settings"
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
@@ -150,7 +146,7 @@ export default function SuperAdminLayout() {
                   </div>
 
                   <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer"
                     >
@@ -166,7 +162,6 @@ export default function SuperAdminLayout() {
           </div>
         </header>
 
-        {/* Content */}
         <div className="flex-1 overflow-auto p-8">
           <Outlet />
         </div>

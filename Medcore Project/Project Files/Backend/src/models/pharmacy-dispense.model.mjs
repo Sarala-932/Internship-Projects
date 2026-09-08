@@ -17,7 +17,7 @@ const pharmacyDispenseSchema = new mongoose.Schema(
         hospitalId: {type: mongoose.Schema.Types.ObjectId, ref: "Hospital", required: true, index: true},
         prescriptionId: {type: mongoose.Schema.Types.ObjectId, ref: "Prescription", required: true},
         patientId: {type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true},
-        dispensedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true}, // pharmacist
+        dispensedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
         items: [dispenseItemSchema],
         totalAmount: {type: Number, required: true, min: 0},
         paymentStatus: {type: String, enum: ["pending", "paid", "partial"], default: "pending"},
